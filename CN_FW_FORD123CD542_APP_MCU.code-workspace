@@ -25,18 +25,7 @@
         "cortex-debug.JLinkGDBServerPath.osx": "/Applications/SEGGER/JLink/JLinkGDBServerCLExe",
         "cortex-debug.JLinkGDBServerPath.linux": "JLinkGDBServerCLExe",
         "files.associations": {
-            "cybsp.h": "c",
-            "mainapp.h": "c",
-            "stdio.h": "c",
-            "uartdriver.h": "c",
-            "main.h": "c",
-            "cycfg_peripherals.h": "c",
-            "cy_tcpwm_counter.h": "c",
-            "cy_scb_uart.h": "c",
-            "tc0app.h": "c",
-            "i2c4mdriver.h": "c",
-            "cy_scb_i2c.h": "c",
-            "i2c1mdriver.h": "c"
+            "registerapp.h": "c"
         }
     },
     "extensions": {

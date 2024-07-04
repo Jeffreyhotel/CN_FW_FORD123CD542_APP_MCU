@@ -4,7 +4,6 @@
 #include "main.h"
 
 void TC0App_Initial(void);
-void TC0App_HandShakeSet(void);
 uint8_t TC0App_DelayMS(uint16_t delay);
 
 #endif

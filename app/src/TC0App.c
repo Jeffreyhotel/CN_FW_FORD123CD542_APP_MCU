@@ -33,7 +33,6 @@
 static long int timercount_ms = 0;
 static long int timercount_sec = 0;
 static long int cpu_timer_ms=0;
-bool isHandShakeFinished = false;
 
 static void TC0APP_TC0_Task_1000msec(void)
 {
@@ -45,13 +44,11 @@ static void TC0App_Callback_InterruptHandler(void)
     TC0Driver_IntFlagClean();
     timercount_ms = timercount_ms+1;
     cpu_timer_ms = cpu_timer_ms+1;
-    if(isHandShakeFinished == true)
+
+    if((timercount_ms % 1000) == 0)
     {
-        if((timercount_ms % 1000) == 0)
-        {
-            TC0APP_TC0_Task_1000msec();
-            timercount_sec = timercount_sec+1;
-        }else{/*Do Nothing*/}
+        TC0APP_TC0_Task_1000msec();
+        timercount_sec = timercount_sec+1;
     }else{/*Do Nothing*/}
 }
 
@@ -81,9 +78,4 @@ uint8_t TC0App_DelayMS(uint16_t delay)
         }
     }
     return NOTHING;
-}
-
-void TC0App_HandShakeSet(void)
-{
-    isHandShakeFinished = true;
 }

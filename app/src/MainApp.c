@@ -24,6 +24,7 @@
 #include "app/inc/MainApp.h"
 #include "app/inc/TC0App.h"
 #include "app/inc/StackTaskApp.h"
+#include "app/inc/RegisterApp.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/I2C1MDriver.h"
@@ -68,6 +69,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     {
         UartDriver_TxWriteString((uint8_t *)"I2C M driver init fail\r\n");
     }
+    RegisterApp_ALL_Initial();
 
     /* Enable global interrupts */
     __enable_irq();
@@ -88,7 +90,7 @@ static uint8_t MainApp_PreNormal_Mode(uint8_t u8Nothing)
 {
     /*ADC initial*/
     AdcDriver_Initial(ADC_SAR0_TYPE, ADC_SAR0_CONFIG);
-    /*Power On Sequence*/
+    /*Do LCD Power On Sequence*/
     sprintf((char *)u8TxBuffer,"PRENORMAL FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
     (void) u8Nothing;
@@ -104,7 +106,6 @@ static uint8_t MainApp_HandShake_Mode(uint8_t u8Nothing)
 {
     
     /*Do or Check Handshake function*/
-    TC0App_HandShakeSet();
     sprintf((char *)u8TxBuffer,"HANDSHAKE FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
     (void) u8Nothing;
@@ -124,7 +125,13 @@ static uint8_t MainApp_Normal_Mode(uint8_t u8Nothing)
 
     sprintf((char *)u8TxBuffer,"NORMAL FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
-    u8Return = STATE_NORMAL;
+    if((RegisterApp_DHU_Read(CMD_DISP_SHUTD,0U) & 0x01U) == 0x00U)
+    {
+        u8Return = STATE_NORMAL;
+    }else{
+        u8Return = STATE_PRESLEEP;
+    }
+    
     (void) u8Nothing;
     return u8Return;
 }
@@ -137,7 +144,7 @@ static uint8_t MainApp_Normal_Mode(uint8_t u8Nothing)
 static uint8_t MainApp_PreSleep_Mode(uint8_t u8Nothing)
 {
     uint8_t u8Return;
-    /* Do Power Off Sequence*/
+    /* Do LCD Power Off Sequence*/
     sprintf((char *)u8TxBuffer,"PRESLEEP FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
     u8Return = STATE_SLEEP;
@@ -190,22 +197,18 @@ static uint8_t MainApp_Flow(uint8_t u8State)
         break;
 
         case STATE_PRESLEEP:
-            /* To Deinitial Driver & Set Pin to GPIO(L) for dark current needed in sleep mode*/
             u8CurrentState = MainApp_PreSleep_Mode(NOTHING);
         break;
 
         case STATE_SLEEP:
-            /* Check the Wake up pin & return to BOOT mode or WAKE HOST mode*/
             u8CurrentState = MainApp_Sleep_Mode(NOTHING);;
         break;
 
         case STATE_WAKE_HOST:
-            /* Check the Wake up pin & return to BOOT mode or SLEEP mode*/
             u8CurrentState = STATE_BOOT;
         break;
 
         default:
-            /* Do nothing & no check here*/
             u8CurrentState = STATE_BOOT;
         break;
     }
