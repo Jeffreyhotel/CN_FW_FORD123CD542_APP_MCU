@@ -28,6 +28,7 @@
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/I2C1MDriver.h"
+#include "driver/inc/PwmDriver.h"
 
 #define CY_ASSERT_FAILED          (0u)
 
@@ -65,6 +66,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     /* Configure and enable the UART peripheral */
     UartDriver_Initial();
     TC0App_Initial();
+    PwmDriver_Initial();
     if(I2C1MDriver_Initialize() == false)
     {
         UartDriver_TxWriteString((uint8_t *)"I2C M driver init fail\r\n");
@@ -91,6 +93,7 @@ static uint8_t MainApp_PreNormal_Mode(uint8_t u8Nothing)
 {
     /*ADC initial*/
     AdcDriver_Initial(ADC_SAR0_TYPE, ADC_SAR0_CONFIG);
+    PwmDriver_DutySet(30U);
     /*Do LCD Power On Sequence*/
     sprintf((char *)u8TxBuffer,"PRENORMAL FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
