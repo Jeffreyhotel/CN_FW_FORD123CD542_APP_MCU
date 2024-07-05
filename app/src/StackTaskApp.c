@@ -21,6 +21,7 @@
  */
 
 #include "app/inc/StackTaskApp.h"
+#include "app/inc/BacklightApp.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/I2C1MDriver.h"
@@ -171,7 +172,6 @@ void StackTaskApp_MissionAction(void)
     (void)QueneNumber;
     TaskNumber = StackTaskApp_MissionPop();
     //TC0App_TimerTaskStopper(false);
-    //(void)TC0App_CPUCounterReset();
     switch(TaskNumber)
     {
         case TASK_DEBUGINFO:
@@ -195,23 +195,32 @@ void StackTaskApp_MissionAction(void)
             }
         break;
 
+        case TASK_MONITOR:
+            BacklightApp_TempMonitor();
+        break;
+
+        case TASK_BLTFLOW:
+            BacklightApp_DeratingFlow();
+        break;
+
         default:
             /*Do nothing*/
-            uint16_t adc_value = 0U;
-            adc_value = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE, ADC_SAR0_CH1_BLTTEMP);
-            sprintf((char *)u8TxBuffer,"ADC1 = 0x%04x\r\n",adc_value);
-            UartDriver_TxWriteString(u8TxBuffer);
-            adc_value = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE, ADC_SAR0_CH2_BATTEMP);
-            sprintf((char *)u8TxBuffer,"ADC2 = 0x%04x\r\n",adc_value);
-            UartDriver_TxWriteString(u8TxBuffer);
-            Cy_GPIO_Inv(BIAS_EN_PORT,BIAS_EN_PIN);
+            // uint16_t adc_value = 0U;
+            // adc_value = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE, ADC_SAR0_CH1_BLTTEMP);
+            // sprintf((char *)u8TxBuffer,"ADC1 = 0x%04x\r\n",adc_value);
+            // UartDriver_TxWriteString(u8TxBuffer);
+            // adc_value = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE, ADC_SAR0_CH2_BATTEMP);
+            // sprintf((char *)u8TxBuffer,"ADC2 = 0x%04x\r\n",adc_value);
+            // UartDriver_TxWriteString(u8TxBuffer);
+            // Cy_GPIO_Inv(BIAS_EN_PORT,BIAS_EN_PIN);
         break;
     }
     /* Show the CPU information exclude Overflow*/
     if (TaskNumber == 0xFFU){
         /*DO NOTHING*/
     }else{
-        //UartApp_WriteCPUCounter(TaskNumber,QueneNumber);
+        sprintf((char *)u8TxBuffer,"TASK> %ld CPU> %d\r\n",QueneNumber,TaskNumber);
+        UartDriver_TxWriteString(u8TxBuffer);
     }
 
     (void)QueneNumber;

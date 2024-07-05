@@ -18,12 +18,7 @@ void PwmDriver_Stop(void)
     Cy_TCPWM_Disable_Multiple(TC7_PWM_LED_HW,TC7_PWM_LED_MASK);
 }
 
-void PwmDriver_DutySet(uint8_t duty)
+void PwmDriver_DutySet(uint16_t duty)
 {
-    if (duty > 100U)
-    {
-        /* code */
-        duty = 100U;
-    }
-    Cy_TCPWM_PWM_SetCompare0(TC7_PWM_LED_HW,TC7_PWM_LED_NUM,(uint32_t)(duty*PWM_UNIT));
+    Cy_TCPWM_PWM_SetCompare0(TC7_PWM_LED_HW,TC7_PWM_LED_NUM,(uint32_t)(duty));
 }

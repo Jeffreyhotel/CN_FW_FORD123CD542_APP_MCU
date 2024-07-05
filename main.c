@@ -90,7 +90,7 @@ int main(void)
 		{
 			u32MainTimeOut=0U;
 		}
-        Cy_SysLib_Delay(LED_DELAY_MS);
+        //Cy_SysLib_Delay(LED_DELAY_MS);
     }
 
     return 0;

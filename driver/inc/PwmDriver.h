@@ -9,6 +9,6 @@
 void PwmDriver_Initial(void);
 void PwmDriver_Start(void);
 void PwmDriver_Stop(void);
-void PwmDriver_DutySet(uint8_t duty);
+void PwmDriver_DutySet(uint16_t duty);
 
 #endif

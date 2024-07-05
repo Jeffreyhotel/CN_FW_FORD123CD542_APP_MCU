@@ -11,6 +11,8 @@
 #define MISSION_NUM_THREE   3U
 
 #define TASK_DEBUGINFO  0U
+#define TASK_MONITOR    1U
+#define TASK_BLTFLOW    2U
 
 typedef struct{
     volatile uint8_t data[StackTaskMaxSize];

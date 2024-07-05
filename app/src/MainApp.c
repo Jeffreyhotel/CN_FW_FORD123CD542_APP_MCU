@@ -127,8 +127,8 @@ static uint8_t MainApp_Normal_Mode(uint8_t u8Nothing)
 
     StackTaskApp_MissionAction();
 
-    sprintf((char *)u8TxBuffer,"NORMAL FINISHED 0x%02x\r\n",RegisterApp_DHU_Read(CMD_DISP_STATUS,0U));
-    UartDriver_TxWriteString(u8TxBuffer);
+    // sprintf((char *)u8TxBuffer,"NORMAL FINISHED 0x%02x\r\n",RegisterApp_DHU_Read(CMD_DISP_STATUS,0U));
+    // UartDriver_TxWriteString(u8TxBuffer);
     if((RegisterApp_DHU_Read(CMD_DISP_SHUTD,0U) & 0x01U) == 0x00U)
     {
         u8Return = STATE_NORMAL;
