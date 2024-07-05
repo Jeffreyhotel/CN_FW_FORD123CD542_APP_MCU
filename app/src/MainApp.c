@@ -70,6 +70,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
         UartDriver_TxWriteString((uint8_t *)"I2C M driver init fail\r\n");
     }
     RegisterApp_ALL_Initial();
+    RegisterApp_DHU_Setup(CMD_DISP_STATUS,0U,0xF3);
 
     /* Enable global interrupts */
     __enable_irq();
@@ -123,7 +124,7 @@ static uint8_t MainApp_Normal_Mode(uint8_t u8Nothing)
 
     StackTaskApp_MissionAction();
 
-    sprintf((char *)u8TxBuffer,"NORMAL FINISHED\r\n");
+    sprintf((char *)u8TxBuffer,"NORMAL FINISHED 0x%02x\r\n",RegisterApp_DHU_Read(CMD_DISP_STATUS,0U));
     UartDriver_TxWriteString(u8TxBuffer);
     if((RegisterApp_DHU_Read(CMD_DISP_SHUTD,0U) & 0x01U) == 0x00U)
     {
