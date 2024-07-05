@@ -137,7 +137,9 @@ LINKER_SCRIPT=
 PREBUILD=
 
 # Custom post-build commands to run.
-POSTBUILD=
+POSTBUILD="C:/Users/Admin/ModusToolbox/tools_3.2/gcc/bin/arm-none-eabi-objcopy.exe" \
+			D:/SourceCode/ModusWorkspace/CN_FW_FORD123CD542_APP_MCU/build/FORD123_CD542_CY8C4147AZS-S285/Debug/CN_FW_FORD123CD542_APP_MCU.elf \
+			D:/SourceCode/ModusWorkspace/CN_FW_FORD123CD542_APP_MCU/build/FORD123_CD542_CY8C4147AZS-S285/Debug/CN_FW_FORD123CD542_APP_MCU.bin -O binary --gap-fill=0xff
 
 
 ################################################################################

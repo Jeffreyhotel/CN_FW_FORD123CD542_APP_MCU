@@ -24,7 +24,7 @@
 
 /* This section lists the other files that are included in this file.
  */
-#include "main.h"
+
 #include "app/inc/RegisterApp.h"
 
 Register RegisterContainer;
