@@ -29,6 +29,7 @@
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/I2C1MDriver.h"
+#include "driver/inc/I2C2SDriver.h"
 #include "driver/inc/PwmDriver.h"
 
 #define CY_ASSERT_FAILED          (0u)
@@ -71,6 +72,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     {
         UartDriver_TxWriteString((uint8_t *)"I2C M driver init fail\r\n");
     }
+    I2C2SDriver_Initial();
     RegisterApp_ALL_Initial();
     RegisterApp_DHU_Setup(CMD_DISP_STATUS,0U,0xF3);
     StackTaskApp_Global_MissionInitial();
