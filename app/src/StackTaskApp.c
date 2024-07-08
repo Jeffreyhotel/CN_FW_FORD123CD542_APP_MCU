@@ -22,6 +22,7 @@
 
 #include "app/inc/StackTaskApp.h"
 #include "app/inc/BacklightApp.h"
+#include "app/inc/BatteryApp.h"
 #include "app/inc/RegisterApp.h"
 #include "app/inc/TC0App.h"
 #include "driver/inc/AdcDriver.h"
@@ -220,6 +221,7 @@ void StackTaskApp_MissionAction(void)
 
         case TASK_MONITOR:
             BacklightApp_TempMonitor();
+            BatteryApp_PowerMonitor();
         break;
 
         case TASK_BLTFLOW:
@@ -228,6 +230,10 @@ void StackTaskApp_MissionAction(void)
 
         case TASK_DIMMING:
             BacklightApp_DimmingControl();
+        break;
+
+        case TASK_BATFLOW:
+            BatteryApp_Flow();
         break;
 
         default:

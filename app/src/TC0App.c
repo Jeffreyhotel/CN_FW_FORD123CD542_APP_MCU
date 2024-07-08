@@ -46,6 +46,11 @@ static void TC0APP_TC0_Task_1000msec(void)
     StackTaskApp_MissionPush(TASK_MONITOR);
 }
 
+static void TC0APP_TC0_Task_10msec(void)
+{
+    StackTaskApp_MissionPush(TASK_BATFLOW);
+}
+
 static void TC0APP_TC0_Task_15msec(void)
 {
     StackTaskApp_MissionPush(TASK_BLTFLOW);
@@ -64,6 +69,11 @@ static void TC0App_Callback_InterruptHandler(void)
 
     if(FLAG_STARTTOWORK_START == TRUE)
     {
+        if ((timercount_ms % 10) ==0)
+        {
+            TC0APP_TC0_Task_10msec();
+        }else{/*Do Nothing*/}
+
         if ((timercount_ms % 15) ==0)
         {
             TC0APP_TC0_Task_15msec();
