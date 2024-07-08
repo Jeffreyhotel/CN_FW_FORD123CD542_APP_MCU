@@ -22,6 +22,8 @@
 
 #include "app/inc/StackTaskApp.h"
 #include "app/inc/BacklightApp.h"
+#include "app/inc/RegisterApp.h"
+#include "app/inc/TC0App.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/I2C1MDriver.h"
@@ -164,6 +166,8 @@ static uint8_t StackTaskApp_MissionPop(void)
 **            Case Task define at StackTaskApp.h
 **        Go: No Return
  */
+uint8_t test_flag = TRUE;
+uint8_t test_flag2 = TRUE;
 void StackTaskApp_MissionAction(void)
 {
     (void)QueneNumber;
@@ -193,6 +197,25 @@ void StackTaskApp_MissionAction(void)
                 sprintf((char *)u8TxBuffer,"I2C M driver transmit fail >> 0x%02x\r\n",Status);
                 UartDriver_TxWriteString(u8TxBuffer);
             }
+            if(test_flag == TRUE)
+            {
+                test_flag = FALSE;
+                RegisterApp_DHU_Setup(CMD_BL_PWM,0U,0x03U);
+                RegisterApp_DHU_Setup(CMD_BL_PWM,1U,0xFFU);
+                RegisterApp_DHU_Setup(CMD_DISP_EN,0U,1U);
+            }else{
+                test_flag = TRUE;
+                RegisterApp_DHU_Setup(CMD_BL_PWM,0U,0x00U);
+                RegisterApp_DHU_Setup(CMD_BL_PWM,1U,0x01U);
+                if(test_flag2 == TRUE){
+                    test_flag2 = FALSE;
+                    RegisterApp_DHU_Setup(CMD_DISP_EN,0U,0U);
+                }else{
+                    test_flag2 = TRUE;
+                    RegisterApp_DHU_Setup(CMD_DISP_EN,0U,1U);
+                }
+            }
+            
         break;
 
         case TASK_MONITOR:
@@ -201,6 +224,10 @@ void StackTaskApp_MissionAction(void)
 
         case TASK_BLTFLOW:
             BacklightApp_DeratingFlow();
+        break;
+
+        case TASK_DIMMING:
+            BacklightApp_DimmingControl();
         break;
 
         default:
@@ -216,10 +243,10 @@ void StackTaskApp_MissionAction(void)
         break;
     }
     /* Show the CPU information exclude Overflow*/
-    if (TaskNumber == 0xFFU){
+    if (TaskNumber == 0xFFU || TaskNumber == TASK_BLTFLOW){
         /*DO NOTHING*/
     }else{
-        sprintf((char *)u8TxBuffer,"TASK> %ld CPU> %d\r\n",QueneNumber,TaskNumber);
+        sprintf((char *)u8TxBuffer,"QLINE> %ld TASK> %d\r\n",QueneNumber,TaskNumber);
         UartDriver_TxWriteString(u8TxBuffer);
     }
 

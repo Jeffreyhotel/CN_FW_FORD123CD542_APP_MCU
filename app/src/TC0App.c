@@ -28,7 +28,8 @@
 #include "app/inc/StackTaskApp.h"
 #include "driver/inc/TC0Driver.h"
 
-#define CLOCK_48M_DELAY 7920U
+#define CLOCK_48M_DELAY_MS 7920U
+#define CLOCK_48M_DELAY_US 8U
 
 static long int timercount_ms = 0;
 static long int timercount_sec = 0;
@@ -37,6 +38,7 @@ static long int derating_timer_sec =0;
 static long int batteryprotect_timer_sec =0;
 uint8_t FLAG_DERATINGCNT_START = FALSE;
 uint8_t FLAG_BATTERYPROT_START = FALSE;
+uint8_t FLAG_STARTTOWORK_START = FALSE;
 
 static void TC0APP_TC0_Task_1000msec(void)
 {
@@ -44,9 +46,14 @@ static void TC0APP_TC0_Task_1000msec(void)
     StackTaskApp_MissionPush(TASK_MONITOR);
 }
 
-static void TC0APP_TC0_Task_150msec(void)
+static void TC0APP_TC0_Task_15msec(void)
 {
     StackTaskApp_MissionPush(TASK_BLTFLOW);
+}
+
+static void TC0APP_TC0_Task_20msec(void)
+{
+    StackTaskApp_MissionPush(TASK_DIMMING);
 }
 
 static void TC0App_Callback_InterruptHandler(void)
@@ -55,10 +62,18 @@ static void TC0App_Callback_InterruptHandler(void)
     timercount_ms = timercount_ms+1;
     cpu_timer_ms = cpu_timer_ms+1;
 
-    if ((timercount_ms % 150) ==0)
+    if(FLAG_STARTTOWORK_START == TRUE)
     {
-        TC0APP_TC0_Task_150msec();
-    }else{/*Do Nothing*/}
+        if ((timercount_ms % 15) ==0)
+        {
+            TC0APP_TC0_Task_15msec();
+        }else{/*Do Nothing*/}
+
+        if ((timercount_ms % 20) ==0)
+        {
+            TC0APP_TC0_Task_20msec();
+        }else{/*Do Nothing*/}
+    }
 
     if((timercount_ms % 1000) == 0)
     {
@@ -83,6 +98,11 @@ void TC0App_DerateCntStartSet(uint8_t SetValue)
 void TC0App_BatteryCntStartSet(uint8_t SetValue)
 {
     FLAG_BATTERYPROT_START = SetValue;
+}
+
+void TC0App_NormalWorkStartSet(uint8_t SetValue)
+{
+    FLAG_STARTTOWORK_START = SetValue;
 }
 
 void TC0App_Initial(void)
@@ -178,7 +198,22 @@ uint8_t TC0App_DelayMS(uint16_t delay)
     uint16_t count2;
     for(count2= 0 ; count2< delay ; count2++)
     {
-        for(count = 0 ; count < CLOCK_48M_DELAY ; count ++)
+        for(count = 0 ; count < CLOCK_48M_DELAY_MS ; count ++)
+        {
+            // __asm("nop");
+            __NOP();
+        }
+    }
+    return NOTHING;
+}
+
+uint8_t TC0App_DelayUS(uint16_t delay)
+{
+    uint16_t count;
+    uint16_t count2;
+    for(count2= 0 ; count2< delay ; count2++)
+    {
+        for(count = 0 ; count < CLOCK_48M_DELAY_US ; count ++)
         {
             // __asm("nop");
             __NOP();

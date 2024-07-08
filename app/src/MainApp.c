@@ -25,6 +25,7 @@
 #include "app/inc/TC0App.h"
 #include "app/inc/StackTaskApp.h"
 #include "app/inc/RegisterApp.h"
+#include "app/inc/BacklightApp.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/I2C1MDriver.h"
@@ -66,14 +67,14 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     /* Configure and enable the UART peripheral */
     UartDriver_Initial();
     TC0App_Initial();
-    PwmDriver_Initial();
     if(I2C1MDriver_Initialize() == false)
     {
         UartDriver_TxWriteString((uint8_t *)"I2C M driver init fail\r\n");
     }
     RegisterApp_ALL_Initial();
     RegisterApp_DHU_Setup(CMD_DISP_STATUS,0U,0xF3);
-
+    StackTaskApp_Global_MissionInitial();
+    BacklightApp_Initial();
     /* Enable global interrupts */
     __enable_irq();
 
@@ -92,8 +93,8 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
 static uint8_t MainApp_PreNormal_Mode(uint8_t u8Nothing)
 {
     /*ADC initial*/
+    TC0App_NormalWorkStartSet(TRUE);
     AdcDriver_Initial(ADC_SAR0_TYPE, ADC_SAR0_CONFIG);
-    PwmDriver_DutySet(30U);
     /*Do LCD Power On Sequence*/
     sprintf((char *)u8TxBuffer,"PRENORMAL FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);

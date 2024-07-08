@@ -3,8 +3,7 @@
 
 #include "main.h"
 
-#define PWM_PERIOD  19799U
-#define PWM_UNIT    (PWM_PERIOD+1)/100
+#define PWM_PERIOD  20459U
 
 void PwmDriver_Initial(void);
 void PwmDriver_Start(void);
