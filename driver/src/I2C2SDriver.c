@@ -48,15 +48,11 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include <stdint.h>
-#include <stddef.h>                     // Defines NULL
-#include <stdbool.h>                    // Defines true
 #include "driver/inc/I2C2SDriver.h"
+#include "app/inc/RegisterApp.h"
 
-#define SL_RD_BUFFER_SIZE 2048U
-#define SL_WR_BUFFER_SIZE 80U 
-uint8_t i2cReadBuffer [SL_RD_BUFFER_SIZE] = {0};
-uint8_t i2cWriteBuffer[SL_WR_BUFFER_SIZE] = {0};
+
+
 
 cy_stc_scb_i2c_context_t SCB_I2C2S_IRQ_context;
 
@@ -66,55 +62,48 @@ const cy_stc_sysint_t SCB_I2C2S_IRQ_config = {
         .intrPriority = 2u
 };
 
-static void SlaveCallback(uint32_t event)
-{
-    switch (event)
-    {
-        case CY_SCB_I2C_SLAVE_READ_EVENT:
-          /* Nothing */
-        break;
-
-        case CY_SCB_I2C_SLAVE_WRITE_EVENT:
-          /* Nothing */
-        break;
-
-        case CY_SCB_I2C_SLAVE_RD_IN_FIFO_EVENT:
-          /* Nothing */
-        break;
-
-        case CY_SCB_I2C_SLAVE_RD_BUF_EMPTY_EVENT:
-          /* Nothing */
-        break;
-
-        case CY_SCB_I2C_SLAVE_ERR_EVENT:
-          /* Nothing */
-        break;
-
-        /* Receive data complete */
-        case CY_SCB_I2C_SLAVE_WR_CMPLT_EVENT:
-        break;
-
-        /* Transmit data complete */
-        case CY_SCB_I2C_SLAVE_RD_CMPLT_EVENT:
-        break;
-
-        case CY_SCB_I2C_MASTER_WR_IN_FIFO_EVENT:
-        break;
-
-        default:
-        break;
-    }
-}
-
-void I2C2SDriver_InterruptHandler(void)
+static void I2C2SDriver_InterruptHandler(void)
 {
     /* ISR implementation for I2C */
     Cy_SCB_I2C_SlaveInterrupt(SCB_I2C2S_HW, &SCB_I2C2S_IRQ_context);
 }
 
-void I2C2SDriver_Initial(void)
+uint32_t I2C2SDriver_GetTxCount(void)
 {
-    uint8_t result = 0U;
+    return Cy_SCB_I2C_SlaveGetWriteTransferCount(SCB_I2C2S_HW,&SCB_I2C2S_IRQ_context);
+}
+
+void I2C2SDriver_ConfigRxBuff(uint8_t ReadBuffer[])
+{
+    /* Configure read buffer */
+    Cy_SCB_I2C_SlaveConfigReadBuf(SCB_I2C2S_HW, ReadBuffer,
+                                    SL_RD_BUFFER_SIZE, &SCB_I2C2S_IRQ_context);
+}
+
+void I2C2SDriver_ConfigTxBuff(uint8_t WriteBuffer[])
+{
+    /* Configure write buffer */
+    Cy_SCB_I2C_SlaveConfigWriteBuf(SCB_I2C2S_HW, WriteBuffer,
+                                    SL_WR_BUFFER_SIZE, &SCB_I2C2S_IRQ_context);
+}
+
+void I2C2SDriver_RegisterCallback(cy_cb_scb_i2c_handle_events_t callback)
+{
+    /* Register Callback function for interrupt */
+    Cy_SCB_I2C_RegisterEventCallback(SCB_I2C2S_HW,callback,&SCB_I2C2S_IRQ_context);
+}
+
+void I2C2SDriver_Enable(void)
+{
+    /*  Enable interrupt and I2C block */
+    NVIC_EnableIRQ((IRQn_Type) SCB_I2C2S_IRQ_config.intrSrc);
+    Cy_SCB_I2C_Enable(SCB_I2C2S_HW, &SCB_I2C2S_IRQ_context);
+}
+
+bool I2C2SDriver_Initial(void)
+{
+    bool bresult = true;
+    cy_rslt_t result;
     /* Initialize and enable I2C Component in slave mode.
      * If initialization fails process error
      */
@@ -122,22 +111,23 @@ void I2C2SDriver_Initial(void)
                             &SCB_I2C2S_IRQ_context);
     if(result != CY_SCB_I2C_SUCCESS)
     {
-        CY_ASSERT(0);
+        bresult = false;
     }
 
     result = Cy_SysInt_Init(&SCB_I2C2S_IRQ_config, &I2C2SDriver_InterruptHandler);
     if(result != CY_SYSINT_SUCCESS)
     {
-        CY_ASSERT(0);
+        bresult = false;
     }
 
+#if 0
     /* Configure read buffer */
     Cy_SCB_I2C_SlaveConfigReadBuf(SCB_I2C2S_HW, i2cReadBuffer,
-                                  SL_RD_BUFFER_SIZE, &SCB_I2C2S_IRQ_context);
+                                    SL_RD_BUFFER_SIZE, &SCB_I2C2S_IRQ_context);
 
     /* Configure write buffer */
     Cy_SCB_I2C_SlaveConfigWriteBuf(SCB_I2C2S_HW, i2cWriteBuffer,
-                                   SL_WR_BUFFER_SIZE, &SCB_I2C2S_IRQ_context);
+                                    SL_WR_BUFFER_SIZE, &SCB_I2C2S_IRQ_context);
 
     /* Register Callback function for interrupt */
     Cy_SCB_I2C_RegisterEventCallback(SCB_I2C2S_HW,
@@ -146,6 +136,10 @@ void I2C2SDriver_Initial(void)
 
     /*  Enable interrupt and I2C block */
     NVIC_EnableIRQ((IRQn_Type) SCB_I2C2S_IRQ_config.intrSrc);
+    Cy_SCB_I2C_Enable(SCB_I2C2S_HW, &SCB_I2C2S_IRQ_context);
+#endif
+
+    return bresult;
 }
 
 /* *****************************************************************************

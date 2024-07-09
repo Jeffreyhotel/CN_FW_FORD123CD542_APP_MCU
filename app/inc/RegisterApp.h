@@ -6,6 +6,10 @@
 #define RegisterMaxSize 80U
 #define WritePageSize 2053U
 
+/* Command Format*/
+#define SUB_ADDR_POS  0x00U
+#define CMD_DATA_POS  0x01U
+
 /* Define DHU Command Number*/
 #define CMD_DISP_STATUS 0x00U
 #define CMD_DISP_ID 0x01U

@@ -26,10 +26,10 @@
 #include "app/inc/StackTaskApp.h"
 #include "app/inc/RegisterApp.h"
 #include "app/inc/BacklightApp.h"
+#include "app/inc/I2C2SlaveApp.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/I2C1MDriver.h"
-#include "driver/inc/I2C2SDriver.h"
 #include "driver/inc/PwmDriver.h"
 
 #define CY_ASSERT_FAILED          (0u)
@@ -72,15 +72,14 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     {
         UartDriver_TxWriteString((uint8_t *)"I2C M driver init fail\r\n");
     }
-    I2C2SDriver_Initial();
     RegisterApp_ALL_Initial();
-    RegisterApp_DHU_Setup(CMD_DISP_STATUS,0U,0xF3);
+    RegisterApp_DHU_Setup(CMD_DISP_STATUS,1U,0xF3);
+    I2C2SlaveApp_Initial();
     StackTaskApp_Global_MissionInitial();
     BacklightApp_Initial();
     /* Enable global interrupts */
     __enable_irq();
-
-    // Cy_GPIO_Clr(BIAS_EN_PORT,BIAS_EN_PIN);
+    
     sprintf((char *)u8TxBuffer,"BOOT FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
     (void) u8Nothing;

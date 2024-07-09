@@ -110,62 +110,6 @@ static void BacklightApp_BrightnessAdgust(uint16_t BrightnessTarget,uint16_t Gra
     //PortDriver_PinToggle(P1V2_EN_PORT,P1V2_EN_PIN);
 }
 
-void BacklightApp_DimmingControl(void)
-{
-    uint8_t rdData[2U] = {0U};
-    uint8_t BacklightSwitch = 0U;
-    uint16_t BrightnessTarget = 0U;
-
-    /*Get DHU command and control the dimming*/
-    for (uint8_t count=0U;count<2U;count++){
-        rdData[count] = RegisterApp_DHU_Read(CMD_BL_PWM,count);
-    }
-    /*Backlight On/Off*/
-    BacklightSwitch = RegisterApp_DHU_Read(CMD_DISP_EN,0U) & 0x01U;
-    /*Dimming target*/
-    BrightnessTarget =  ((uint16_t)rdData[0U])*256U;
-    BrightnessTarget += ((uint16_t)rdData[1U])*1U;
-
-    /*Do gradual-dimming function & set threshold value*/
-    BrightnessTarget = ((BrightnessTarget > u16BrightnessUpperLimit) ? u16BrightnessUpperLimit : BrightnessTarget);
-    if(BacklightSwitch == BLT_ENABLE){
-        u16GradientValue = 0U;
-        BacklightApp_BrightnessAdgust(BrightnessTarget,0U);
-
-        /*Check if battery in protection state*/
-        if(u8BATT_PROTECT_EN == FALSE)
-        {
-            PwmDriver_Start();
-        }else{
-            PwmDriver_Stop();
-        }
-    }else if(BacklightSwitch == BLT_DISABLE){
-        /*Do gradual dimming from target to 0*/
-        if(u16GradientValue != BrightnessTarget){
-            u16GradientValue = u16GradientValue + BLT_GRADUAL_UNIT;
-            u16GradientValue = ((BrightnessTarget >= u16GradientValue) ? u16GradientValue : BrightnessTarget);
-            BacklightApp_BrightnessAdgust(BrightnessTarget,u16GradientValue);
-            //PwmDriver_Start();
-        }else{
-            //PwmDriver_Initial();
-            BacklightApp_BrightnessAdgust(BrightnessTarget,BrightnessTarget);
-            PwmDriver_Stop();
-        }
-    }else{
-        /*ERROR READ FORMAT. NEED CHECK*/
-    }
-
-    /*Report Derating alarm with one time flag*/
-    if(u8BLT_DERATING_ALARM_FLAG == TRUE)
-    {
-        u8BLT_DERATING_ALARM_FLAG = FALSE;
-        //report Derating
-        //StackTaskApp_IRQPush(0x62U);
-    }else{/*DO NOTHING*/}
-    //sprintf((char *)u8TxBuffer,"SW %d TARGET %d GRAD %d BATT_PT %d\r\n",BacklightSwitch,BrightnessTarget,u16GradientValue,u8BATT_PROTECT_EN);
-    //UartDriver_TxWriteString((uint8_t*)u8TxBuffer);
-}
-
 static uint8_t BacklightApp_Normal_Mode(uint16_t u16MATemp)
 {
 	uint8_t u8Return = BLT_NORMAL_MODE;
@@ -269,6 +213,61 @@ static uint8_t BacklightApp_Scorch_Mode(uint16_t u16MATemp)
 	return u8Return;
 }
 
+void BacklightApp_DimmingControl(void)
+{
+    uint8_t rdData[2U] = {0U};
+    uint8_t BacklightSwitch = 0U;
+    uint16_t BrightnessTarget = 0U;
+
+    /*Get DHU command and control the dimming*/
+    for (uint8_t count=0U;count<2U;count++){
+        rdData[count] = RegisterApp_DHU_Read(CMD_BL_PWM,count);
+    }
+    /*Backlight On/Off*/
+    BacklightSwitch = RegisterApp_DHU_Read(CMD_DISP_EN,CMD_DATA_POS) & 0x01U;
+    /*Dimming target*/
+    BrightnessTarget =  ((uint16_t)rdData[CMD_DATA_POS])*256U;
+    BrightnessTarget += ((uint16_t)rdData[CMD_DATA_POS+1U])*1U;
+
+    /*Do gradual-dimming function & set threshold value*/
+    BrightnessTarget = ((BrightnessTarget > u16BrightnessUpperLimit) ? u16BrightnessUpperLimit : BrightnessTarget);
+    if(BacklightSwitch == BLT_ENABLE){
+        u16GradientValue = 0U;
+        BacklightApp_BrightnessAdgust(BrightnessTarget,0U);
+
+        /*Check if battery in protection state*/
+        if(u8BATT_PROTECT_EN == FALSE)
+        {
+            PwmDriver_Start();
+        }else{
+            PwmDriver_Stop();
+        }
+    }else if(BacklightSwitch == BLT_DISABLE){
+        /*Do gradual dimming from target to 0*/
+        if(u16GradientValue != BrightnessTarget){
+            u16GradientValue = u16GradientValue + BLT_GRADUAL_UNIT;
+            u16GradientValue = ((BrightnessTarget >= u16GradientValue) ? u16GradientValue : BrightnessTarget);
+            BacklightApp_BrightnessAdgust(BrightnessTarget,u16GradientValue);
+            //PwmDriver_Start();
+        }else{
+            //PwmDriver_Initial();
+            BacklightApp_BrightnessAdgust(BrightnessTarget,BrightnessTarget);
+            PwmDriver_Stop();
+        }
+    }else{
+        /*ERROR READ FORMAT. NEED CHECK*/
+    }
+
+    /*Report Derating alarm with one time flag*/
+    if(u8BLT_DERATING_ALARM_FLAG == TRUE)
+    {
+        u8BLT_DERATING_ALARM_FLAG = FALSE;
+        //report Derating
+        //StackTaskApp_IRQPush(0x62U);
+    }else{/*DO NOTHING*/}
+    //sprintf((char *)u8TxBuffer,"SW %d TARGET %d GRAD %d BATT_PT %d\r\n",BacklightSwitch,BrightnessTarget,u16GradientValue,u8BATT_PROTECT_EN);
+    //UartDriver_TxWriteString((uint8_t*)u8TxBuffer);
+}
 
 /*SWUV Static Test Need Double Check*/
 static uint16_t BacklightApp_MAcount(uint16_t u16data[])
