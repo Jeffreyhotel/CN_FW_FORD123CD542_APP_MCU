@@ -191,7 +191,8 @@ void StackTaskApp_MissionAction(void)
             Command[0] = CMD_DISP_EN; /*Color Temp Write Only Reg*/
             Command[1] = 0x01U; /*IP Index*/
             Status = I2C1MDriver_Write(0x71U,Command,2U);
-            I2C1MDriver_Read(0x71,RxBuffer,10U);
+            Status |= I2C1MDriver_Read(0x71,RxBuffer,10U);
+            Status |= I2C1MDriver_WriteRead(0x71U,Command,2U,RxBuffer,10U);
             if(Status != ERROR_NONE)
             {
                 sprintf((char *)u8TxBuffer,"I2C M driver transmit fail >> 0x%02x\r\n",Status);

@@ -163,3 +163,73 @@ uint8_t I2C1MDriver_Write(uint16_t address, uint8_t* wrData, uint32_t wrLength)
     }
     return (status);
 }
+
+uint8_t I2C1MDriver_WriteRead(uint16_t address, uint8_t* wrData, uint32_t wrLength, uint8_t* rdData, uint32_t rdLength)
+{
+    cy_en_scb_i2c_status_t status;
+    /* Timeout 1 sec (one unit is us) */
+    uint32_t timeout = 10000UL;
+
+    /* Send Start condition, address and receive ACK/NACK response from slave */
+	status = Cy_SCB_I2C_MasterSendStart(I2C1M_MCU_HW, address, CY_SCB_I2C_WRITE_XFER, timeout, &I2C1M_MCU_context);
+	if (CY_SCB_I2C_SUCCESS == status)
+	{
+        for (uint32_t i = 0 ; i < wrLength ; i ++)
+		{
+			  status = Cy_SCB_I2C_MasterWriteByte(I2C1M_MCU_HW, wrData[i], timeout, &I2C1M_MCU_context);
+			  if (status != CY_SCB_I2C_SUCCESS)
+			  	  {break;}
+			  else
+				  {continue;}
+		}
+        if(status == CY_SCB_I2C_SUCCESS)
+        {
+            /*Send restart bit*/
+            Cy_SCB_I2C_MasterSendReStart(I2C1M_MCU_HW,
+                                        address,
+                                        CY_SCB_I2C_READ_XFER,
+                                        timeout,
+                                        &I2C1M_MCU_context);
+            /*Read data & send NAK*/
+            uint32_t cnt = 0UL;
+            cy_en_scb_i2c_command_t cmd = CY_SCB_I2C_ACK;
+            while ((status == CY_SCB_I2C_SUCCESS) && (cnt < rdLength))
+            {
+                /* code */
+                if (cnt == (rdLength - 1UL))
+                {
+                    /* The last byte must be NACKed */
+                    cmd = CY_SCB_I2C_NAK;
+                }
+                /* Read byte and generate ACK / or prepare for NACK */
+                status = Cy_SCB_I2C_MasterReadByte(I2C1M_MCU_HW, cmd, &rdData[cnt], timeout, &I2C1M_MCU_context);
+                ++cnt;
+            }
+
+            /* Send Stop condition on the bus */
+            /* Check status of transaction */
+            if ((status == CY_SCB_I2C_SUCCESS)           ||
+                (status == CY_SCB_I2C_MASTER_MANUAL_NAK) ||
+                (status == CY_SCB_I2C_MASTER_MANUAL_ADDR_NAK))
+            {
+                /* Send Stop condition on the bus */
+                status = Cy_SCB_I2C_MasterSendStop(I2C1M_MCU_HW, timeout, &I2C1M_MCU_context);
+            }
+            else
+            {
+                /* Other statuses do not require any actions.
+                * The received data should dropped.
+                */
+            }
+        }
+        else
+        {
+            /* do not requite any actions*/
+        }
+    }
+    else
+    {
+        /* do not requite any actions*/
+    }
+    return (status);
+}

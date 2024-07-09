@@ -41,11 +41,9 @@
                             CY_SCB_I2C_MASTER_BUS_ERR)
 
 bool I2C1MDriver_Initialize(void);
-//void I2CMDriver_Stop(uint8_t COMPort);
 uint8_t I2C1MDriver_Read(uint16_t address, uint8_t* rdData, uint32_t rdLength);
 uint8_t I2C1MDriver_Write(uint16_t address, uint8_t* wrData, uint32_t wrLength);
-//uint8_t I2C4MDriver_WriteRead(uint8_t COMPort, uint16_t address, uint8_t* wrData, uint32_t wrLength, uint8_t* rdData, uint32_t rdLength);
-//bool I2CMDriver_IsBusy(uint8_t COMPort);
+uint8_t I2C1MDriver_WriteRead(uint16_t address, uint8_t* wrData, uint32_t wrLength, uint8_t* rdData, uint32_t rdLength);
 
 #endif /* _EXAMPLE_FILE_NAME_H */
 /* *****************************************************************************
