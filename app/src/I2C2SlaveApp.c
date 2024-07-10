@@ -2,8 +2,75 @@
 #include "I2C2SDriver.h"
 #include "app/inc/RegisterApp.h"
 
+#define DHU_CMD_TOTAL_NUM    19U
+#define DHU_WRITE_APPROVED_CMD_NUM    10U
+#define LENGTH_ZERO 0U
+#define ADDR_CMD_NUM    256U
+
 uint8_t i2cReadBuffer [SL_RD_BUFFER_SIZE] = {0};
 uint8_t i2cWriteBuffer[SL_WR_BUFFER_SIZE] = {0};
+uint8_t TxCmdAddrPassPool[DHU_CMD_TOTAL_NUM] = {
+                                CMD_DISP_STATUS,CMD_DISP_ID,CMD_BL_PWM,CMD_DISP_UD,CMD_DISP_EN,
+                                CMD_DISP_SHUTD,CMD_ISR_STATUS,CMD_CORE_ASMB,CMD_DELIVER_ASMB,CMD_SW_FPN,
+                                CMD_SN,CMD_MC_FPN,CMD_DTC,CMD_AB_SWITCH,CMD_ERASE,
+                                CMD_TRANSFER,CMD_CRC,CMD_RESET,CMD_STATUS_CHECK};
+uint8_t TxCmdWritePassPool[DHU_WRITE_APPROVED_CMD_NUM] = {
+                                CMD_BL_PWM,CMD_DISP_UD,CMD_DISP_EN,CMD_DISP_SHUTD,CMD_AB_SWITCH,
+                                CMD_ERASE,CMD_TRANSFER,CMD_CRC,CMD_RESET,CMD_STATUS_CHECK};
+uint32_t CmdSizePool[ADDR_CMD_NUM] = {0};
+
+static void I2CSlaveApp_CmdSizeInitial(void)
+{
+    CmdSizePool[CMD_DISP_STATUS]    = 4U;
+    CmdSizePool[CMD_DISP_ID]        = 3U;
+    CmdSizePool[CMD_BL_PWM]         = 3U;
+    CmdSizePool[CMD_DISP_UD]        = 2U;
+    CmdSizePool[CMD_DISP_EN]        = 2U;
+    CmdSizePool[CMD_DISP_SHUTD]     = 2U;
+    CmdSizePool[CMD_ISR_STATUS]     = 2U;
+    CmdSizePool[CMD_CORE_ASMB]      = 26U;
+    CmdSizePool[CMD_DELIVER_ASMB]   = 26U;
+    CmdSizePool[CMD_SW_FPN]         = 26U;
+    CmdSizePool[CMD_SN]             = 26U;
+    CmdSizePool[CMD_DTC]            = 4U;
+}
+
+static uint32_t I2CSlaveApp_GetCmdSize(uint8_t subaddr)
+{
+    return CmdSizePool[subaddr];
+}
+
+static bool I2CSlaveApp_SubAddrPassCheck(uint8_t subaddr)
+{
+    bool bresult = false;
+    for (uint32_t cnt = 0U; cnt<DHU_CMD_TOTAL_NUM; cnt++)
+    {
+        if (TxCmdAddrPassPool[cnt] == subaddr)
+        {
+            bresult = true;
+            break;
+        }else{
+            /* Do nothing*/
+        }
+    }
+    return bresult;
+}
+
+static bool I2CSlaveApp_SubAddrWritePassCheck(uint8_t subaddr)
+{
+    bool bresult = false;
+    for (uint32_t cnt = 0U; cnt<DHU_WRITE_APPROVED_CMD_NUM; cnt++)
+    {
+        if (TxCmdWritePassPool[cnt] == subaddr)
+        {
+            bresult = true;
+            break;
+        }else{
+            /* Do nothing*/
+        }
+    }
+    return bresult;
+}
 
 uint8_t flag_i2c2s = 1U;
 static void SlaveCallback(uint32_t event)
@@ -40,21 +107,42 @@ static void SlaveCallback(uint32_t event)
             uint32_t index = 0U;
             uint32_t length = 0U;
             length = I2C2SDriver_GetTxCount();
-            if(length > 1)
+            /* Check command with subaddr*/
+            if(length > LENGTH_ZERO)
             {
-                /* Need to check sub addr is correct*/
-                for(index = 0U;index<(length);index++)
+                uint8_t u8SubAddr = i2cWriteBuffer[SUB_ADDR_POS];
+                /* Check command sub addr is correct or not*/
+                if (I2CSlaveApp_SubAddrPassCheck(u8SubAddr) == false)
                 {
-                    RegisterApp_DHU_Setup(i2cWriteBuffer[SUB_ADDR_POS],index,i2cWriteBuffer[index]);
+                    /* Clean Buffer and Return Echo*/
+                    memset(i2cReadBuffer,0xFFU,SL_RD_BUFFER_SIZE);
+                    i2cReadBuffer[SUB_ADDR_POS] = u8SubAddr;
+                }else{
+                    /* Check the command is Write Available*/
+                    if (I2CSlaveApp_SubAddrWritePassCheck(u8SubAddr) == true)
+                    {
+                        /* Update DHU Command if Write available */
+                        for(index = 0U;index<I2CSlaveApp_GetCmdSize(u8SubAddr);index++)
+                        {
+                            RegisterApp_DHU_Setup(u8SubAddr,index,i2cWriteBuffer[index]);
+                        }
+                    }else{
+                        /* Do nothing if command belong to read only*/
+                    }
+                    /* DHU command data update to Rx buffer*/
+                    uint32_t CmdSize = I2CSlaveApp_GetCmdSize(u8SubAddr);
+                    CmdSize = (CmdSize > SL_RD_BUFFER_SIZE) ? SL_RD_BUFFER_SIZE : CmdSize;
+                    memset(i2cReadBuffer,0xFFU,SL_RD_BUFFER_SIZE);
+                    for(index = 0U;index<CmdSize;index++)
+                    {
+                        i2cReadBuffer[index] = RegisterApp_DHU_Read(u8SubAddr,index);
+                    }
                 }
+            }else{
+                /* Clean Buffer Return Default High (0xFF)*/
                 memset(i2cReadBuffer,0xFFU,SL_RD_BUFFER_SIZE);
-                /* Need to check the command id*/
-                for(index = 0U;index<SL_RD_BUFFER_SIZE;index++)
-                {
-                    i2cReadBuffer[index] = RegisterApp_DHU_Read(i2cWriteBuffer[SUB_ADDR_POS],index);
-                }
             }
-            i2cReadBuffer[SUB_ADDR_POS] = i2cWriteBuffer[SUB_ADDR_POS];
+            /* Clean Tx Buffer after finish event*/
             memset(i2cWriteBuffer,0xFFU,SL_WR_BUFFER_SIZE);
             /* Configure write & read buffer */
             I2C2SDriver_ConfigRxBuff(i2cReadBuffer);
@@ -88,6 +176,6 @@ bool I2C2SlaveApp_Initial(void)
     }else{
         /* Do nothing*/
     }
-
+    I2CSlaveApp_CmdSizeInitial();
     return bresult;
 }

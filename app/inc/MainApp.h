@@ -1,7 +1,6 @@
-/* ************************************************************************** */
-#ifndef MAINAPP_H    /* Guard against multiple inclusion */
+#ifndef MAINAPP_H
 #define MAINAPP_H
-/* ************************************************************************** */
+
 #define STATE_BOOT          0x00U
 #define STATE_PRENORMAL     0x01U
 #define STATE_HANDSHAKE     0x02U
