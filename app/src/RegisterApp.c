@@ -56,30 +56,54 @@ void RegisterApp_Initial(Register* pRegisterContainer)
 {
     uint16_t counter = 0x0000U;
     uint8_t address = 0U;
-    for(counter =0x0000U;counter<0x0050U;counter++){
+    for(counter =0x0000U;counter<RegisterMaxSize;counter++){
         address = (uint8_t) counter;
-        pRegisterContainer->DHU_0X00_DISP_STATUS[address] = 0x00U;
-        pRegisterContainer->DHU_0X01_DISP_ID[address] = 0x00U;
-        pRegisterContainer->DHU_0X02_BL_PWM[address] = 0x00U;
-        pRegisterContainer->DHU_0X03_DISP_UD[address] = 0x00U;
-        pRegisterContainer->DHU_0X04_DISP_EN[address] = 0x00U;
-        pRegisterContainer->DHU_0X05_DISP_SHUTD[address] = 0x00U;
-        pRegisterContainer->DHU_0X30_ISR_STATUS[address] = 0x00U;
-        pRegisterContainer->DHU_0X31_CORE_ASMB[address] = 0x00U;
-        pRegisterContainer->DHU_0X32_DELIVER_ASMB[address] = 0x00U;
-        pRegisterContainer->DHU_0X33_SW_FPN[address] = 0x00U;
-        pRegisterContainer->DHU_0X34_SN[address] = 0x00U;
-        pRegisterContainer->DHU_0X35_MC_FPN[address] = 0x00U;
-        pRegisterContainer->DHU_0XA3_DTC[address] = 0x00U;
+        if(address == 0x0000U)
+        {
+            pRegisterContainer->DHU_0X00_DISP_STATUS[address]   = CMD_DISP_STATUS;
+            pRegisterContainer->DHU_0X01_DISP_ID[address]       = CMD_DISP_ID;
+            pRegisterContainer->DHU_0X02_BL_PWM[address]        = CMD_BL_PWM;
+            pRegisterContainer->DHU_0X03_DISP_UD[address]       = CMD_DISP_UD;
+            pRegisterContainer->DHU_0X04_DISP_EN[address]       = CMD_DISP_EN;
+            pRegisterContainer->DHU_0X05_DISP_SHUTD[address]    = CMD_DISP_SHUTD;
+            pRegisterContainer->DHU_0X30_ISR_STATUS[address]    = CMD_ISR_STATUS;
+            pRegisterContainer->DHU_0X31_CORE_ASMB[address]     = CMD_CORE_ASMB;
+            pRegisterContainer->DHU_0X32_DELIVER_ASMB[address]  = CMD_DELIVER_ASMB;
+            pRegisterContainer->DHU_0X33_SW_FPN[address]        = CMD_SW_FPN;
+            pRegisterContainer->DHU_0X34_SN[address]            = CMD_SN;
+            pRegisterContainer->DHU_0X35_MC_FPN[address]        = CMD_MC_FPN;
+            pRegisterContainer->DHU_0XA3_DTC[address]           = CMD_DTC;
 
-        pRegisterContainer->DHU_0XC0_AB_SWITCH[address] = 0x00U;
-        pRegisterContainer->DHU_0XC1_ERASE[address] = 0x00U;
-        pRegisterContainer->DHU_0XC2_TRANSFER[address] = 0x00U;
-        pRegisterContainer->DHU_0XC3_CRC[address] = 0x00U;
-        pRegisterContainer->DHU_0XC4_RESET[address] = 0x00U;
-        pRegisterContainer->DHU_0XD0_STATUS_CHECK[address] = 0x00U;
+            pRegisterContainer->DHU_0XC0_AB_SWITCH[address]     = CMD_AB_SWITCH;
+            pRegisterContainer->DHU_0XC1_ERASE[address]         = CMD_ERASE;
+            pRegisterContainer->DHU_0XC2_TRANSFER[address]      = CMD_TRANSFER;
+            pRegisterContainer->DHU_0XC3_CRC[address]           = CMD_CRC;
+            pRegisterContainer->DHU_0XC4_RESET[address]         = CMD_RESET;
+            pRegisterContainer->DHU_0XD0_STATUS_CHECK[address]  = CMD_STATUS_CHECK;
+        }else{
+            pRegisterContainer->DHU_0X00_DISP_STATUS[address] = 0x00U;
+            pRegisterContainer->DHU_0X01_DISP_ID[address] = 0x00U;
+            pRegisterContainer->DHU_0X02_BL_PWM[address] = 0x00U;
+            pRegisterContainer->DHU_0X03_DISP_UD[address] = 0x00U;
+            pRegisterContainer->DHU_0X04_DISP_EN[address] = 0x00U;
+            pRegisterContainer->DHU_0X05_DISP_SHUTD[address] = 0x00U;
+            pRegisterContainer->DHU_0X30_ISR_STATUS[address] = 0x00U;
+            pRegisterContainer->DHU_0X31_CORE_ASMB[address] = 0x00U;
+            pRegisterContainer->DHU_0X32_DELIVER_ASMB[address] = 0x00U;
+            pRegisterContainer->DHU_0X33_SW_FPN[address] = 0x00U;
+            pRegisterContainer->DHU_0X34_SN[address] = 0x00U;
+            pRegisterContainer->DHU_0X35_MC_FPN[address] = 0x00U;
+            pRegisterContainer->DHU_0XA3_DTC[address] = 0x00U;
+
+            pRegisterContainer->DHU_0XC0_AB_SWITCH[address] = 0x00U;
+            pRegisterContainer->DHU_0XC1_ERASE[address] = 0x00U;
+            pRegisterContainer->DHU_0XC2_TRANSFER[address] = 0x00U;
+            pRegisterContainer->DHU_0XC3_CRC[address] = 0x00U;
+            pRegisterContainer->DHU_0XC4_RESET[address] = 0x00U;
+            pRegisterContainer->DHU_0XD0_STATUS_CHECK[address] = 0x00U;
+        }
     }
-    for(counter =0x0000U;counter<0x0805U;counter++){
+    for(counter =0x0001U;counter<WritePageSize;counter++){
         pRegisterContainer->DHU_0XC2_TRANSFER[counter]        =   0x00U;
     }
     (void)address;
