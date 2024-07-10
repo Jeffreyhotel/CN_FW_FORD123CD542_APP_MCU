@@ -115,13 +115,14 @@ static void SlaveCallback(uint32_t event)
                 /* Check command sub addr is correct or not*/
                 if (I2CSlaveApp_SubAddrPassCheck(u8SubAddr) == false)
                 {
-                    /* Clean Buffer and Return Echo*/
+                    /* Clean Buffer and Return Echo (IFS-MMI2C-SR-REQ-140565)*/
                     memset(i2cReadBuffer,0xFFU,SL_RD_BUFFER_SIZE);
                     i2cReadBuffer[SUB_ADDR_POS] = u8SubAddr;
                 }else{
-                    /* Check the command is Write Available*/
+                    /* Check the command is Write Available (IFS-MMI2C-SR-REQ-197857)*/
                     if (I2CSlaveApp_SubAddrWritePassCheck(u8SubAddr) == true)
                     {
+                        /* Check the write length is overflow/underflow or not (IFS-MMI2C-SR-REQ-140570/IFS-MMI2C-SR-REQ-140569)*/
                         if(length == I2CSlaveApp_GetCmdSize(u8SubAddr))
                         {
                             /* Update DHU Command if Write available */
@@ -135,7 +136,7 @@ static void SlaveCallback(uint32_t event)
                     }else{
                         /* Do nothing if command belong to read only*/
                     }
-                    /* DHU command data update to Rx buffer*/
+                    /* DHU command data update to Rx buffer (IFS-MMI2C-SR-REQ-197875)*/
                     uint32_t CmdSize = I2CSlaveApp_GetCmdSize(u8SubAddr);
                     CmdSize = (CmdSize > SL_RD_BUFFER_SIZE) ? SL_RD_BUFFER_SIZE : CmdSize;
                     memset(i2cReadBuffer,0xFFU,SL_RD_BUFFER_SIZE);

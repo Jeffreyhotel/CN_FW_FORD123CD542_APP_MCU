@@ -226,8 +226,8 @@ void BacklightApp_DimmingControl(void)
     /*Backlight On/Off*/
     BacklightSwitch = RegisterApp_DHU_Read(CMD_DISP_EN,CMD_DATA_POS) & 0x01U;
     /*Dimming target*/
-    BrightnessTarget =  ((uint16_t)rdData[CMD_DATA_POS])*256U;
-    BrightnessTarget += ((uint16_t)rdData[CMD_DATA_POS+1U])*1U;
+    BrightnessTarget =  ((uint16_t)rdData[CMD_DATA_POS+1U])*256U;
+    BrightnessTarget += ((uint16_t)rdData[CMD_DATA_POS])*1U;
 
     /*Do gradual-dimming function & set threshold value*/
     BrightnessTarget = ((BrightnessTarget > u16BrightnessUpperLimit) ? u16BrightnessUpperLimit : BrightnessTarget);

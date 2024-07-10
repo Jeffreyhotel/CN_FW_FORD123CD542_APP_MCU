@@ -205,13 +205,13 @@ void StackTaskApp_MissionAction(void)
             if(test_flag == TRUE)
             {
                 test_flag = FALSE;
-                RegisterApp_DHU_Setup(CMD_BL_PWM,CMD_DATA_POS,0x03U);
-                RegisterApp_DHU_Setup(CMD_BL_PWM,CMD_DATA_POS+1U,0xFFU);
+                RegisterApp_DHU_Setup(CMD_BL_PWM,CMD_DATA_POS,0xFFU);
+                RegisterApp_DHU_Setup(CMD_BL_PWM,CMD_DATA_POS+1U,0x03U);
                 //RegisterApp_DHU_Setup(CMD_DISP_EN,0U,1U);
             }else{
                 test_flag = TRUE;
                 RegisterApp_DHU_Setup(CMD_BL_PWM,CMD_DATA_POS,0x00U);
-                RegisterApp_DHU_Setup(CMD_BL_PWM,CMD_DATA_POS+1U,0x01U);
+                RegisterApp_DHU_Setup(CMD_BL_PWM,CMD_DATA_POS+1U,0x00U);
                 if(test_flag2 == TRUE){
                     test_flag2 = FALSE;
                     //RegisterApp_DHU_Setup(CMD_DISP_EN,0U,0U);
