@@ -5,6 +5,7 @@
 #define DHU_CMD_TOTAL_NUM    19U
 #define DHU_WRITE_APPROVED_CMD_NUM    10U
 #define LENGTH_ZERO 0U
+#define LENGTH_ONE  1U
 #define ADDR_CMD_NUM    256U
 
 uint8_t i2cReadBuffer [SL_RD_BUFFER_SIZE] = {0};
@@ -121,10 +122,15 @@ static void SlaveCallback(uint32_t event)
                     /* Check the command is Write Available*/
                     if (I2CSlaveApp_SubAddrWritePassCheck(u8SubAddr) == true)
                     {
-                        /* Update DHU Command if Write available */
-                        for(index = 0U;index<I2CSlaveApp_GetCmdSize(u8SubAddr);index++)
+                        if(length == I2CSlaveApp_GetCmdSize(u8SubAddr))
                         {
-                            RegisterApp_DHU_Setup(u8SubAddr,index,i2cWriteBuffer[index]);
+                            /* Update DHU Command if Write available */
+                            for(index = 0U;index<I2CSlaveApp_GetCmdSize(u8SubAddr);index++)
+                            {
+                                RegisterApp_DHU_Setup(u8SubAddr,index,i2cWriteBuffer[index]);
+                            }
+                        }else{
+                            /* Ignore data write if command length is wrong*/
                         }
                     }else{
                         /* Do nothing if command belong to read only*/

@@ -186,6 +186,8 @@ void StackTaskApp_MissionAction(void)
             sprintf((char *)u8TxBuffer,"ADC0 = 0x%04x\r\n",adc0_value);
             UartDriver_TxWriteString(u8TxBuffer);
             uint8_t Command[2] = {0x00U};
+            uint8_t Command2[3] = {CMD_DISP_EN,0x02,0x03};
+            uint8_t Command3[1] = {CMD_BL_PWM};
             uint8_t RxBuffer[10] = {0U};
             uint8_t Status = ERROR_NONE;
             Command[0] = CMD_DISP_EN; /*Color Temp Write Only Reg*/
@@ -193,6 +195,8 @@ void StackTaskApp_MissionAction(void)
             Status = I2C1MDriver_Write(0x71U,Command,2U);
             Status |= I2C1MDriver_Read(0x71,RxBuffer,10U);
             Status |= I2C1MDriver_WriteRead(0x71U,Command,2U,RxBuffer,10U);
+            Status |= I2C1MDriver_WriteRead(0x71U,Command2,3U,RxBuffer,10U);
+            Status |= I2C1MDriver_WriteRead(0x71U,Command3,1U,RxBuffer,10U);
             if(Status != ERROR_NONE)
             {
                 sprintf((char *)u8TxBuffer,"I2C M driver transmit fail >> 0x%02x\r\n",Status);
