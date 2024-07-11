@@ -26,6 +26,7 @@
 #include "app/inc/RegisterApp.h"
 #include "app/inc/TC0App.h"
 #include "app/inc/INTBApp.h"
+#include "app/inc/DiagApp.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/I2C1MDriver.h"
@@ -188,7 +189,8 @@ void StackTaskApp_MissionAction(void)
             UartDriver_TxWriteString(u8TxBuffer);
             uint8_t Command[2] = {0x00U};
             uint8_t Command2[3] = {CMD_DISP_EN,0x02,0x03};
-            uint8_t Command3[1] = {CMD_BL_PWM};
+            uint8_t Command3[1] = {CMD_DISP_STATUS};
+            uint8_t Command4[1] = {CMD_ISR_STATUS};
             uint8_t RxBuffer[10] = {0U};
             uint8_t Status = ERROR_NONE;
             Command[0] = CMD_DISP_EN; /*Color Temp Write Only Reg*/
@@ -196,8 +198,10 @@ void StackTaskApp_MissionAction(void)
             Status = I2C1MDriver_Write(0x71U,Command,2U);
             Status |= I2C1MDriver_Read(0x71,RxBuffer,10U);
             Status |= I2C1MDriver_WriteRead(0x71U,Command,2U,RxBuffer,10U);
+            Status |= I2C1MDriver_WriteRead(0x71U,Command4,1U,RxBuffer,2U);
             Status |= I2C1MDriver_WriteRead(0x71U,Command2,3U,RxBuffer,10U);
-            Status |= I2C1MDriver_WriteRead(0x71U,Command3,1U,RxBuffer,10U);
+            Status |= I2C1MDriver_WriteRead(0x71U,Command3,1U,RxBuffer,3U);
+            Status |= I2C1MDriver_WriteRead(0x71U,Command4,1U,RxBuffer,2U);
             if(Status != ERROR_NONE)
             {
                 sprintf((char *)u8TxBuffer,"I2C M driver transmit fail >> 0x%02x\r\n",Status);
@@ -221,7 +225,7 @@ void StackTaskApp_MissionAction(void)
                     //RegisterApp_DHU_Setup(CMD_DISP_EN,0U,1U);
                 }
             }
-            INTBApp_PullErrorSetOrClear(INTB_ERROR_SET);
+            INTBApp_PullReqSetOrClear(INTB_REQ_SET);
         break;
 
         case TASK_MONITOR:
@@ -231,6 +235,7 @@ void StackTaskApp_MissionAction(void)
 
         case TASK_BLTFLOW:
             BacklightApp_DeratingFlow();
+            DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_TERR_MASK);
         break;
 
         case TASK_DIMMING:

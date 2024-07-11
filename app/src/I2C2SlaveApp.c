@@ -1,6 +1,7 @@
 #include "I2C2SlaveApp.h"
 #include "I2C2SDriver.h"
 #include "app/inc/RegisterApp.h"
+#include "app/inc/INTBApp.h"
 
 #define DHU_CMD_TOTAL_NUM    19U
 #define DHU_WRITE_APPROVED_CMD_NUM    10U
@@ -158,7 +159,13 @@ static void SlaveCallback(uint32_t event)
 
         /* Transmit data complete */
         case CY_SCB_I2C_SLAVE_RD_CMPLT_EVENT:
-            flag_i2c2s = 0U;
+            /* Check the DISP_STATUS has been sent & Clear INT_ERR*/
+            if(i2cReadBuffer[SUB_ADDR_POS] == CMD_DISP_STATUS)
+            {
+                RegisterApp_DHU_Setup(CMD_ISR_STATUS,CMD_DATA_POS,INTB_INT_ERR_CLEAR);
+            }else{
+                /* Do nothing*/
+            }
         break;
 
         case CY_SCB_I2C_MASTER_WR_IN_FIFO_EVENT:

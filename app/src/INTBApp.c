@@ -3,7 +3,7 @@
 #include "driver/inc/PortDriver.h"
 
 static uint8_t u8IntbCurrentState = INTB_STATE_INIT;
-static uint8_t FLAG_PULL_ERROR = INTB_ERROR_CLEAR;
+static uint8_t FLAG_PULL_REQ = INTB_REQ_CLEAR;
 static uint8_t SWITCH_INIT_STATE = INTB_INITIAL;
 static uint8_t u8quene_error_num = 0U;
 
@@ -22,7 +22,7 @@ static uint8_t INTBApp_Idle_Mode(void)
     if(SWITCH_INIT_STATE == INTB_DEINITIAL)
     {
         u8return = INTB_STATE_DEINIT;
-    }else if(FLAG_PULL_ERROR == INTB_ERROR_SET && (u8quene_error_num != 0UL)){
+    }else if(FLAG_PULL_REQ == INTB_REQ_SET && (u8quene_error_num != 0UL)){
         u8return = INTB_STATE_SET;
         /* Avoid Interrupt impact*/
         if(u8quene_error_num > 0)
@@ -83,10 +83,10 @@ static uint8_t INTBApp_Deinit_Mode(void)
     return u8return;
 }
 
-void INTBApp_PullErrorSetOrClear(uint8_t u8SetValue)
+void INTBApp_PullReqSetOrClear(uint8_t u8SetValue)
 {
-    FLAG_PULL_ERROR = u8SetValue;
-    if(FLAG_PULL_ERROR == INTB_ERROR_SET)
+    FLAG_PULL_REQ = u8SetValue;
+    if(FLAG_PULL_REQ == INTB_REQ_SET)
     {
         u8quene_error_num = (u8quene_error_num == 0xFFU) ? u8quene_error_num : u8quene_error_num+1 ;
     }else{
