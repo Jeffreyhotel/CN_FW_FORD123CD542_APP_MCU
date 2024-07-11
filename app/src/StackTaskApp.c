@@ -170,7 +170,6 @@ static uint8_t StackTaskApp_MissionPop(void)
 **        Go: No Return
  */
 uint8_t test_flag = TRUE;
-uint8_t test_flag2 = TRUE;
 void StackTaskApp_MissionAction(void)
 {
     (void)QueneNumber;
@@ -191,6 +190,7 @@ void StackTaskApp_MissionAction(void)
             uint8_t Command2[3] = {CMD_DISP_EN,0x02,0x03};
             uint8_t Command3[1] = {CMD_DISP_STATUS};
             uint8_t Command4[1] = {CMD_ISR_STATUS};
+            uint8_t Command5[1] = {CMD_CORE_ASMB};
             uint8_t RxBuffer[10] = {0U};
             uint8_t Status = ERROR_NONE;
             Command[0] = CMD_DISP_EN; /*Color Temp Write Only Reg*/
@@ -202,6 +202,7 @@ void StackTaskApp_MissionAction(void)
             Status |= I2C1MDriver_WriteRead(0x71U,Command2,3U,RxBuffer,10U);
             Status |= I2C1MDriver_WriteRead(0x71U,Command3,1U,RxBuffer,3U);
             Status |= I2C1MDriver_WriteRead(0x71U,Command4,1U,RxBuffer,2U);
+            Status |= I2C1MDriver_WriteRead(0x71U,Command5,1U,RxBuffer,26U);
             if(Status != ERROR_NONE)
             {
                 sprintf((char *)u8TxBuffer,"I2C M driver transmit fail >> 0x%02x\r\n",Status);
@@ -217,13 +218,6 @@ void StackTaskApp_MissionAction(void)
                 test_flag = TRUE;
                 RegisterApp_DHU_Setup(CMD_BL_PWM,CMD_DATA_POS,0x00U);
                 RegisterApp_DHU_Setup(CMD_BL_PWM,CMD_DATA_POS+1U,0x00U);
-                if(test_flag2 == TRUE){
-                    test_flag2 = FALSE;
-                    //RegisterApp_DHU_Setup(CMD_DISP_EN,0U,0U);
-                }else{
-                    test_flag2 = TRUE;
-                    //RegisterApp_DHU_Setup(CMD_DISP_EN,0U,1U);
-                }
             }
             INTBApp_PullReqSetOrClear(INTB_REQ_SET);
         break;
@@ -248,14 +242,6 @@ void StackTaskApp_MissionAction(void)
 
         default:
             /*Do nothing*/
-            // uint16_t adc_value = 0U;
-            // adc_value = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE, ADC_SAR0_CH1_BLTTEMP);
-            // sprintf((char *)u8TxBuffer,"ADC1 = 0x%04x\r\n",adc_value);
-            // UartDriver_TxWriteString(u8TxBuffer);
-            // adc_value = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE, ADC_SAR0_CH2_BATTEMP);
-            // sprintf((char *)u8TxBuffer,"ADC2 = 0x%04x\r\n",adc_value);
-            // UartDriver_TxWriteString(u8TxBuffer);
-            // Cy_GPIO_Inv(BIAS_EN_PORT,BIAS_EN_PIN);
         break;
     }
     /* Show the CPU information exclude Overflow*/

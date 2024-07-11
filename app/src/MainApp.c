@@ -28,6 +28,7 @@
 #include "app/inc/BacklightApp.h"
 #include "app/inc/I2C2SlaveApp.h"
 #include "app/inc/INTBApp.h"
+#include "app/inc/DeviceApp.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/I2C1MDriver.h"
@@ -78,6 +79,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     I2C2SlaveApp_Initial();
     StackTaskApp_Global_MissionInitial();
     BacklightApp_Initial();
+    DeviceApp_Intial();
     /* Enable global interrupts */
     __enable_irq();
     
