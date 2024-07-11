@@ -36,9 +36,13 @@ static long int timercount_sec = 0;
 static long int cpu_timer_ms=0;
 static long int derating_timer_sec =0;
 static long int batteryprotect_timer_sec =0;
+static long int intb_set_timer_ms=0;
+static long int intb_hold_timer_ms=0;
 uint8_t FLAG_DERATINGCNT_START = FALSE;
 uint8_t FLAG_BATTERYPROT_START = FALSE;
 uint8_t FLAG_STARTTOWORK_START = FALSE;
+uint8_t FLAG_INTBSETTCNT_START = FALSE;
+uint8_t FLAG_INTBHOLDCNT_START = FALSE;
 
 static void TC0APP_TC0_Task_1000msec(void)
 {
@@ -66,6 +70,14 @@ static void TC0App_Callback_InterruptHandler(void)
     TC0Driver_IntFlagClean();
     timercount_ms = timercount_ms+1;
     cpu_timer_ms = cpu_timer_ms+1;
+    if(FLAG_INTBSETTCNT_START == TRUE)
+    {
+        intb_set_timer_ms = intb_set_timer_ms+1;
+    }
+    if(FLAG_INTBHOLDCNT_START == TRUE)
+    {
+        intb_hold_timer_ms = intb_hold_timer_ms+1;
+    }
 
     if(FLAG_STARTTOWORK_START == TRUE)
     {
@@ -115,6 +127,16 @@ void TC0App_NormalWorkStartSet(uint8_t SetValue)
     FLAG_STARTTOWORK_START = SetValue;
 }
 
+void TC0App_IntbSetCountStartSet(uint8_t SetValue)
+{
+    FLAG_INTBSETTCNT_START = SetValue;
+}
+
+void TC0App_IntbHoldCountStartSet(uint8_t SetValue)
+{
+    FLAG_INTBHOLDCNT_START = SetValue;
+}
+
 void TC0App_Initial(void)
 {
     if(true == TC0Driver_TimerCallbackRegister(TC0App_Callback_InterruptHandler))
@@ -128,33 +150,38 @@ void TC0App_Initial(void)
     }
 }
 
-uint8_t TC0App_FlagReturn(uint8_t Request)
+uint8_t TC0App_TimerReturn(uint8_t Request)
 {
 	uint8_t u8Return;
 	
     switch (Request)
     {
-    case FLAG_CPUCOUNT:
+    case TIMER_CPUCOUNT:
         /* code */
         u8Return = (uint8_t)(((uint32_t)cpu_timer_ms) & 0XFFU);
         break;
 
-    case FLAG_IRQCOUNT:
+    case TIMER_INT_SET_COUNT:
+        /* code */
+        u8Return = intb_set_timer_ms;
+        break;
+
+    case TIMER_INT_HOLD_COUNT:
+        /* code */
+        u8Return = intb_hold_timer_ms;
+        break;
+
+    case TIMER_HANDSHAKECOUNT:
         /* code */
         u8Return = 0xFFU;
         break;
 
-    case FLAG_HANDSHAKECOUNT:
-        /* code */
-        u8Return = 0xFFU;
-        break;
-
-    case FLAG_DERATECOUNT:
+    case TIMER_DERATECOUNT:
         /* code */
         u8Return = derating_timer_sec;
         break;
 
-    case FLAG_BATTERYCOUNT:
+    case TIMER_BATTERYCOUNT:
         /* code */
         u8Return = batteryprotect_timer_sec;
         break;
@@ -167,31 +194,36 @@ uint8_t TC0App_FlagReturn(uint8_t Request)
     return u8Return;
 }
 
-void TC0App_FlagReset(uint8_t Request)
+void TC0App_TimerReset(uint8_t Request)
 {
     switch (Request)
     {
-    case FLAG_CPUCOUNT:
+    case TIMER_CPUCOUNT:
         /* code */
         cpu_timer_ms = 0U;
         break;
 
-    case FLAG_IRQCOUNT:
+    case TIMER_INT_SET_COUNT:
+        /* code */
+        intb_set_timer_ms = 0U;
+        break;
+
+    case TIMER_INT_HOLD_COUNT:
+        /* code */
+        intb_hold_timer_ms = 0U;
+        break;
+
+    case TIMER_HANDSHAKECOUNT:
         /* code */
         
         break;
 
-    case FLAG_HANDSHAKECOUNT:
-        /* code */
-        
-        break;
-
-    case FLAG_DERATECOUNT:
+    case TIMER_DERATECOUNT:
         /* code */
         derating_timer_sec = 0U;
         break;
 
-    case FLAG_BATTERYCOUNT:
+    case TIMER_BATTERYCOUNT:
         /* code */
         batteryprotect_timer_sec = 0U;
         break;

@@ -25,6 +25,7 @@
 #include "app/inc/BatteryApp.h"
 #include "app/inc/RegisterApp.h"
 #include "app/inc/TC0App.h"
+#include "app/inc/INTBApp.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/I2C1MDriver.h"
@@ -220,7 +221,7 @@ void StackTaskApp_MissionAction(void)
                     //RegisterApp_DHU_Setup(CMD_DISP_EN,0U,1U);
                 }
             }
-            
+            INTBApp_PullErrorSetOrClear(INTB_ERROR_SET);
         break;
 
         case TASK_MONITOR:

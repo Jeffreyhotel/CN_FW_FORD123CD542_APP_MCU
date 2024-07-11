@@ -27,6 +27,7 @@
 #include "app/inc/RegisterApp.h"
 #include "app/inc/BacklightApp.h"
 #include "app/inc/I2C2SlaveApp.h"
+#include "app/inc/INTBApp.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/I2C1MDriver.h"
@@ -128,7 +129,7 @@ static uint8_t MainApp_Normal_Mode(uint8_t u8Nothing)
     uint8_t u8Return;
 
     StackTaskApp_MissionAction();
-
+    INTBApp_Flow();
     // sprintf((char *)u8TxBuffer,"NORMAL FINISHED 0x%02x\r\n",RegisterApp_DHU_Read(CMD_DISP_STATUS,0U));
     // UartDriver_TxWriteString(u8TxBuffer);
     if((RegisterApp_DHU_Read(CMD_DISP_SHUTD,1U) & 0x01U) == 0x00U)
@@ -151,6 +152,7 @@ static uint8_t MainApp_PreSleep_Mode(uint8_t u8Nothing)
 {
     uint8_t u8Return;
     /* Do LCD Power Off Sequence*/
+    INTBApp_InitSwitch(INTB_DEINITIAL);
     sprintf((char *)u8TxBuffer,"PRESLEEP FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
     u8Return = STATE_SLEEP;
@@ -166,11 +168,11 @@ static uint8_t MainApp_PreSleep_Mode(uint8_t u8Nothing)
 static uint8_t MainApp_Sleep_Mode(uint8_t u8Nothing)
 {
     uint8_t u8Return;
-
+    INTBApp_Flow();
     /* Do Power Off Sequence*/
     sprintf((char *)u8TxBuffer,"SLEEP FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
-    u8Return = STATE_PRENORMAL;
+    u8Return = STATE_SLEEP;
     (void) u8Nothing;
     return u8Return;
 }

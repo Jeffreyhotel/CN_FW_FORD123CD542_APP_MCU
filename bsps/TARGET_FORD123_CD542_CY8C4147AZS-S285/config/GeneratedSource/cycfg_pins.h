@@ -802,7 +802,7 @@ extern "C" {
 #define DES_INTB_PIN 3U
 #define DES_INTB_NUM 3U
 #define DES_INTB_DRIVEMODE CY_GPIO_DM_STRONG_IN_OFF
-#define DES_INTB_INIT_DRIVESTATE 0
+#define DES_INTB_INIT_DRIVESTATE 1
 #ifndef ioss_0_port_5_pin_3_HSIOM
     #define ioss_0_port_5_pin_3_HSIOM HSIOM_SEL_GPIO
 #endif

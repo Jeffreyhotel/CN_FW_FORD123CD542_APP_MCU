@@ -590,7 +590,7 @@
                     <Parameters>
                         <Param id="DriveModes" value="CY_GPIO_DM_STRONG_IN_OFF"/>
                         <Param id="inFlash" value="true"/>
-                        <Param id="initialState" value="0"/>
+                        <Param id="initialState" value="1"/>
                         <Param id="isrTrigger" value="CY_GPIO_INTR_DISABLE"/>
                         <Param id="portLevelConfig" value="false"/>
                         <Param id="slewRate" value="CY_GPIO_SLEW_FAST"/>
@@ -1240,18 +1240,18 @@
                     </Block>
                     <Parameters>
                         <Param id="ClockPrescaler" value="CY_TCPWM_PWM_PRESCALER_DIVBY_1"/>
-                        <Param id="Compare0" value="16384"/>
+                        <Param id="Compare0" value="25000"/>
                         <Param id="Compare1" value="16384"/>
                         <Param id="CountInput" value="CY_TCPWM_INPUT_DISABLED"/>
-                        <Param id="DeadClocks" value="0"/>
+                        <Param id="DeadClocks" value="1"/>
                         <Param id="EnableCompareSwap" value="false"/>
                         <Param id="EnablePeriodSwap" value="false"/>
                         <Param id="InterruptSource" value="CY_TCPWM_INT_NONE"/>
                         <Param id="InvertPwm" value="false"/>
-                        <Param id="InvertPwm_n" value="false"/>
+                        <Param id="InvertPwm_n" value="true"/>
                         <Param id="KillInput" value="CY_TCPWM_INPUT_DISABLED"/>
                         <Param id="KillMode" value="CY_TCPWM_PWM_STOP_ON_KILL"/>
-                        <Param id="Period0" value="32768"/>
+                        <Param id="Period0" value="50000"/>
                         <Param id="Period1" value="32768"/>
                         <Param id="PwmAlignment" value="CY_TCPWM_PWM_LEFT_ALIGN"/>
                         <Param id="PwmMode" value="CY_TCPWM_PWM_MODE_PWM"/>
@@ -1352,10 +1352,6 @@
                 <Net>
                     <Port name="ioss[0].port[4].pin[3].digital_inout[0]"/>
                     <Port name="scb[0].spi_select0[0]"/>
-                </Net>
-                <Net>
-                    <Port name="ioss[0].port[5].pin[3].digital_out[0]"/>
-                    <Port name="tcpwm[0].cnt[5].line_compl[0]"/>
                 </Net>
                 <Net>
                     <Port name="ioss[0].port[5].pin[6].digital_out[0]"/>

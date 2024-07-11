@@ -136,10 +136,10 @@ static uint8_t BacklightApp_Burn_Mode(uint16_t u16MATemp)
     if(u16MATemp > BLT_TEMP80)
     {
         TC0App_DerateCntStartSet(TRUE);
-        if (TC0App_FlagReturn(FLAG_DERATECOUNT) > 30U)
+        if (TC0App_TimerReturn(TIMER_DERATECOUNT) > 30U)
         {
             TC0App_DerateCntStartSet(FALSE);
-            TC0App_FlagReset(FLAG_DERATECOUNT);
+            TC0App_TimerReset(TIMER_DERATECOUNT);
 			(void)u8BLT_DERATING_EN;
             u8BLT_DERATING_EN = FALSE;
             u8BLT_DERATING_ALARM_FLAG = TRUE;
@@ -165,10 +165,10 @@ static uint8_t BacklightApp_Boil_Mode(uint16_t u16MATemp)
     if(u16MATemp > BLT_TEMP80)
     {
         TC0App_DerateCntStartSet(TRUE);
-        if (TC0App_FlagReturn(FLAG_DERATECOUNT) > 30U)
+        if (TC0App_TimerReturn(TIMER_DERATECOUNT) > 30U)
         {
             TC0App_DerateCntStartSet(FALSE);
-            TC0App_FlagReset(FLAG_DERATECOUNT);
+            TC0App_TimerReset(TIMER_DERATECOUNT);
 			(void)u8BLT_DERATING_EN;
             u8BLT_DERATING_EN = FALSE;
             u8BLT_DERATING_ALARM_FLAG = TRUE;
@@ -195,10 +195,10 @@ static uint8_t BacklightApp_Scorch_Mode(uint16_t u16MATemp)
     if(u16MATemp > BLT_TEMP80)
     {
         TC0App_DerateCntStartSet(TRUE);
-        if (TC0App_FlagReturn(FLAG_DERATECOUNT) > 30U)
+        if (TC0App_TimerReturn(TIMER_DERATECOUNT) > 30U)
         {
             TC0App_DerateCntStartSet(FALSE);
-            TC0App_FlagReset(FLAG_DERATECOUNT);
+            TC0App_TimerReset(TIMER_DERATECOUNT);
 			(void)u8BLT_DERATING_EN;
             u8BLT_DERATING_EN = FALSE;
             u8BLT_DERATING_ALARM_FLAG = TRUE;

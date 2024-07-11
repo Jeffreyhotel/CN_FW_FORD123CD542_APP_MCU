@@ -198,15 +198,15 @@ static uint8_t BatteryApp_LowHigh_Mode(uint8_t STAGE)
         /*20 SECOND SAFE KEY CHECK*/
         if (guBatterySafeKey == FALSE){
             /*COUNTER RESET*/
-            TC0App_FlagReset(FLAG_BATTERYCOUNT);
+            TC0App_TimerReset(TIMER_BATTERYCOUNT);
             TC0App_BatteryCntStartSet(TRUE);
             guBatterySafeKey = TRUE;
         }else{
             /*IF COUNTER > 20SEC*/
-            if(TC0App_FlagReturn(FLAG_BATTERYCOUNT) > 20U)
+            if(TC0App_TimerReturn(TIMER_BATTERYCOUNT) > 20U)
             {
                 TC0App_BatteryCntStartSet(FALSE);
-                TC0App_FlagReset(FLAG_BATTERYCOUNT);
+                TC0App_TimerReset(TIMER_BATTERYCOUNT);
                 guBatterySafeKey = FALSE;
                 if(STAGE == BT_STAGE1 || STAGE == BT_STAGE2)
                 {

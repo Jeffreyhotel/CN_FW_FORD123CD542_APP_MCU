@@ -50,7 +50,6 @@ extern "C" {
 #define ioss_0_port_4_pin_1_HSIOM P4_1_SCB0_SPI_MISO
 #define ioss_0_port_4_pin_2_HSIOM P4_2_SCB0_SPI_CLK
 #define ioss_0_port_4_pin_3_HSIOM P4_3_SCB0_SPI_SELECT0
-#define ioss_0_port_5_pin_3_HSIOM P5_3_TCPWM_LINE_COMPL5
 #define ioss_0_port_5_pin_6_HSIOM P5_6_TCPWM_LINE7
 #define ioss_0_port_6_pin_4_HSIOM P6_4_SCB4_I2C_SCL
 #define ioss_0_port_6_pin_5_HSIOM P6_5_SCB4_I2C_SDA
