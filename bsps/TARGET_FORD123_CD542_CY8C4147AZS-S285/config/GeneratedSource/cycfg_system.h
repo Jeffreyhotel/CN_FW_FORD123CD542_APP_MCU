@@ -47,11 +47,14 @@ extern "C" {
 #define CY_CFG_SYSCLK_PLL_EN_ERROR 5
 #define CY_CFG_SYSCLK_HF_SRC_ERROR 6
 #define srss_0_clock_0_hfclk_0_ENABLED 1U
+#define srss_0_clock_0_ilo_0_ENABLED 1U
 #define srss_0_clock_0_imo_0_ENABLED 1U
 #define CY_CFG_SYSCLK_IMO_FREQ_HZ 48000000UL
 #define CY_CFG_SYSCLK_IMO_FREQ_MHZ 48UL
 #define CY_CFG_SYSCLK_IMO_FREQ CY_SYSCLK_IMO_48MHZ
 #define CY_CFG_SYSCLK_IMO_LOCK CY_SYSCLK_IMO_LOCK_NONE
+#define srss_0_clock_0_lfclk_0_ENABLED 1U
+#define CY_CFG_SYSCLK_CLKLF_FREQ_HZ 40000
 #define srss_0_clock_0_sysclk_0_ENABLED 1U
 #define srss_0_power_0_ENABLED 1U
 #define CY_CFG_PWR_MODE_ACTIVE 0x04UL

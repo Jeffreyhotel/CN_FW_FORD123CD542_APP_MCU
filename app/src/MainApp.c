@@ -29,6 +29,7 @@
 #include "app/inc/I2C2SlaveApp.h"
 #include "app/inc/INTBApp.h"
 #include "app/inc/DeviceApp.h"
+#include "app/inc/WdtApp.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/I2C1MDriver.h"
@@ -83,6 +84,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     /* Enable global interrupts */
     __enable_irq();
     
+    WdtApp_Initial();
     sprintf((char *)u8TxBuffer,"BOOT FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
     (void) u8Nothing;
@@ -140,7 +142,9 @@ static uint8_t MainApp_Normal_Mode(uint8_t u8Nothing)
     }else{
         u8Return = STATE_PRESLEEP;
     }
-    
+    WdtApp_Initial();
+    /* Test WDT timeout*/
+    //TC0App_DelayMS(5000U);
     (void) u8Nothing;
     return u8Return;
 }

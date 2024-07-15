@@ -366,6 +366,9 @@ void init_cycfg_peripherals(void)
     Cy_SysClk_PeriphAssignDivider(PCLK_SCB2_CLOCK, CY_SYSCLK_DIV_16_BIT, 2U);
     Cy_SysClk_PeriphAssignDivider(PCLK_SCB3_CLOCK, CY_SYSCLK_DIV_16_BIT, 3U);
     Cy_SysClk_PeriphAssignDivider(PCLK_SCB4_CLOCK, CY_SYSCLK_DIV_16_BIT, 4U);
+    Cy_WDT_SetMatch(4096UL);
+    Cy_WDT_SetIgnoreBits(0UL);
+    Cy_WDT_ClearInterrupt();
     Cy_SysClk_PeriphAssignDivider(PCLK_TCPWM_CLOCKS0, CY_SYSCLK_DIV_16_BIT, 6U);
     Cy_SysClk_PeriphAssignDivider(PCLK_TCPWM_CLOCKS5, CY_SYSCLK_DIV_16_BIT, 8U);
     Cy_SysClk_PeriphAssignDivider(PCLK_TCPWM_CLOCKS7, CY_SYSCLK_DIV_16_BIT, 5U);

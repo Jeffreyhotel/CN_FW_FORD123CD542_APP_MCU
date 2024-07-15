@@ -36,6 +36,7 @@
 #include "cy_scb_spi.h"
 #include "cy_scb_i2c.h"
 #include "cy_scb_uart.h"
+#include "cy_wdt.h"
 #include "cy_tcpwm_counter.h"
 #include "cy_tcpwm_pwm.h"
 
@@ -66,6 +67,7 @@ extern "C" {
 #define SCB_I2C4M_ENABLED 1U
 #define SCB_I2C4M_HW SCB4
 #define SCB_I2C4M_IRQ scb_4_interrupt_IRQn
+#define srss_0_wdt_0_ENABLED 1U
 #define TC0_TIMER_ENABLED 1U
 #define TC0_TIMER_HW TCPWM
 #define TC0_TIMER_NUM 0UL
