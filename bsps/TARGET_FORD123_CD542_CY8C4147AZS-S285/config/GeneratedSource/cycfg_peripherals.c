@@ -199,7 +199,7 @@ const cy_stc_scb_uart_config_t SCB_UART3_DEBUG_config =
     .dataWidth = 8UL,
     .parity = CY_SCB_UART_PARITY_NONE,
     .stopBits = CY_SCB_UART_STOP_BITS_1,
-    .enableInputFilter = false,
+    .enableInputFilter = true,
     .breakWidth = 11UL,
     .dropOnFrameError = false,
     .dropOnParityError = false,
@@ -212,7 +212,7 @@ const cy_stc_scb_uart_config_t SCB_UART3_DEBUG_config =
     .rtsPolarity = CY_SCB_UART_ACTIVE_LOW,
     .rxFifoTriggerLevel = 7UL,
     .rxFifoIntEnableMask = 0UL,
-    .txFifoTriggerLevel = 0UL,
+    .txFifoTriggerLevel = 7UL,
     .txFifoIntEnableMask = 0UL,
 };
 

@@ -866,7 +866,7 @@ const cyhal_resource_inst_t MCU_I2C_SDA_obj =
 
 const cy_stc_gpio_pin_config_t DEBUG_UART_RX_config =
 {
-    .outVal = 1,
+    .outVal = 0,
     .driveMode = CY_GPIO_DM_HIGHZ,
     .hsiom = DEBUG_UART_RX_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,

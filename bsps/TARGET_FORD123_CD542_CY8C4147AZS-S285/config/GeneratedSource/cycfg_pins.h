@@ -970,7 +970,7 @@ extern "C" {
 #define DEBUG_UART_RX_PIN 0U
 #define DEBUG_UART_RX_NUM 0U
 #define DEBUG_UART_RX_DRIVEMODE CY_GPIO_DM_HIGHZ
-#define DEBUG_UART_RX_INIT_DRIVESTATE 1
+#define DEBUG_UART_RX_INIT_DRIVESTATE 0
 #ifndef ioss_0_port_7_pin_0_HSIOM
     #define ioss_0_port_7_pin_0_HSIOM HSIOM_SEL_GPIO
 #endif

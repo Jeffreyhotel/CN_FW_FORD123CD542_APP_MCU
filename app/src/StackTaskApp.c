@@ -27,6 +27,7 @@
 #include "app/inc/TC0App.h"
 #include "app/inc/INTBApp.h"
 #include "app/inc/DiagApp.h"
+#include "app/inc/UartApp.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/I2C1MDriver.h"
@@ -220,6 +221,7 @@ void StackTaskApp_MissionAction(void)
                 RegisterApp_DHU_Setup(CMD_BL_PWM,CMD_DATA_POS+1U,0x00U);
             }
             INTBApp_PullReqSetOrClear(INTB_REQ_SET);
+            UartApp_ReadFlow();
         break;
 
         case TASK_MONITOR:

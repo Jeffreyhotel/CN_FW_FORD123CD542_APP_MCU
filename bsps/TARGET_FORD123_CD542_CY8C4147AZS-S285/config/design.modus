@@ -718,7 +718,7 @@
                     <Parameters>
                         <Param id="DriveModes" value="CY_GPIO_DM_HIGHZ"/>
                         <Param id="inFlash" value="true"/>
-                        <Param id="initialState" value="1"/>
+                        <Param id="initialState" value="0"/>
                         <Param id="isrTrigger" value="CY_GPIO_INTR_DISABLE"/>
                         <Param id="portLevelConfig" value="false"/>
                         <Param id="slewRate" value="CY_GPIO_SLEW_FAST"/>
@@ -1113,7 +1113,7 @@
                         <Param id="DataWidth" value="8"/>
                         <Param id="DropOnFrameErr" value="false"/>
                         <Param id="DropOnParityErr" value="false"/>
-                        <Param id="EnableInputFilter" value="false"/>
+                        <Param id="EnableInputFilter" value="true"/>
                         <Param id="EnableLinMode" value="false"/>
                         <Param id="FlowControl" value="false"/>
                         <Param id="IntrRxBreakDetected" value="false"/>
@@ -1145,7 +1145,7 @@
                         <Param id="RxTriggerLevel" value="7"/>
                         <Param id="SmCardRetryOnNack" value="false"/>
                         <Param id="StopBits" value="CY_SCB_UART_STOP_BITS_1"/>
-                        <Param id="TxTriggerLevel" value="0"/>
+                        <Param id="TxTriggerLevel" value="7"/>
                         <Param id="inFlash" value="true"/>
                     </Parameters>
                 </Personality>
