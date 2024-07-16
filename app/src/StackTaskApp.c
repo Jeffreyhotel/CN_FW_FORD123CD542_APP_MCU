@@ -251,7 +251,7 @@ void StackTaskApp_MissionAction(void)
         /*DO NOTHING*/
     }else{
         sprintf((char *)u8TxBuffer,"QLINE> %ld TASK> %d\r\n",QueneNumber,TaskNumber);
-        UartDriver_TxWriteString(u8TxBuffer);
+        //UartDriver_TxWriteString(u8TxBuffer);
     }
 
     (void)QueneNumber;

@@ -28,6 +28,7 @@ bool WdtDriver_Initial(void);
 bool WdtDriver_SetMatchIfPeriodMode(void);
 bool WdtDriver_RegisterISR(cy_israddress user_isr);
 bool WdtDriver_Enable(void);
+void WdtDriver_Disable(void);
 void WdtDriver_RegisterDSCallback(void);
 
 #endif /* _EXAMPLE_FILE_NAME_H */

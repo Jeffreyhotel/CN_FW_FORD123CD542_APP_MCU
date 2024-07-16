@@ -118,6 +118,14 @@ bool WdtDriver_Enable(void)
     return bresult;
 }
 
+void WdtDriver_Disable(void)
+{
+    Cy_WDT_Disable();
+    Cy_SysClk_IloDisable();
+    ilo_compensated_counts = 0;
+    temp_ilo_counts = 0;
+}
+
 void WdtDriver_RegisterDSCallback(void)
 {
     /* Register Deep Sleep callback */

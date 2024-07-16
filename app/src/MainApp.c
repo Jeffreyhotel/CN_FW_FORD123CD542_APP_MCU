@@ -142,7 +142,7 @@ static uint8_t MainApp_Normal_Mode(uint8_t u8Nothing)
     }else{
         u8Return = STATE_PRESLEEP;
     }
-    WdtApp_Initial();
+    WdtApp_CleanCounter();
     /* Test WDT timeout*/
     //TC0App_DelayMS(5000U);
     (void) u8Nothing;

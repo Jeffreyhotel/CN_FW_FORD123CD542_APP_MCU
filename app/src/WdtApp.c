@@ -10,11 +10,13 @@ static void WdtApp_ISR(void)
 
 void WdtApp_CleanCounter(void)
 {
-    /* No method*/
+    Cy_WDT_ClearWatchdog();
 }
 
 void WdtApp_Initial(void)
 {
+    Cy_WDT_ClearWatchdog();
+    WdtDriver_Disable();
     (void)WdtDriver_Initial();
     (void)WdtDriver_SetMatchIfPeriodMode();
     (void)WdtDriver_RegisterISR(WdtApp_ISR);
