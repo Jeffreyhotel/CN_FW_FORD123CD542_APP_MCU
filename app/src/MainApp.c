@@ -30,6 +30,7 @@
 #include "app/inc/INTBApp.h"
 #include "app/inc/DeviceApp.h"
 #include "app/inc/WdtApp.h"
+#include "app/inc/PowerApp.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/I2C1MDriver.h"
@@ -101,6 +102,7 @@ static uint8_t MainApp_PreNormal_Mode(uint8_t u8Nothing)
     /*ADC initial*/
     TC0App_NormalWorkStartSet(TRUE);
     AdcDriver_Initial(ADC_SAR0_TYPE, ADC_SAR0_CONFIG);
+    PowerApp_PowerGoodInitial();
     /*Do LCD Power On Sequence*/
     sprintf((char *)u8TxBuffer,"PRENORMAL FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);

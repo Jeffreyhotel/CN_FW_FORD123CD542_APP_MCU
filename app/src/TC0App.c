@@ -65,6 +65,11 @@ static void TC0APP_TC0_Task_20msec(void)
     StackTaskApp_MissionPush(TASK_DIMMING);
 }
 
+static void TC0APP_TC0_Task_100msec(void)
+{
+    StackTaskApp_MissionPush(TASK_PWGFLOW);
+}
+
 static void TC0App_Callback_InterruptHandler(void)
 {
     TC0Driver_IntFlagClean();
@@ -94,6 +99,11 @@ static void TC0App_Callback_InterruptHandler(void)
         if ((timercount_ms % 20) ==0)
         {
             TC0APP_TC0_Task_20msec();
+        }else{/*Do Nothing*/}
+
+        if ((timercount_ms % 100) ==0)
+        {
+            TC0APP_TC0_Task_100msec();
         }else{/*Do Nothing*/}
     }
 

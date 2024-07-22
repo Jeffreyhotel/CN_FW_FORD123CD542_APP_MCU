@@ -21,6 +21,7 @@ void DiagApp_DispStatusClear(uint8_t ByteNumber, uint8_t MaskValue)
         /*DO NOTHING*/
     }
 
+    /* Check if the data is New event (Pull Request Necessary)*/
     if (((u8OldByte0 & DISP0_LATCHED_MASK) != (u8DiagDispByte0 & DISP0_LATCHED_MASK)) || 
         ((u8OldByte1 & DISP1_LATCHED_MASK) != (u8DiagDispByte1 & DISP1_LATCHED_MASK)))
     {
@@ -47,6 +48,7 @@ void DiagApp_DispStatusSet(uint8_t ByteNumber, uint8_t MaskValue)
         /*DO NOTHING*/
     }
 
+    /* Check if the data is New event (Pull Request Necessary)*/
     if (((u8OldByte0 & DISP0_LATCHED_MASK) != (u8DiagDispByte0 & DISP0_LATCHED_MASK)) || 
         ((u8OldByte1 & DISP1_LATCHED_MASK) != (u8DiagDispByte1 & DISP1_LATCHED_MASK)))
     {

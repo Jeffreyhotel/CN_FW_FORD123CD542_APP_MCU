@@ -15,6 +15,7 @@
 #define TASK_BLTFLOW    2U
 #define TASK_DIMMING    3U
 #define TASK_BATFLOW    4U
+#define TASK_PWGFLOW    5U
 
 typedef struct{
     volatile uint8_t data[StackTaskMaxSize];
