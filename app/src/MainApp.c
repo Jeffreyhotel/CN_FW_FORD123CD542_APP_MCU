@@ -121,12 +121,22 @@ static uint8_t MainApp_PreNormal_Mode(uint8_t u8Nothing)
  */
 static uint8_t MainApp_HandShake_Mode(uint8_t u8Nothing)
 {
-    
-    /*Do or Check Handshake function*/
-    sprintf((char *)u8TxBuffer,"HANDSHAKE FINISHED\r\n");
+    uint8_t u8Return;
+    /* Check Disp En Cmd*/
+    if(RegisterApp_DHU_Read(CMD_DISP_EN,CMD_DATA_POS) == 0x01U)
+    {
+        u8Return = STATE_NORMAL;
+        sprintf((char *)u8TxBuffer,"HANDSHAKE FINISHED\r\n");
+    }else{
+        u8Return = STATE_HANDSHAKE;
+        sprintf((char *)u8TxBuffer,"WAIT HANDSHAKE\r\n");
+    }
+    /* Do or Check Handshake function*/
     UartDriver_TxWriteString(u8TxBuffer);
+    /* Test Disp En Cmd -- need to be deleted*/
+    RegisterApp_DHU_Setup(CMD_DISP_EN,CMD_DATA_POS,0x01U);
     (void) u8Nothing;
-    return STATE_NORMAL;
+    return u8Return;
 }
 
 /*  Function: MainApp_Normal_Mode
