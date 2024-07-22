@@ -31,6 +31,7 @@
 #include "app/inc/DeviceApp.h"
 #include "app/inc/WdtApp.h"
 #include "app/inc/PowerApp.h"
+#include "app/inc/FlashApp.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/I2C1MDriver.h"
@@ -88,6 +89,9 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     WdtApp_Initial();
     sprintf((char *)u8TxBuffer,"BOOT FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
+    /* Only for flash w/r test*/
+    uint8_t Flag[4] = {0x0A, 0x00, 0x00, 0x00};
+    FlashApp_WriteRowFlash(&Flag[0],0x0001F000,4U);
     (void) u8Nothing;
     return u8Return;
 }
