@@ -12,26 +12,31 @@
 #define CMD_UPDATE_DATA_POS 0x02U
 
 /* Define DHU Command Number*/
-#define CMD_DISP_STATUS 0x00U
-#define CMD_DISP_ID 0x01U
-#define CMD_BL_PWM 0x02U
-#define CMD_DISP_UD 0x03U
-#define CMD_DISP_EN 0x04U
-#define CMD_DISP_SHUTD 0x05U
-#define CMD_ISR_STATUS 0x30U
-#define CMD_CORE_ASMB 0x31U
-#define CMD_DELIVER_ASMB 0x32U
-#define CMD_SW_FPN 0x33U
-#define CMD_SN 0x34U
-#define CMD_MC_FPN 0x35U
-#define CMD_DTC 0xA3U
-#define CMD_AB_SWITCH 0xC0U
-#define CMD_ERASE 0xE6U
-#define CMD_TRANSFER 0xE7U
-#define CMD_CRC 0xE8U
-#define CMD_UPSATE_STATUS 0xE9U
-#define CMD_RESET 0xC4U
-#define CMD_STATUS_CHECK 0xD0U
+#define CMD_DISP_STATUS             0x00U
+#define CMD_DISP_ID                 0x01U
+#define CMD_BL_PWM                  0x02U
+#define CMD_DISP_UD                 0x03U
+#define CMD_DISP_EN                 0x04U
+#define CMD_DISP_SHUTD              0x05U
+#define CMD_ISR_STATUS              0x30U
+#define CMD_CORE_ASMB               0x31U
+#define CMD_DELIVER_ASMB            0x32U
+#define CMD_SW_FPN                  0x33U
+#define CMD_SN                      0x34U
+#define CMD_MC_FPN                  0x35U
+#define CMD_DTC                     0xA3U
+#define CMD_APP_REQ                 0xE4U
+#define CMD_BL_REQ                  0xE5U
+#define CMD_ERASE_REQ               0xE6U
+#define CMD_TRANSFER_REQ            0xE7U
+#define CMD_CRC_REQ                 0xE8U
+#define CMD_UPDATESTATUS_REQ        0xE9U
+#define CMD_APP_FB                  0xF4U
+#define CMD_BL_FB                   0xF5U
+#define CMD_ERASE_FB                0xF6U
+#define CMD_TRANSFER_FB             0xF7U
+#define CMD_CRC_FB                  0xF8U
+#define CMD_UPDATESTATUS_FB         0xF9U
 
 /*Flag Register Define*/
 #define OFFSET_TOUCHFLAG    0x00U
@@ -83,12 +88,20 @@ typedef struct{
     volatile uint8_t DHU_0X35_MC_FPN[RegisterMaxSize];
     volatile uint8_t DHU_0XA3_DTC[RegisterMaxSize];
 
-    volatile uint8_t DHU_0XC0_AB_SWITCH[RegisterMaxSize];
-    volatile uint8_t DHU_0XC1_ERASE[RegisterMaxSize];
-    volatile uint8_t DHU_0XC2_TRANSFER[WritePageSize];
-    volatile uint8_t DHU_0XC3_CRC[RegisterMaxSize];
-    volatile uint8_t DHU_0XC4_RESET[RegisterMaxSize];
-    volatile uint8_t DHU_0XD0_STATUS_CHECK[RegisterMaxSize];
+    volatile uint8_t DHU_0XE4_APP_REQ[RegisterMaxSize];
+    volatile uint8_t DHU_0XE5_BL_REQ[RegisterMaxSize];
+    volatile uint8_t DHU_0XE6_ERASE_REQ[RegisterMaxSize];
+    volatile uint8_t DHU_0XE7_TRANSFER_REQ[WritePageSize];
+    volatile uint8_t DHU_0XE8_CRC_REQ[RegisterMaxSize];
+    volatile uint8_t DHU_0XE9_UPDATESTATUS_REQ[RegisterMaxSize];
+
+    volatile uint8_t DHU_0XF4_APP_FB[RegisterMaxSize];
+    volatile uint8_t DHU_0XF5_BL_FB[RegisterMaxSize];
+    volatile uint8_t DHU_0XF6_ERASE_FB[RegisterMaxSize];
+    volatile uint8_t DHU_0XF7_TRANSFER_FB[WritePageSize];
+    volatile uint8_t DHU_0XF8_CRC_FB[RegisterMaxSize];
+    volatile uint8_t DHU_0XF9_UPDATESTATUS_FB[RegisterMaxSize];
+    
 }Register;
 
 void RegisterApp_ALL_Initial(void);

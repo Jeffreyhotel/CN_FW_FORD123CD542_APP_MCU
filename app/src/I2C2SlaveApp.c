@@ -5,7 +5,7 @@
 #include "app/inc/TC0App.h"
 #include "app/inc/StackTaskApp.h"
 
-#define DHU_CMD_TOTAL_NUM    19U
+#define DHU_CMD_TOTAL_NUM    25U
 #define DHU_WRITE_APPROVED_CMD_NUM    10U
 #define LENGTH_ZERO 0U
 #define LENGTH_ONE  1U
@@ -16,11 +16,12 @@ uint8_t i2cWriteBuffer[SL_WR_BUFFER_SIZE] = {0};
 uint8_t TxCmdAddrPassPool[DHU_CMD_TOTAL_NUM] = {
                                 CMD_DISP_STATUS,CMD_DISP_ID,CMD_BL_PWM,CMD_DISP_UD,CMD_DISP_EN,
                                 CMD_DISP_SHUTD,CMD_ISR_STATUS,CMD_CORE_ASMB,CMD_DELIVER_ASMB,CMD_SW_FPN,
-                                CMD_SN,CMD_MC_FPN,CMD_DTC,CMD_AB_SWITCH,CMD_ERASE,
-                                CMD_TRANSFER,CMD_CRC,CMD_RESET,CMD_STATUS_CHECK};
+                                CMD_SN,CMD_MC_FPN,CMD_DTC,CMD_APP_REQ,CMD_BL_REQ,
+                                CMD_ERASE_REQ,CMD_TRANSFER_REQ,CMD_CRC_REQ,CMD_UPDATESTATUS_REQ,CMD_APP_FB,
+                                CMD_BL_FB,CMD_ERASE_FB,CMD_TRANSFER_FB,CMD_CRC_FB,CMD_UPDATESTATUS_FB};
 uint8_t TxCmdWritePassPool[DHU_WRITE_APPROVED_CMD_NUM] = {
-                                CMD_BL_PWM,CMD_DISP_UD,CMD_DISP_EN,CMD_DISP_SHUTD,CMD_AB_SWITCH,
-                                CMD_ERASE,CMD_TRANSFER,CMD_CRC,CMD_RESET,CMD_STATUS_CHECK};
+                                CMD_BL_PWM,CMD_DISP_UD,CMD_DISP_EN,CMD_DISP_SHUTD,CMD_APP_REQ,
+                                CMD_BL_REQ,CMD_ERASE_REQ,CMD_TRANSFER_REQ,CMD_CRC_REQ,CMD_UPDATESTATUS_REQ};
 uint32_t CmdSizePool[ADDR_CMD_NUM] = {0};
 
 static void I2CSlaveApp_CmdSizeInitial(void)
@@ -37,9 +38,19 @@ static void I2CSlaveApp_CmdSizeInitial(void)
     CmdSizePool[CMD_SW_FPN]         = 26U;
     CmdSizePool[CMD_SN]             = 26U;
     CmdSizePool[CMD_DTC]            = 4U;
-    CmdSizePool[CMD_ERASE]          = 4U;
-    CmdSizePool[CMD_TRANSFER]       = 133U;
-    CmdSizePool[CMD_CRC]            = 5U;
+
+    CmdSizePool[CMD_APP_REQ]            = 4U;
+    CmdSizePool[CMD_BL_REQ]             = 4U;
+    CmdSizePool[CMD_ERASE_REQ]          = 4U;
+    CmdSizePool[CMD_TRANSFER_REQ]       = 133U;
+    CmdSizePool[CMD_CRC_REQ]            = 5U;
+    CmdSizePool[CMD_UPDATESTATUS_REQ]   = 3U;
+    CmdSizePool[CMD_APP_FB]             = 4U;
+    CmdSizePool[CMD_BL_FB]              = 4U;
+    CmdSizePool[CMD_ERASE_FB]           = 4U;
+    CmdSizePool[CMD_TRANSFER_FB]        = 5U;
+    CmdSizePool[CMD_CRC_FB]             = 4U;
+    CmdSizePool[CMD_UPDATESTATUS_FB]    = 4U;
 }
 
 static uint32_t I2CSlaveApp_GetCmdSize(uint8_t subaddr)
@@ -81,11 +92,12 @@ static bool I2CSlaveApp_SubAddrWritePassCheck(uint8_t subaddr)
 
 static void I2CSlaveApp_TransferDone(uint8_t subaddr)
 {
+    /* Need to check crc is correct*/
     switch (subaddr)
     {
-    case CMD_ERASE:
+    case CMD_ERASE_REQ:
         /* According to Update protocol, 0x03 : MCU */
-        if(RegisterApp_DHU_Read(CMD_ERASE,CMD_UPDATE_DATA_POS) == 0x03U)
+        if(RegisterApp_DHU_Read(CMD_ERASE_REQ,CMD_UPDATE_DATA_POS) == 0x03U)
         {
             TC0App_DHUTaskPush(TASK_UPDATE_ERASE);
         }else{
@@ -93,12 +105,12 @@ static void I2CSlaveApp_TransferDone(uint8_t subaddr)
         }
         break;
 
-    case CMD_TRANSFER:
+    case CMD_TRANSFER_REQ:
         /* code */
         TC0App_DHUTaskPush(TASK_UPDATE_TRANS);
         break;
 
-    case CMD_CRC:
+    case CMD_CRC_REQ:
         /* code */
         TC0App_DHUTaskPush(TASK_UPDATE_CRCSM);
         break;

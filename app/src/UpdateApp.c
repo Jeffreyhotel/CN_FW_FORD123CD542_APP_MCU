@@ -105,11 +105,11 @@ bool UpdateApp_TransferFlashMCU(void)
     uint32_t u32DataSerialNumber = 0U;
     uint8_t u8DataBuffer[128];
     /* Data Collection*/
-    u32DataSerialNumber = ((uint32_t)RegisterApp_DHU_Read(CMD_TRANSFER,2U)*256U)
-                        + (uint32_t)RegisterApp_DHU_Read(CMD_TRANSFER,3U);
+    u32DataSerialNumber = ((uint32_t)RegisterApp_DHU_Read(CMD_TRANSFER_REQ,2U)*256U)
+                        + (uint32_t)RegisterApp_DHU_Read(CMD_TRANSFER_REQ,3U);
     for(uint32_t u32index = 0U;u32index < SIZE_PACKUNIT_128B;u32index++)
     {
-        u8DataBuffer[u32index] = RegisterApp_DHU_Read(CMD_TRANSFER,(uint16_t)(4U+u32index));
+        u8DataBuffer[u32index] = RegisterApp_DHU_Read(CMD_TRANSFER_REQ,(uint16_t)(4U+u32index));
         u16ChecksumMCU += u8DataBuffer[u32index];
     }
     /* Execute Flashing MCU*/
@@ -221,8 +221,8 @@ bool UpdateApp_ChecksumFlashMCU(void)
     bool breturn = true;
     uint16_t u16ChecksumDHU = 0U;
     /* Data Collection*/
-    u16ChecksumDHU = ((uint32_t)RegisterApp_DHU_Read(CMD_CRC,2U)*256U)
-                        + (uint32_t)RegisterApp_DHU_Read(CMD_CRC,3U);
+    u16ChecksumDHU = ((uint32_t)RegisterApp_DHU_Read(CMD_CRC_REQ,2U)*256U)
+                        + (uint32_t)RegisterApp_DHU_Read(CMD_CRC_REQ,3U);
 
     /* Do Data Communication Checksum*/
     if(u16ChecksumDHU == u16ChecksumMCU)

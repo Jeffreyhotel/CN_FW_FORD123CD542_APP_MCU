@@ -74,12 +74,18 @@ void RegisterApp_Initial(Register* pRegisterContainer)
             pRegisterContainer->DHU_0X35_MC_FPN[address]        = CMD_MC_FPN;
             pRegisterContainer->DHU_0XA3_DTC[address]           = CMD_DTC;
 
-            pRegisterContainer->DHU_0XC0_AB_SWITCH[address]     = CMD_AB_SWITCH;
-            pRegisterContainer->DHU_0XC1_ERASE[address]         = CMD_ERASE;
-            pRegisterContainer->DHU_0XC2_TRANSFER[address]      = CMD_TRANSFER;
-            pRegisterContainer->DHU_0XC3_CRC[address]           = CMD_CRC;
-            pRegisterContainer->DHU_0XC4_RESET[address]         = CMD_RESET;
-            pRegisterContainer->DHU_0XD0_STATUS_CHECK[address]  = CMD_STATUS_CHECK;
+            pRegisterContainer->DHU_0XE4_APP_REQ[address]           = CMD_APP_REQ;
+            pRegisterContainer->DHU_0XE5_BL_REQ[address]            = CMD_BL_REQ;
+            pRegisterContainer->DHU_0XE6_ERASE_REQ[address]         = CMD_ERASE_REQ;
+            pRegisterContainer->DHU_0XE7_TRANSFER_REQ[address]      = CMD_TRANSFER_REQ;
+            pRegisterContainer->DHU_0XE8_CRC_REQ[address]           = CMD_CRC_REQ;
+            pRegisterContainer->DHU_0XE9_UPDATESTATUS_REQ[address]  = CMD_UPDATESTATUS_REQ;
+            pRegisterContainer->DHU_0XF4_APP_FB[address]            = CMD_APP_FB;
+            pRegisterContainer->DHU_0XF5_BL_FB[address]             = CMD_BL_FB;
+            pRegisterContainer->DHU_0XF6_ERASE_FB[address]          = CMD_ERASE_FB;
+            pRegisterContainer->DHU_0XF7_TRANSFER_FB[address]       = CMD_TRANSFER_FB;
+            pRegisterContainer->DHU_0XF8_CRC_FB[address]            = CMD_CRC_FB;
+            pRegisterContainer->DHU_0XF9_UPDATESTATUS_FB[address]   = CMD_UPDATESTATUS_FB;
         }else{
             pRegisterContainer->DHU_0X00_DISP_STATUS[address] = 0x00U;
             pRegisterContainer->DHU_0X01_DISP_ID[address] = 0x00U;
@@ -95,16 +101,22 @@ void RegisterApp_Initial(Register* pRegisterContainer)
             pRegisterContainer->DHU_0X35_MC_FPN[address] = 0x00U;
             pRegisterContainer->DHU_0XA3_DTC[address] = 0x00U;
 
-            pRegisterContainer->DHU_0XC0_AB_SWITCH[address] = 0x00U;
-            pRegisterContainer->DHU_0XC1_ERASE[address] = 0x00U;
-            pRegisterContainer->DHU_0XC2_TRANSFER[address] = 0x00U;
-            pRegisterContainer->DHU_0XC3_CRC[address] = 0x00U;
-            pRegisterContainer->DHU_0XC4_RESET[address] = 0x00U;
-            pRegisterContainer->DHU_0XD0_STATUS_CHECK[address] = 0x00U;
+            pRegisterContainer->DHU_0XE4_APP_REQ[address]           = 0x00U;
+            pRegisterContainer->DHU_0XE5_BL_REQ[address]            = 0x00U;
+            pRegisterContainer->DHU_0XE6_ERASE_REQ[address]         = 0x00U;
+            pRegisterContainer->DHU_0XE7_TRANSFER_REQ[address]      = 0x00U;
+            pRegisterContainer->DHU_0XE8_CRC_REQ[address]           = 0x00U;
+            pRegisterContainer->DHU_0XE9_UPDATESTATUS_REQ[address]  = 0x00U;
+            pRegisterContainer->DHU_0XF4_APP_FB[address]            = 0x00U;
+            pRegisterContainer->DHU_0XF5_BL_FB[address]             = 0x00U;
+            pRegisterContainer->DHU_0XF6_ERASE_FB[address]          = 0x00U;
+            pRegisterContainer->DHU_0XF7_TRANSFER_FB[address]       = 0x00U;
+            pRegisterContainer->DHU_0XF8_CRC_FB[address]            = 0x00U;
+            pRegisterContainer->DHU_0XF9_UPDATESTATUS_FB[address]   = 0x00U;
         }
     }
     for(counter =0x0001U;counter<WritePageSize;counter++){
-        pRegisterContainer->DHU_0XC2_TRANSFER[counter]        =   0x00U;
+        pRegisterContainer->DHU_0XE7_TRANSFER_REQ[counter]        =   0x00U;
     }
     (void)address;
 }
@@ -170,28 +182,52 @@ void RegisterApp_Setup(uint8_t Page,Register* pRegisterContainer,uint16_t Regist
             pRegisterContainer->DHU_0XA3_DTC[RegisterOffset] = RegisterValue;
         break;
 
-        case CMD_AB_SWITCH:
-            pRegisterContainer->DHU_0XC0_AB_SWITCH[RegisterOffset] = RegisterValue;
+        case CMD_APP_REQ:
+            pRegisterContainer->DHU_0XE4_APP_REQ[RegisterOffset] = RegisterValue;
         break;
 
-        case CMD_ERASE:
-            pRegisterContainer->DHU_0XC1_ERASE[RegisterOffset] = RegisterValue;
+        case CMD_BL_REQ:
+            pRegisterContainer->DHU_0XE5_BL_REQ[RegisterOffset] = RegisterValue;
         break;
 
-        case CMD_TRANSFER:
-            pRegisterContainer->DHU_0XC2_TRANSFER[RegisterOffset] = RegisterValue;
+        case CMD_ERASE_REQ:
+            pRegisterContainer->DHU_0XE6_ERASE_REQ[RegisterOffset] = RegisterValue;
         break;
 
-        case CMD_CRC:
-            pRegisterContainer->DHU_0XC3_CRC[RegisterOffset] = RegisterValue;
+        case CMD_TRANSFER_REQ:
+            pRegisterContainer->DHU_0XE7_TRANSFER_REQ[RegisterOffset] = RegisterValue;
         break;
 
-        case CMD_RESET:
-            pRegisterContainer->DHU_0XC4_RESET[RegisterOffset] = RegisterValue;
+        case CMD_CRC_REQ:
+            pRegisterContainer->DHU_0XE8_CRC_REQ[RegisterOffset] = RegisterValue;
         break;
 
-        case CMD_STATUS_CHECK:
-            pRegisterContainer->DHU_0XD0_STATUS_CHECK[RegisterOffset] = RegisterValue;
+        case CMD_UPDATESTATUS_REQ:
+            pRegisterContainer->DHU_0XE9_UPDATESTATUS_REQ[RegisterOffset] = RegisterValue;
+        break;
+
+        case CMD_APP_FB:
+            pRegisterContainer->DHU_0XF4_APP_FB[RegisterOffset] = RegisterValue;
+        break;
+
+        case CMD_BL_FB:
+            pRegisterContainer->DHU_0XF5_BL_FB[RegisterOffset] = RegisterValue;
+        break;
+
+        case CMD_ERASE_FB:
+            pRegisterContainer->DHU_0XF6_ERASE_FB[RegisterOffset] = RegisterValue;
+        break;
+
+        case CMD_TRANSFER_FB:
+            pRegisterContainer->DHU_0XF7_TRANSFER_FB[RegisterOffset] = RegisterValue;
+        break;
+
+        case CMD_CRC_FB:
+            pRegisterContainer->DHU_0XF8_CRC_FB[RegisterOffset] = RegisterValue;
+        break;
+
+        case CMD_UPDATESTATUS_FB:
+            pRegisterContainer->DHU_0XF9_UPDATESTATUS_FB[RegisterOffset] = RegisterValue;
         break;
 
         default:
@@ -263,28 +299,52 @@ uint8_t RegisterApp_Read(uint8_t Page,Register* pRegisterContainer,uint16_t Regi
             u8Return = pRegisterContainer->DHU_0XA3_DTC[RegisterOffset];
         break;
 
-        case CMD_AB_SWITCH:
-            u8Return = pRegisterContainer->DHU_0XC0_AB_SWITCH[RegisterOffset];
+        case CMD_APP_REQ:
+            u8Return = pRegisterContainer->DHU_0XE4_APP_REQ[RegisterOffset];
         break;
 
-        case CMD_ERASE:
-            u8Return = pRegisterContainer->DHU_0XC1_ERASE[RegisterOffset];
+        case CMD_BL_REQ:
+            u8Return = pRegisterContainer->DHU_0XE5_BL_REQ[RegisterOffset];
         break;
 
-        case CMD_TRANSFER:
-            u8Return = pRegisterContainer->DHU_0XC2_TRANSFER[RegisterOffset];
+        case CMD_ERASE_REQ:
+            u8Return = pRegisterContainer->DHU_0XE6_ERASE_REQ[RegisterOffset];
         break;
 
-        case CMD_CRC:
-            u8Return = pRegisterContainer->DHU_0XC3_CRC[RegisterOffset];
+        case CMD_TRANSFER_REQ:
+            u8Return = pRegisterContainer->DHU_0XE7_TRANSFER_REQ[RegisterOffset];
         break;
 
-        case CMD_RESET:
-            u8Return = pRegisterContainer->DHU_0XC4_RESET[RegisterOffset];
+        case CMD_CRC_REQ:
+            u8Return = pRegisterContainer->DHU_0XE8_CRC_REQ[RegisterOffset];
         break;
 
-        case CMD_STATUS_CHECK:
-            u8Return = pRegisterContainer->DHU_0XD0_STATUS_CHECK[RegisterOffset];
+        case CMD_UPDATESTATUS_REQ:
+            u8Return = pRegisterContainer->DHU_0XE9_UPDATESTATUS_REQ[RegisterOffset];
+        break;
+
+        case CMD_APP_FB:
+            u8Return = pRegisterContainer->DHU_0XF4_APP_FB[RegisterOffset];
+        break;
+
+        case CMD_BL_FB:
+            u8Return = pRegisterContainer->DHU_0XF5_BL_FB[RegisterOffset];
+        break;
+
+        case CMD_ERASE_FB:
+            u8Return = pRegisterContainer->DHU_0XF6_ERASE_FB[RegisterOffset];
+        break;
+
+        case CMD_TRANSFER_FB:
+            u8Return = pRegisterContainer->DHU_0XF7_TRANSFER_FB[RegisterOffset];
+        break;
+
+        case CMD_CRC_FB:
+            u8Return = pRegisterContainer->DHU_0XF8_CRC_FB[RegisterOffset];
+        break;
+
+        case CMD_UPDATESTATUS_FB:
+            u8Return = pRegisterContainer->DHU_0XF9_UPDATESTATUS_FB[RegisterOffset];
         break;
 
         default:
