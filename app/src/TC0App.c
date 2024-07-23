@@ -43,6 +43,7 @@ uint8_t FLAG_BATTERYPROT_START = FALSE;
 uint8_t FLAG_STARTTOWORK_START = FALSE;
 uint8_t FLAG_INTBSETTCNT_START = FALSE;
 uint8_t FLAG_INTBHOLDCNT_START = FALSE;
+volatile bool DHUTaskFlag[DHUCmdBufferSize] = {0};
 
 static void TC0APP_TC0_Task_1000msec(void)
 {
@@ -70,6 +71,18 @@ static void TC0APP_TC0_Task_100msec(void)
     StackTaskApp_MissionPush(TASK_PWGFLOW);
 }
 
+static void TC0APP_TC0_Task_1msec(void)
+{
+    for(uint32_t DHUCmdID=0U;DHUCmdID<DHUCmdBufferSize;DHUCmdID++)
+    {
+        if(DHUTaskFlag[DHUCmdID] == true)
+        {
+            StackTaskApp_MissionPush((uint8_t)(DHUCmdID & 0XFFU));
+            DHUTaskFlag[DHUCmdID] = false;
+        }
+    }
+}
+
 static void TC0App_Callback_InterruptHandler(void)
 {
     TC0Driver_IntFlagClean();
@@ -86,6 +99,8 @@ static void TC0App_Callback_InterruptHandler(void)
 
     if(FLAG_STARTTOWORK_START == TRUE)
     {
+        TC0APP_TC0_Task_1msec();
+
         if ((timercount_ms % 10) ==0)
         {
             TC0APP_TC0_Task_10msec();
@@ -120,6 +135,19 @@ static void TC0App_Callback_InterruptHandler(void)
             batteryprotect_timer_sec = batteryprotect_timer_sec +1U;
         }else{/*Do Nothing*/}
     }else{/*Do Nothing*/}
+}
+
+void TC0App_DHUTaskClean(void)
+{
+    for(uint32_t DHUCmdID=0U;DHUCmdID<DHUCmdBufferSize;DHUCmdID++)
+    {
+        DHUTaskFlag[DHUCmdID] = false;
+    }
+}
+
+void TC0App_DHUTaskPush(uint8_t DHUCmdID)
+{
+    DHUTaskFlag[DHUCmdID] = true;
 }
 
 void TC0App_DerateCntStartSet(uint8_t SetValue)

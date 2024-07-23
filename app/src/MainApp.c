@@ -83,6 +83,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     StackTaskApp_Global_MissionInitial();
     BacklightApp_Initial();
     DeviceApp_Intial();
+    TC0App_DHUTaskClean();
     /* Enable global interrupts */
     __enable_irq();
     

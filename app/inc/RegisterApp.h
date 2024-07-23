@@ -9,6 +9,7 @@
 /* Command Format*/
 #define SUB_ADDR_POS  0x00U
 #define CMD_DATA_POS  0x01U
+#define CMD_UPDATE_DATA_POS 0x02U
 
 /* Define DHU Command Number*/
 #define CMD_DISP_STATUS 0x00U
@@ -25,9 +26,10 @@
 #define CMD_MC_FPN 0x35U
 #define CMD_DTC 0xA3U
 #define CMD_AB_SWITCH 0xC0U
-#define CMD_ERASE 0xC1U
-#define CMD_TRANSFER 0xC2U
-#define CMD_CRC 0xC3U
+#define CMD_ERASE 0xE6U
+#define CMD_TRANSFER 0xE7U
+#define CMD_CRC 0xE8U
+#define CMD_UPSATE_STATUS 0xE9U
 #define CMD_RESET 0xC4U
 #define CMD_STATUS_CHECK 0xD0U
 

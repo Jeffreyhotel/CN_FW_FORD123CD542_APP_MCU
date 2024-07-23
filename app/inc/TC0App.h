@@ -10,7 +10,11 @@
 #define TIMER_DERATECOUNT    0x04U
 #define TIMER_BATTERYCOUNT   0x05U
 
+#define DHUCmdBufferSize 256U
+
 void TC0App_Initial(void);
+void TC0App_DHUTaskClean(void);
+void TC0App_DHUTaskPush(uint8_t DHUCmdID);
 void TC0App_DerateCntStartSet(uint8_t SetValue);
 void TC0App_BatteryCntStartSet(uint8_t SetValue);
 void TC0App_NormalWorkStartSet(uint8_t SetValue);

@@ -29,6 +29,7 @@
 #include "app/inc/DiagApp.h"
 #include "app/inc/UartApp.h"
 #include "app/inc/PowerApp.h"
+#include "app/inc/UpdateApp.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/I2C1MDriver.h"
@@ -193,18 +194,31 @@ void StackTaskApp_MissionAction(void)
             uint8_t Command3[1] = {CMD_DISP_STATUS};
             uint8_t Command4[1] = {CMD_ISR_STATUS};
             uint8_t Command5[1] = {CMD_CORE_ASMB};
+            //uint8_t Command6[4] = {CMD_ERASE,0x03,0x03,0xEC};
+            //uint8_t Command6[5] = {CMD_CRC,0x04,0x01,0x02,0xEF};
+            uint8_t Command7[133] = {CMD_TRANSFER,0x84,0x01,0xC4,
+                                    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+                                    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+                                    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+                                    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+                                    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+                                    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+                                    0x00,0x00,0x00,0x00,0x00,0x00,0x01,0xFC,
+                                    0x2D};
             uint8_t RxBuffer[10] = {0U};
             uint8_t Status = ERROR_NONE;
             Command[0] = CMD_DISP_EN; /*Color Temp Write Only Reg*/
             Command[1] = 0x01U; /*IP Index*/
-            Status = I2C1MDriver_Write(0x71U,Command,2U);
-            Status |= I2C1MDriver_Read(0x71,RxBuffer,10U);
-            Status |= I2C1MDriver_WriteRead(0x71U,Command,2U,RxBuffer,10U);
-            Status |= I2C1MDriver_WriteRead(0x71U,Command4,1U,RxBuffer,2U);
-            Status |= I2C1MDriver_WriteRead(0x71U,Command2,3U,RxBuffer,10U);
-            Status |= I2C1MDriver_WriteRead(0x71U,Command3,1U,RxBuffer,3U);
-            Status |= I2C1MDriver_WriteRead(0x71U,Command4,1U,RxBuffer,2U);
-            Status |= I2C1MDriver_WriteRead(0x71U,Command5,1U,RxBuffer,26U);
+            // Status = I2C1MDriver_Write(0x71U,Command,2U);
+            // Status |= I2C1MDriver_Read(0x71,RxBuffer,10U);
+            // Status |= I2C1MDriver_WriteRead(0x71U,Command,2U,RxBuffer,10U);
+            // Status |= I2C1MDriver_WriteRead(0x71U,Command4,1U,RxBuffer,2U);
+            // Status |= I2C1MDriver_WriteRead(0x71U,Command2,3U,RxBuffer,10U);
+            // Status |= I2C1MDriver_WriteRead(0x71U,Command3,1U,RxBuffer,3U);
+            // Status |= I2C1MDriver_WriteRead(0x71U,Command4,1U,RxBuffer,2U);
+            // Status |= I2C1MDriver_WriteRead(0x71U,Command5,1U,RxBuffer,26U);
+            //Status |= I2C1MDriver_Write(0x71U,Command6,5U);
+            Status |= I2C1MDriver_Write(0x71U,Command7,133U);
             if(Status != ERROR_NONE)
             {
                 sprintf((char *)u8TxBuffer,"I2C M driver transmit fail >> 0x%02x\r\n",Status);
@@ -245,6 +259,18 @@ void StackTaskApp_MissionAction(void)
 
         case TASK_PWGFLOW:
             PowerApp_PowerGoodFlow();
+        break;
+
+        case TASK_UPDATE_ERASE:
+            UpdateApp_EraseFlashMCU();
+        break;
+
+        case TASK_UPDATE_TRANS:
+            UpdateApp_TransferFlashMCU();
+        break;
+
+        case TASK_UPDATE_CRCSM:
+            UpdateApp_ChecksumFlashMCU();
         break;
 
         default:

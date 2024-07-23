@@ -2,6 +2,8 @@
 #include "I2C2SDriver.h"
 #include "app/inc/RegisterApp.h"
 #include "app/inc/INTBApp.h"
+#include "app/inc/TC0App.h"
+#include "app/inc/StackTaskApp.h"
 
 #define DHU_CMD_TOTAL_NUM    19U
 #define DHU_WRITE_APPROVED_CMD_NUM    10U
@@ -35,6 +37,9 @@ static void I2CSlaveApp_CmdSizeInitial(void)
     CmdSizePool[CMD_SW_FPN]         = 26U;
     CmdSizePool[CMD_SN]             = 26U;
     CmdSizePool[CMD_DTC]            = 4U;
+    CmdSizePool[CMD_ERASE]          = 4U;
+    CmdSizePool[CMD_TRANSFER]       = 133U;
+    CmdSizePool[CMD_CRC]            = 5U;
 }
 
 static uint32_t I2CSlaveApp_GetCmdSize(uint8_t subaddr)
@@ -72,6 +77,35 @@ static bool I2CSlaveApp_SubAddrWritePassCheck(uint8_t subaddr)
         }
     }
     return bresult;
+}
+
+static void I2CSlaveApp_TransferDone(uint8_t subaddr)
+{
+    switch (subaddr)
+    {
+    case CMD_ERASE:
+        /* According to Update protocol, 0x03 : MCU */
+        if(RegisterApp_DHU_Read(CMD_ERASE,CMD_UPDATE_DATA_POS) == 0x03U)
+        {
+            TC0App_DHUTaskPush(TASK_UPDATE_ERASE);
+        }else{
+            /* Do nothing*/
+        }
+        break;
+
+    case CMD_TRANSFER:
+        /* code */
+        TC0App_DHUTaskPush(TASK_UPDATE_TRANS);
+        break;
+
+    case CMD_CRC:
+        /* code */
+        TC0App_DHUTaskPush(TASK_UPDATE_CRCSM);
+        break;
+
+    default:
+        break;
+    }
 }
 
 uint8_t flag_i2c2s = 1U;
@@ -131,6 +165,7 @@ static void SlaveCallback(uint32_t event)
                             {
                                 RegisterApp_DHU_Setup(u8SubAddr,index,i2cWriteBuffer[index]);
                             }
+                            I2CSlaveApp_TransferDone(u8SubAddr);
                         }else{
                             /* Ignore data write if command length is wrong*/
                         }
