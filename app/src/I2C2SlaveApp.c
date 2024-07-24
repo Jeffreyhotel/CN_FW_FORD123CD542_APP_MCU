@@ -45,6 +45,7 @@ static void I2CSlaveApp_CmdSizeInitial(void)
     CmdSizePool[CMD_DELIVER_ASMB]   = 26U;
     CmdSizePool[CMD_SW_FPN]         = 26U;
     CmdSizePool[CMD_SN]             = 26U;
+    CmdSizePool[CMD_MC_FPN]         = 26U;
     CmdSizePool[CMD_DTC]            = 4U;
 
     CmdSizePool[CMD_APP_REQ]            = 4U;
@@ -114,10 +115,27 @@ static bool I2CSlaveApp_SubaddressUpdateCmdCheck(uint8_t subaddr)
     return bresult;
 }
 
-static void I2CSlaveApp_TransferDone(uint8_t subaddr)
+void I2CSlaveApp_UpdateCmdChecksumSet(uint8_t subaddr)
+{
+    uint32_t u32ChecksumCounter = 0U;
+    uint32_t u32SizeOfCmd = I2CSlaveApp_GetCmdSize(subaddr);
+    if(u32SizeOfCmd > 2U && I2CSlaveApp_SubaddressUpdateCmdCheck(subaddr) == true)
+    {
+        for(uint32_t index = 0U;index<(u32SizeOfCmd-2U);index++)
+        {
+            u32ChecksumCounter += RegisterApp_DHU_Read(subaddr,index);
+        }
+        u32ChecksumCounter += 1U;
+        RegisterApp_DHU_Setup(subaddr,u32SizeOfCmd-1U,u32ChecksumCounter);
+    }else{
+        /* Do nothing and ignored*/
+    }
+}
+
+static void I2CSlaveApp_TxWriteTransferDone(uint8_t subaddr)
 {
     bool isUpdateCmdWithCorrectChecksum = false;
-    /* Check Update Cmd Checksum*/
+    /* Check if Update Cmd Checksum or not*/
     if(I2CSlaveApp_SubaddressUpdateCmdCheck(subaddr) == true)
     {
         uint32_t u32ChecksumCounter = 0U;
@@ -135,6 +153,16 @@ static void I2CSlaveApp_TransferDone(uint8_t subaddr)
         {
             switch (subaddr)
             {
+            case CMD_APP_REQ:
+                RegisterApp_DHU_Setup(CMD_APP_FB,CMD_UPDATE_DATA_POS,CMD_FB_MCU_OK);
+                I2CSlaveApp_UpdateCmdChecksumSet(CMD_APP_FB);
+                break;
+
+            case CMD_BL_REQ:
+                RegisterApp_DHU_Setup(CMD_BL_FB,CMD_UPDATE_DATA_POS,CMD_FB_MCU_OK);
+                I2CSlaveApp_UpdateCmdChecksumSet(CMD_BL_FB);
+                break;
+
             case CMD_ERASE_REQ:
                 /* According to Update protocol, 0x03 : MCU */
                 if(RegisterApp_DHU_Read(CMD_ERASE_REQ,CMD_UPDATE_DATA_POS) == CMD_REQ_FOR_MCU)
@@ -143,6 +171,7 @@ static void I2CSlaveApp_TransferDone(uint8_t subaddr)
                 }else{
                     /* Do nothing*/
                     RegisterApp_DHU_Setup(CMD_ERASE_FB,CMD_UPDATE_DATA_POS,CMD_FB_FAIL);
+                    I2CSlaveApp_UpdateCmdChecksumSet(CMD_ERASE_FB);
                 }
                 break;
 
@@ -154,6 +183,9 @@ static void I2CSlaveApp_TransferDone(uint8_t subaddr)
             case CMD_CRC_REQ:
                 /* code */
                 TC0App_DHUTaskPush(TASK_UPDATE_CRCSM);
+                break;
+
+            case CMD_UPDATESTATUS_REQ:
                 break;
 
             default:
@@ -184,6 +216,28 @@ static void I2CSlaveApp_TransferDone(uint8_t subaddr)
         default:
             break;
         }
+    }
+}
+
+static void I2CSlaveApp_TxReadTransferDone(uint8_t subaddr)
+{
+    /* Check the number of bytes read by the master(Tx) is the same of Cmd Length*/
+    if (I2CSlaveApp_GetCmdSize(subaddr) == I2C2SDriver_GetTxReadTransferCount())
+    {
+        switch (subaddr)
+        {
+        case CMD_DISP_STATUS:
+            /* Check the DISP_STATUS has been sent, then Clear INT_ERR*/
+            RegisterApp_DHU_Setup(CMD_ISR_STATUS,CMD_DATA_POS,INTB_INT_ERR_CLEAR);
+            break;
+        
+        default:
+            break;
+        }
+    }else{
+        /* Command register read is not compeleted*/
+        /* Ignore command*/
+        /* Error shooting*/
     }
 }
 
@@ -221,7 +275,8 @@ static void SlaveCallback(uint32_t event)
         case CY_SCB_I2C_SLAVE_WR_CMPLT_EVENT:
             uint32_t index = 0U;
             uint32_t length = 0U;
-            length = I2C2SDriver_GetTxCount();
+            /* Get the number of bytes written by the master(Tx) */
+            length = I2C2SDriver_GetTxWriteTransferCount();
             /* Check command with subaddr*/
             if(length > LENGTH_ZERO)
             {
@@ -245,7 +300,7 @@ static void SlaveCallback(uint32_t event)
                                 RegisterApp_DHU_Setup(u8SubAddr,index,i2cWriteBuffer[index]);
                             }
                             /* Do Cmd task*/
-                            I2CSlaveApp_TransferDone(u8SubAddr);
+                            I2CSlaveApp_TxWriteTransferDone(u8SubAddr);
                         }else{
                             /* Ignore data write if command length is wrong*/
                         }
@@ -274,13 +329,8 @@ static void SlaveCallback(uint32_t event)
 
         /* Transmit data complete */
         case CY_SCB_I2C_SLAVE_RD_CMPLT_EVENT:
-            /* Check the DISP_STATUS has been sent & Clear INT_ERR*/
-            if(i2cReadBuffer[SUB_ADDR_POS] == CMD_DISP_STATUS)
-            {
-                RegisterApp_DHU_Setup(CMD_ISR_STATUS,CMD_DATA_POS,INTB_INT_ERR_CLEAR);
-            }else{
-                /* Do nothing*/
-            }
+            uint8_t u8SubAddr = i2cReadBuffer[SUB_ADDR_POS];
+            I2CSlaveApp_TxReadTransferDone(u8SubAddr);
         break;
 
         case CY_SCB_I2C_MASTER_WR_IN_FIFO_EVENT:

@@ -28,7 +28,8 @@
 #define SL_WR_BUFFER_SIZE 2048U
 
 bool I2C2SDriver_Initial(void);
-uint32_t I2C2SDriver_GetTxCount(void);
+uint32_t I2C2SDriver_GetTxWriteTransferCount(void);
+uint32_t I2C2SDriver_GetTxReadTransferCount(void);
 void I2C2SDriver_ConfigRxBuff(uint8_t ReadBuffer[]);
 void I2C2SDriver_ConfigTxBuff(uint8_t WriteBuffer[]);
 void I2C2SDriver_RegisterCallback(cy_cb_scb_i2c_handle_events_t callback);

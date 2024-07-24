@@ -1,6 +1,7 @@
 #include "app/inc/UpdateApp.h"
 #include "app/inc/FlashApp.h"
 #include "app/inc/RegisterApp.h"
+#include "app/inc/I2C2SlaveApp.h"
 #include "driver/inc/NVMDriver.h"
 #include "driver/inc/UartDriver.h"
 
@@ -76,6 +77,7 @@ bool UpdateApp_EraseFlashMCU(void)
     sprintf((char *)u8TxBuffer,"MCU ERASE OK\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
     RegisterApp_DHU_Setup(CMD_ERASE_FB,CMD_UPDATE_DATA_POS,CMD_FB_MCU_OK);
+    I2CSlaveApp_UpdateCmdChecksumSet(CMD_ERASE_FB);
     return breturn;
 }
 
@@ -127,6 +129,7 @@ bool UpdateApp_TransferFlashMCU(void)
     {
         RegisterApp_DHU_Setup(CMD_TRANSFER_FB,CMD_UPDATE_DATA_POS,(uint8_t)u32DataSerialNumber >> 8U);
         RegisterApp_DHU_Setup(CMD_TRANSFER_FB,CMD_UPDATE_DATA_POS+1U,(uint8_t)u32DataSerialNumber);
+        I2CSlaveApp_UpdateCmdChecksumSet(CMD_TRANSFER_FB);
     }
     return breturn;
 }
@@ -244,6 +247,16 @@ bool UpdateApp_ChecksumFlashMCU(void)
         breturn &= true;
     }else{
         breturn &= false;
+    }
+
+    /* Configure the checksum result to CMD_CRC_FB*/
+    if(breturn == true)
+    {
+        RegisterApp_DHU_Setup(CMD_CRC_FB,CMD_UPDATE_DATA_POS,CMD_FB_CHECKSUM_PASS);
+        I2CSlaveApp_UpdateCmdChecksumSet(CMD_CRC_FB);
+    }else{
+        RegisterApp_DHU_Setup(CMD_CRC_FB,CMD_UPDATE_DATA_POS,CMD_FB_CHECKSUM_FAIL);
+        I2CSlaveApp_UpdateCmdChecksumSet(CMD_CRC_FB);
     }
 
     return breturn;

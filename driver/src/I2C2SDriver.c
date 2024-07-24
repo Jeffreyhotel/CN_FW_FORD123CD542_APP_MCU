@@ -68,9 +68,14 @@ static void I2C2SDriver_InterruptHandler(void)
     Cy_SCB_I2C_SlaveInterrupt(SCB_I2C2S_HW, &SCB_I2C2S_IRQ_context);
 }
 
-uint32_t I2C2SDriver_GetTxCount(void)
+uint32_t I2C2SDriver_GetTxWriteTransferCount(void)
 {
     return Cy_SCB_I2C_SlaveGetWriteTransferCount(SCB_I2C2S_HW,&SCB_I2C2S_IRQ_context);
+}
+
+uint32_t I2C2SDriver_GetTxReadTransferCount(void)
+{
+    return Cy_SCB_I2C_SlaveGetReadTransferCount(SCB_I2C2S_HW,&SCB_I2C2S_IRQ_context);
 }
 
 void I2C2SDriver_ConfigRxBuff(uint8_t ReadBuffer[])
