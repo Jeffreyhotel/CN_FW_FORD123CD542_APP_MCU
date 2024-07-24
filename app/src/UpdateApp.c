@@ -75,6 +75,7 @@ bool UpdateApp_EraseFlashMCU(void)
     __enable_irq();
     sprintf((char *)u8TxBuffer,"MCU ERASE OK\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
+    RegisterApp_DHU_Setup(CMD_ERASE_FB,CMD_UPDATE_DATA_POS,CMD_FB_MCU_OK);
     return breturn;
 }
 
@@ -122,6 +123,11 @@ bool UpdateApp_TransferFlashMCU(void)
     }
     sprintf((char *)u8TxBuffer,"TRANSFER FINISHED - SN = %ld, Checksum = %d \r\n",u32DataSerialNumber,u16ChecksumMCU);
     UartDriver_TxWriteString(u8TxBuffer);
+    if(breturn == true)
+    {
+        RegisterApp_DHU_Setup(CMD_TRANSFER_FB,CMD_UPDATE_DATA_POS,(uint8_t)u32DataSerialNumber >> 8U);
+        RegisterApp_DHU_Setup(CMD_TRANSFER_FB,CMD_UPDATE_DATA_POS+1U,(uint8_t)u32DataSerialNumber);
+    }
     return breturn;
 }
 

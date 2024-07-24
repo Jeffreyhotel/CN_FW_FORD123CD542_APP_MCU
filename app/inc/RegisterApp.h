@@ -38,6 +38,12 @@
 #define CMD_CRC_FB                  0xF8U
 #define CMD_UPDATESTATUS_FB         0xF9U
 
+/* Define DHU Command reply*/
+#define CMD_FB_MCU_OK               0x43U
+#define CMD_FB_FAIL                 0x74U
+#define CMD_REQ_FOR_TOUCH           0x02U
+#define CMD_REQ_FOR_MCU             0x03U
+
 /*Flag Register Define*/
 #define OFFSET_TOUCHFLAG    0x00U
 #define COMP_OFFSET_IRQFLAG      0x01U

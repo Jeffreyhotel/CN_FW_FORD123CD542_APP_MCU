@@ -7,6 +7,7 @@
 
 #define DHU_CMD_TOTAL_NUM    25U
 #define DHU_WRITE_APPROVED_CMD_NUM    10U
+#define DHU_CMD_UPDATE_NUM  12U
 #define LENGTH_ZERO 0U
 #define LENGTH_ONE  1U
 #define ADDR_CMD_NUM    256U
@@ -18,10 +19,17 @@ uint8_t TxCmdAddrPassPool[DHU_CMD_TOTAL_NUM] = {
                                 CMD_DISP_SHUTD,CMD_ISR_STATUS,CMD_CORE_ASMB,CMD_DELIVER_ASMB,CMD_SW_FPN,
                                 CMD_SN,CMD_MC_FPN,CMD_DTC,CMD_APP_REQ,CMD_BL_REQ,
                                 CMD_ERASE_REQ,CMD_TRANSFER_REQ,CMD_CRC_REQ,CMD_UPDATESTATUS_REQ,CMD_APP_FB,
-                                CMD_BL_FB,CMD_ERASE_FB,CMD_TRANSFER_FB,CMD_CRC_FB,CMD_UPDATESTATUS_FB};
+                                CMD_BL_FB,CMD_ERASE_FB,CMD_TRANSFER_FB,CMD_CRC_FB,CMD_UPDATESTATUS_FB
+                                };
 uint8_t TxCmdWritePassPool[DHU_WRITE_APPROVED_CMD_NUM] = {
                                 CMD_BL_PWM,CMD_DISP_UD,CMD_DISP_EN,CMD_DISP_SHUTD,CMD_APP_REQ,
-                                CMD_BL_REQ,CMD_ERASE_REQ,CMD_TRANSFER_REQ,CMD_CRC_REQ,CMD_UPDATESTATUS_REQ};
+                                CMD_BL_REQ,CMD_ERASE_REQ,CMD_TRANSFER_REQ,CMD_CRC_REQ,CMD_UPDATESTATUS_REQ
+                                };
+uint8_t TxCmdUpdatePool[DHU_CMD_UPDATE_NUM] = {
+                                CMD_APP_REQ,CMD_BL_REQ,CMD_ERASE_REQ,CMD_TRANSFER_REQ,CMD_CRC_REQ,
+                                CMD_UPDATESTATUS_REQ,CMD_APP_FB,CMD_BL_FB,CMD_ERASE_FB,CMD_TRANSFER_FB,
+                                CMD_CRC_FB,CMD_UPDATESTATUS_FB
+                                };
 uint32_t CmdSizePool[ADDR_CMD_NUM] = {0};
 
 static void I2CSlaveApp_CmdSizeInitial(void)
@@ -90,33 +98,92 @@ static bool I2CSlaveApp_SubAddrWritePassCheck(uint8_t subaddr)
     return bresult;
 }
 
-static void I2CSlaveApp_TransferDone(uint8_t subaddr)
+static bool I2CSlaveApp_SubaddressUpdateCmdCheck(uint8_t subaddr)
 {
-    /* Need to check crc is correct*/
-    switch (subaddr)
+    bool bresult = false;
+    for (uint32_t cnt = 0U; cnt<DHU_WRITE_APPROVED_CMD_NUM; cnt++)
     {
-    case CMD_ERASE_REQ:
-        /* According to Update protocol, 0x03 : MCU */
-        if(RegisterApp_DHU_Read(CMD_ERASE_REQ,CMD_UPDATE_DATA_POS) == 0x03U)
+        if (TxCmdUpdatePool[cnt] == subaddr)
         {
-            TC0App_DHUTaskPush(TASK_UPDATE_ERASE);
+            bresult = true;
+            break;
         }else{
             /* Do nothing*/
         }
-        break;
+    }
+    return bresult;
+}
 
-    case CMD_TRANSFER_REQ:
-        /* code */
-        TC0App_DHUTaskPush(TASK_UPDATE_TRANS);
-        break;
+static void I2CSlaveApp_TransferDone(uint8_t subaddr)
+{
+    bool isUpdateCmdWithCorrectChecksum = false;
+    /* Check Update Cmd Checksum*/
+    if(I2CSlaveApp_SubaddressUpdateCmdCheck(subaddr) == true)
+    {
+        uint32_t u32ChecksumCounter = 0U;
+        for(uint32_t index = 0U;index<(I2CSlaveApp_GetCmdSize(subaddr)-2U);index++)
+        {
+            u32ChecksumCounter += i2cWriteBuffer[index];
+        }
+        if((uint8_t)(u32ChecksumCounter & 0x000000FFU) == i2cWriteBuffer[I2CSlaveApp_GetCmdSize(subaddr)-1U])
+        {
+            isUpdateCmdWithCorrectChecksum = true;
+        }else{
+            /* Do nothing & Ignore Command*/
+        }
+        if (isUpdateCmdWithCorrectChecksum == true)
+        {
+            switch (subaddr)
+            {
+            case CMD_ERASE_REQ:
+                /* According to Update protocol, 0x03 : MCU */
+                if(RegisterApp_DHU_Read(CMD_ERASE_REQ,CMD_UPDATE_DATA_POS) == CMD_REQ_FOR_MCU)
+                {
+                    TC0App_DHUTaskPush(TASK_UPDATE_ERASE);
+                }else{
+                    /* Do nothing*/
+                    RegisterApp_DHU_Setup(CMD_ERASE_FB,CMD_UPDATE_DATA_POS,CMD_FB_FAIL);
+                }
+                break;
 
-    case CMD_CRC_REQ:
-        /* code */
-        TC0App_DHUTaskPush(TASK_UPDATE_CRCSM);
-        break;
+            case CMD_TRANSFER_REQ:
+                /* code */
+                TC0App_DHUTaskPush(TASK_UPDATE_TRANS);
+                break;
 
-    default:
-        break;
+            case CMD_CRC_REQ:
+                /* code */
+                TC0App_DHUTaskPush(TASK_UPDATE_CRCSM);
+                break;
+
+            default:
+                break;
+            }
+        }else{
+            /* Do nothing*/
+        }
+    }else{
+        /* Do common cmd id task*/
+        switch (subaddr)
+        {
+        case CMD_DISP_STATUS:
+            break;
+
+        case CMD_DISP_ID:
+            break;
+
+        case CMD_BL_PWM:
+            break;
+
+        case CMD_DISP_EN:
+            break;
+
+        case CMD_DISP_SHUTD:
+            break;
+
+        default:
+            break;
+        }
     }
 }
 
@@ -177,6 +244,7 @@ static void SlaveCallback(uint32_t event)
                             {
                                 RegisterApp_DHU_Setup(u8SubAddr,index,i2cWriteBuffer[index]);
                             }
+                            /* Do Cmd task*/
                             I2CSlaveApp_TransferDone(u8SubAddr);
                         }else{
                             /* Ignore data write if command length is wrong*/
