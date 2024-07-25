@@ -69,7 +69,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     else{
         u8Return = STATE_PRENORMAL;
     }
-
+    WdtApp_CleanCounter();
     /* Configure and enable the UART peripheral */
     UartDriver_Initial();
     TC0App_Initial();
@@ -87,6 +87,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     /* Enable global interrupts */
     __enable_irq();
     
+    WdtApp_CheckResetCause();
     WdtApp_Initial();
     sprintf((char *)u8TxBuffer,"BOOT FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
@@ -104,6 +105,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
  */
 static uint8_t MainApp_PreNormal_Mode(uint8_t u8Nothing)
 {
+    WdtApp_CleanCounter();
     /*ADC initial*/
     TC0App_NormalWorkStartSet(TRUE);
     AdcDriver_Initial(ADC_SAR0_TYPE, ADC_SAR0_CONFIG);
@@ -123,6 +125,7 @@ static uint8_t MainApp_PreNormal_Mode(uint8_t u8Nothing)
 static uint8_t MainApp_HandShake_Mode(uint8_t u8Nothing)
 {
     uint8_t u8Return;
+    WdtApp_CleanCounter();
     /* Check Disp En Cmd*/
     if(RegisterApp_DHU_Read(CMD_DISP_EN,CMD_DATA_POS) == 0x01U)
     {
@@ -148,7 +151,6 @@ static uint8_t MainApp_HandShake_Mode(uint8_t u8Nothing)
 static uint8_t MainApp_Normal_Mode(uint8_t u8Nothing)
 {
     uint8_t u8Return;
-
     StackTaskApp_MissionAction();
     INTBApp_Flow();
     // sprintf((char *)u8TxBuffer,"NORMAL FINISHED 0x%02x\r\n",RegisterApp_DHU_Read(CMD_DISP_STATUS,0U));
@@ -174,6 +176,7 @@ static uint8_t MainApp_Normal_Mode(uint8_t u8Nothing)
 static uint8_t MainApp_PreSleep_Mode(uint8_t u8Nothing)
 {
     uint8_t u8Return;
+    WdtApp_CleanCounter();
     /* Do LCD Power Off Sequence*/
     INTBApp_InitSwitch(INTB_DEINITIAL);
     sprintf((char *)u8TxBuffer,"PRESLEEP FINISHED\r\n");
@@ -191,6 +194,7 @@ static uint8_t MainApp_PreSleep_Mode(uint8_t u8Nothing)
 static uint8_t MainApp_Sleep_Mode(uint8_t u8Nothing)
 {
     uint8_t u8Return;
+    WdtApp_CleanCounter();
     INTBApp_Flow();
     /* Do Power Off Sequence*/
     sprintf((char *)u8TxBuffer,"SLEEP FINISHED\r\n");

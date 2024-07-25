@@ -209,16 +209,16 @@ void StackTaskApp_MissionAction(void)
             uint8_t Status = ERROR_NONE;
             Command[0] = CMD_DISP_EN; /*Color Temp Write Only Reg*/
             Command[1] = 0x01U; /*IP Index*/
-            // Status = I2C1MDriver_Write(0x71U,Command,2U);
-            // Status |= I2C1MDriver_Read(0x71,RxBuffer,10U);
-            // Status |= I2C1MDriver_WriteRead(0x71U,Command,2U,RxBuffer,10U);
-            // Status |= I2C1MDriver_WriteRead(0x71U,Command4,1U,RxBuffer,2U);
-            // Status |= I2C1MDriver_WriteRead(0x71U,Command2,3U,RxBuffer,10U);
-            // Status |= I2C1MDriver_WriteRead(0x71U,Command3,1U,RxBuffer,3U);
-            // Status |= I2C1MDriver_WriteRead(0x71U,Command4,1U,RxBuffer,2U);
-            // Status |= I2C1MDriver_WriteRead(0x71U,Command5,1U,RxBuffer,26U);
+            Status = I2C1MDriver_Write(0x71U,Command,2U);
+            Status |= I2C1MDriver_Read(0x71,RxBuffer,10U);
+            Status |= I2C1MDriver_WriteRead(0x71U,Command,2U,RxBuffer,10U);
+            Status |= I2C1MDriver_WriteRead(0x71U,Command4,1U,RxBuffer,2U);
+            Status |= I2C1MDriver_WriteRead(0x71U,Command2,3U,RxBuffer,10U);
+            Status |= I2C1MDriver_WriteRead(0x71U,Command3,1U,RxBuffer,3U);
+            Status |= I2C1MDriver_WriteRead(0x71U,Command4,1U,RxBuffer,2U);
+            Status |= I2C1MDriver_WriteRead(0x71U,Command5,1U,RxBuffer,26U);
             //Status |= I2C1MDriver_Write(0x71U,Command6,5U);
-            Status |= I2C1MDriver_Write(0x71U,Command7,133U);
+            //Status |= I2C1MDriver_Write(0x71U,Command7,133U);
             if(Status != ERROR_NONE)
             {
                 sprintf((char *)u8TxBuffer,"I2C M driver transmit fail >> 0x%02x\r\n",Status);

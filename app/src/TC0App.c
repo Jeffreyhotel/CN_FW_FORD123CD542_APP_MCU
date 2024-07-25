@@ -27,6 +27,7 @@
 #include "app/inc/TC0App.h"
 #include "app/inc/StackTaskApp.h"
 #include "driver/inc/TC0Driver.h"
+#include "app/inc/WdtApp.h"
 
 #define CLOCK_48M_DELAY_MS 7920U
 #define CLOCK_48M_DELAY_US 8U
@@ -38,6 +39,7 @@ static long int derating_timer_sec =0;
 static long int batteryprotect_timer_sec =0;
 static long int intb_set_timer_ms=0;
 static long int intb_hold_timer_ms=0;
+static long int wdt_timer_ms=0;
 uint8_t FLAG_DERATINGCNT_START = FALSE;
 uint8_t FLAG_BATTERYPROT_START = FALSE;
 uint8_t FLAG_STARTTOWORK_START = FALSE;
@@ -122,6 +124,13 @@ static void TC0App_Callback_InterruptHandler(void)
         }else{/*Do Nothing*/}
     }
 
+    /* WDT Timer Function*/
+    wdt_timer_ms = wdt_timer_ms+1;
+    if(wdt_timer_ms == WDT_INT_TRIGER_MS){
+        WdtApp_InterruptCallback();
+    }
+
+    /* Timer with 1sec action*/
     if((timercount_ms % 1000) == 0)
     {
         TC0APP_TC0_Task_1000msec();
@@ -224,6 +233,10 @@ uint8_t TC0App_TimerReturn(uint8_t Request)
         u8Return = batteryprotect_timer_sec;
         break;
 
+    case TIMER_WDTCOUNT:
+        u8Return = wdt_timer_ms;
+        break;
+
     default:
         u8Return = 0xFFU;
         break;
@@ -264,6 +277,10 @@ void TC0App_TimerReset(uint8_t Request)
     case TIMER_BATTERYCOUNT:
         /* code */
         batteryprotect_timer_sec = 0U;
+        break;
+
+    case TIMER_WDTCOUNT:
+        wdt_timer_ms = 0U;
         break;
 
     default:

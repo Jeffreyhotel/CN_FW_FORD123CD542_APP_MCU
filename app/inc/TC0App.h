@@ -3,12 +3,13 @@
 
 #include "main.h"
 
-#define TIMER_CPUCOUNT       0x00U
-#define TIMER_INT_SET_COUNT  0x01U
-#define TIMER_INT_HOLD_COUNT 0x02U
-#define TIMER_HANDSHAKECOUNT 0x03U
-#define TIMER_DERATECOUNT    0x04U
-#define TIMER_BATTERYCOUNT   0x05U
+#define TIMER_CPUCOUNT          0x00U
+#define TIMER_INT_SET_COUNT     0x01U
+#define TIMER_INT_HOLD_COUNT    0x02U
+#define TIMER_HANDSHAKECOUNT    0x03U
+#define TIMER_DERATECOUNT       0x04U
+#define TIMER_BATTERYCOUNT      0x05U
+#define TIMER_WDTCOUNT          0x06U
 
 #define DHUCmdBufferSize 256U
 
