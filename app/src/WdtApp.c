@@ -1,5 +1,6 @@
 #include "driver/inc/WdtDriver.h"
 #include "driver/inc/UartDriver.h"
+#include "app/inc/RegisterApp.h"
 #include "app/inc/TC0App.h"
 
 static uint8_t u8TxBuffer[60] = {0};
@@ -12,22 +13,26 @@ void WdtApp_CheckResetCause(void)
         /* code */
         sprintf((char *)u8TxBuffer,"Reset Cause by 0x%04lX:HWWDT!\r\n",CY_SYSLIB_RESET_HWWDT);
         UartDriver_TxWriteString(u8TxBuffer);
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_RESET_CAUSE,0x02);
         break;
 
     case CY_SYSLIB_PROT_FAULT:
         /* code */
         sprintf((char *)u8TxBuffer,"Reset Cause by 0x%04lX:FAULT!\r\n",CY_SYSLIB_PROT_FAULT);
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_RESET_CAUSE,0x04);
         UartDriver_TxWriteString(u8TxBuffer);
         break;
 
     case CY_SYSLIB_RESET_SOFT:
         /* code */
         sprintf((char *)u8TxBuffer,"Reset Cause by 0x%04lX:SOFT!\r\n",CY_SYSLIB_RESET_SOFT);
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_RESET_CAUSE,0x08);
         UartDriver_TxWriteString(u8TxBuffer);
         break;
 
     default:
         sprintf((char *)u8TxBuffer,"Reset Cause by 0x%04lX:UNKOWN!\r\n",Cy_SysLib_GetResetReason());
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_RESET_CAUSE,0x01);
         UartDriver_TxWriteString(u8TxBuffer);
         break;
     }

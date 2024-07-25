@@ -29,6 +29,7 @@
 
 Register RegisterContainer;
 
+#if 0
 void RegisterApp_DHU_CRCSetup(uint8_t Page, uint16_t Length)
 {
     uint8_t CRC = RegisterApp_DHU_Read(Page,OFFSET_CMDID);
@@ -41,6 +42,7 @@ void RegisterApp_DHU_CRCSetup(uint8_t Page, uint16_t Length)
     RegisterApp_DHU_Setup(Page,(Length-1U),CRC);
 	(void)CRC;
 }
+#endif
 
 void RegisterApp_ALL_Initial(void)
 {
@@ -58,21 +60,21 @@ void RegisterApp_Initial(Register* pRegisterContainer)
     uint8_t address = 0U;
     for(counter =0x0000U;counter<RegisterMaxSize;counter++){
         address = (uint8_t) counter;
-        if(address == 0x0000U)
+        if(address == SUB_ADDR_POS)
         {
-            pRegisterContainer->DHU_0X00_DISP_STATUS[address]   = CMD_DISP_STATUS;
-            pRegisterContainer->DHU_0X01_DISP_ID[address]       = CMD_DISP_ID;
-            pRegisterContainer->DHU_0X02_BL_PWM[address]        = CMD_BL_PWM;
-            pRegisterContainer->DHU_0X03_DISP_UD[address]       = CMD_DISP_UD;
-            pRegisterContainer->DHU_0X04_DISP_EN[address]       = CMD_DISP_EN;
-            pRegisterContainer->DHU_0X05_DISP_SHUTD[address]    = CMD_DISP_SHUTD;
-            pRegisterContainer->DHU_0X30_ISR_STATUS[address]    = CMD_ISR_STATUS;
-            pRegisterContainer->DHU_0X31_CORE_ASMB[address]     = CMD_CORE_ASMB;
-            pRegisterContainer->DHU_0X32_DELIVER_ASMB[address]  = CMD_DELIVER_ASMB;
-            pRegisterContainer->DHU_0X33_SW_FPN[address]        = CMD_SW_FPN;
-            pRegisterContainer->DHU_0X34_SN[address]            = CMD_SN;
-            pRegisterContainer->DHU_0X35_MC_FPN[address]        = CMD_MC_FPN;
-            pRegisterContainer->DHU_0XA3_DTC[address]           = CMD_DTC;
+            pRegisterContainer->DHU_0X00_DISP_STATUS[address]       = CMD_DISP_STATUS;
+            pRegisterContainer->DHU_0X01_DISP_ID[address]           = CMD_DISP_ID;
+            pRegisterContainer->DHU_0X02_BL_PWM[address]            = CMD_BL_PWM;
+            pRegisterContainer->DHU_0X03_DISP_UD[address]           = CMD_DISP_UD;
+            pRegisterContainer->DHU_0X04_DISP_EN[address]           = CMD_DISP_EN;
+            pRegisterContainer->DHU_0X05_DISP_SHUTD[address]        = CMD_DISP_SHUTD;
+            pRegisterContainer->DHU_0X30_ISR_STATUS[address]        = CMD_ISR_STATUS;
+            pRegisterContainer->DHU_0X31_CORE_ASMB[address]         = CMD_CORE_ASMB;
+            pRegisterContainer->DHU_0X32_DELIVER_ASMB[address]      = CMD_DELIVER_ASMB;
+            pRegisterContainer->DHU_0X33_SW_FPN[address]            = CMD_SW_FPN;
+            pRegisterContainer->DHU_0X34_SN[address]                = CMD_SN;
+            pRegisterContainer->DHU_0X35_MC_FPN[address]            = CMD_MC_FPN;
+            pRegisterContainer->DHU_0XA3_DTC[address]               = CMD_DTC;
 
             pRegisterContainer->DHU_0XE4_APP_REQ[address]           = CMD_APP_REQ;
             pRegisterContainer->DHU_0XE5_BL_REQ[address]            = CMD_BL_REQ;
@@ -87,19 +89,19 @@ void RegisterApp_Initial(Register* pRegisterContainer)
             pRegisterContainer->DHU_0XF8_CRC_FB[address]            = CMD_CRC_FB;
             pRegisterContainer->DHU_0XF9_UPDATESTATUS_FB[address]   = CMD_UPDATESTATUS_FB;
         }else{
-            pRegisterContainer->DHU_0X00_DISP_STATUS[address] = 0x00U;
-            pRegisterContainer->DHU_0X01_DISP_ID[address] = 0x00U;
-            pRegisterContainer->DHU_0X02_BL_PWM[address] = 0x00U;
-            pRegisterContainer->DHU_0X03_DISP_UD[address] = 0x00U;
-            pRegisterContainer->DHU_0X04_DISP_EN[address] = 0x00U;
-            pRegisterContainer->DHU_0X05_DISP_SHUTD[address] = 0x00U;
-            pRegisterContainer->DHU_0X30_ISR_STATUS[address] = 0x00U;
-            pRegisterContainer->DHU_0X31_CORE_ASMB[address] = 0x00U;
-            pRegisterContainer->DHU_0X32_DELIVER_ASMB[address] = 0x00U;
-            pRegisterContainer->DHU_0X33_SW_FPN[address] = 0x00U;
-            pRegisterContainer->DHU_0X34_SN[address] = 0x00U;
-            pRegisterContainer->DHU_0X35_MC_FPN[address] = 0x00U;
-            pRegisterContainer->DHU_0XA3_DTC[address] = 0x00U;
+            pRegisterContainer->DHU_0X00_DISP_STATUS[address]       = 0x00U;
+            pRegisterContainer->DHU_0X01_DISP_ID[address]           = 0x00U;
+            pRegisterContainer->DHU_0X02_BL_PWM[address]            = 0x00U;
+            pRegisterContainer->DHU_0X03_DISP_UD[address]           = 0x00U;
+            pRegisterContainer->DHU_0X04_DISP_EN[address]           = 0x00U;
+            pRegisterContainer->DHU_0X05_DISP_SHUTD[address]        = 0x00U;
+            pRegisterContainer->DHU_0X30_ISR_STATUS[address]        = 0x00U;
+            pRegisterContainer->DHU_0X31_CORE_ASMB[address]         = 0x00U;
+            pRegisterContainer->DHU_0X32_DELIVER_ASMB[address]      = 0x00U;
+            pRegisterContainer->DHU_0X33_SW_FPN[address]            = 0x00U;
+            pRegisterContainer->DHU_0X34_SN[address]                = 0x00U;
+            pRegisterContainer->DHU_0X35_MC_FPN[address]            = 0x00U;
+            pRegisterContainer->DHU_0XA3_DTC[address]               = 0x00U;
 
             pRegisterContainer->DHU_0XE4_APP_REQ[address]           = 0x00U;
             pRegisterContainer->DHU_0XE5_BL_REQ[address]            = 0x00U;

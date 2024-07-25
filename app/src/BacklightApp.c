@@ -324,6 +324,8 @@ void BacklightApp_DeratingFlow(void)
             CurrentStatus = BacklightApp_Normal_Mode(u16MATemp);
             break;
         }
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_BLT_TEMP_ADC,(uint8_t)(u16MATemp >> 8));
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_BLT_TEMP_ADC+1U,(uint8_t)(u16MATemp));
     }else{
         /*DO NOTHING*/
     }
@@ -340,6 +342,9 @@ void BacklightApp_TempMonitor(void)
     PcbTempVolt = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE,ADC_SAR0_CH0_PCBTEMP);
     sprintf((char *)u8TxBuffer,"PCB TEMP %d \r\n",PcbTempVolt);
     UartDriver_TxWriteString((uint8_t*)u8TxBuffer);
+    RegisterApp_DHU_Setup(CMD_DTC,DTC_PCB_TEMP_ADC,(uint8_t)(PcbTempVolt >> 8));
+    RegisterApp_DHU_Setup(CMD_DTC,DTC_PCB_TEMP_ADC+1U,(uint8_t)(PcbTempVolt));
+
     BltTempVolt = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE,ADC_SAR0_CH1_BLTTEMP);
     sprintf((char *)u8TxBuffer,"BLT TEMP %d DERATE %d STATE %d\r\n",BltTempVolt,u8BLT_DERATING_EN,u8BLT_DERATING_STATUS);
     UartDriver_TxWriteString((uint8_t*)u8TxBuffer);

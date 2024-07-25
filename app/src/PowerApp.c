@@ -85,5 +85,5 @@ void PowerApp_PowerGoodFlow()
         /* When voltage at swim state, Do nothing*/
     }
     sprintf((char *)u8TxBuffer,"PG FLOW> P1V2 0x%02x > P3V3 0x%02x\r\n",u8Status1,u8Status2);
-    UartDriver_TxWriteString(u8TxBuffer);
+    //UartDriver_TxWriteString(u8TxBuffer);
 }

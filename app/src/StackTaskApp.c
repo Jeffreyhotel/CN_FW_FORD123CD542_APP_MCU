@@ -193,7 +193,7 @@ void StackTaskApp_MissionAction(void)
             uint8_t Command2[3] = {CMD_DISP_EN,0x02,0x03};
             uint8_t Command3[1] = {CMD_DISP_STATUS};
             uint8_t Command4[1] = {CMD_ISR_STATUS};
-            uint8_t Command5[1] = {CMD_CORE_ASMB};
+            uint8_t Command5[1] = {CMD_DTC};
             //uint8_t Command6[4] = {CMD_ERASE_REQ,0x03,0x03,0xEC};
             //uint8_t Command6[5] = {CMD_CRC_REQ,0x04,0x01,0x02,0xEF};
             uint8_t Command7[133] = {CMD_TRANSFER_REQ,0x84,0x01,0xC1,

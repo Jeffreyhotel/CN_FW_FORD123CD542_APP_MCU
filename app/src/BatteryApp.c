@@ -38,67 +38,6 @@ uint8_t gu8BattSampleReady = FALSE;
 uint8_t gu8BattSampleCount = 0U;
 uint16_t gu16BattVoltSample[BATT_SAMPLE_CNT] = {0U};
 
-// #define BT_VOLT0   1364U    
-/*8V*/
-
-// #define BT_VOLT1   1450U    
-/*8.5V*/
-
-// #define BT_VOLT2   1535U    
-/*9V-Hysteresis*/
-
-// #define BT_VOLT3   2730U    
-/*16V*/
-
-// #define BT_VOLT4   2815U    
-/*16.5V-Hysteresis*/
-
-// #define BT_VOLT5   2900U    
-/*17V*/
-
-// #define BT_VOLT6   4095U    
-/*24V*/
-
-
-/*HSI 231215*/
-// #define BT_VOLT0   1177U    
-/*8V*/
-
-// #define BT_VOLT1   1253U    
-/*8.5V*/
-
-// #define BT_VOLT2   1329U    
-/*9V-Hysteresis*/
-
-// #define BT_VOLT3   2386U    
-/*16V*/
-
-// #define BT_VOLT4   2461U    
-/*16.5V-Hysteresis*/
-
-// #define BT_VOLT5   2537U    
-/*17V - 2537*/ 
-
-// #define BT_VOLT6   4095U    
-/*24V*/
-
-
-/*DTC 240223*/
-// #define BT_VOLT0   1177U    
-/*8V*/
-// #define BT_VOLT1   1267U    
-/*8.5V*/
-// #define BT_VOLT2   1329U    
-/*9V-Hysteresis*/
-// #define BT_VOLT3   2688U    
-/*18V*/
-// #define BT_VOLT4   2763U    
-/*18.5V-Hysteresis*/
-// #define BT_VOLT5   2839U    
-/*19V - 2839*/ 
-// #define BT_VOLT6   4095U    
-/*24V*/
-
 /*DTC 240321*/
 #define BT_VOLT0   1102U    
 /*7.5V*/
@@ -294,13 +233,11 @@ void BatteryApp_Flow(void)
     uint16_t BatteryVolt = 0U;
 	uint16_t u16MABatt = 0U;
     BatteryVolt = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE,ADC_SAR0_CH2_BATVOLT);
-
     gu16BattVoltSample[gu8BattSampleCount] = BatteryVolt;
     if(gu8BattSampleCount == (BATT_SAMPLE_CNT - 1U)){gu8BattSampleReady = TRUE;}
     gu8BattSampleCount = ((gu8BattSampleCount + 1U) > (BATT_SAMPLE_CNT - 1U)) ? (uint8_t)0U : (uint8_t)(gu8BattSampleCount + 1U);
     if(gu8BattSampleReady == TRUE)
     {
-		
         u16MABatt = BatteryApp_MAcount(gu16BattVoltSample);
         VoltStage = BatteryApp_StageCheck(u16MABatt);
         switch (guBatteryStatus)
@@ -324,8 +261,8 @@ void BatteryApp_Flow(void)
             CurrentStatus = BatteryApp_Normal_Mode(VoltStage);
             break;
         }
-        //RegisterApp_DHU_Setup(CMDID_COMP,COMP_OFFSET_BATT,(uint8_t)(u16MABatt >> 8));
-        //RegisterApp_DHU_Setup(CMDID_COMP,COMP_OFFSET_BATT+1U,(uint8_t)(u16MABatt));
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_BATT_VOLT_ADC,(uint8_t)(u16MABatt >> 8));
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_BATT_VOLT_ADC+1U,(uint8_t)(u16MABatt));
     }
 	else
 	{

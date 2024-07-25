@@ -46,7 +46,7 @@ static void I2CSlaveApp_CmdSizeInitial(void)
     CmdSizePool[CMD_SW_FPN]         = 26U;
     CmdSizePool[CMD_SN]             = 26U;
     CmdSizePool[CMD_MC_FPN]         = 26U;
-    CmdSizePool[CMD_DTC]            = 4U;
+    CmdSizePool[CMD_DTC]            = 26U;
 
     CmdSizePool[CMD_APP_REQ]            = 4U;
     CmdSizePool[CMD_BL_REQ]             = 4U;
