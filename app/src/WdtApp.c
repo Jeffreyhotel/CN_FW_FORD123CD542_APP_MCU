@@ -1,9 +1,21 @@
 #include "driver/inc/WdtDriver.h"
 #include "driver/inc/UartDriver.h"
+#include "driver/inc/PortDriver.h"
 #include "app/inc/RegisterApp.h"
 #include "app/inc/TC0App.h"
 
 static uint8_t u8TxBuffer[60] = {0};
+
+#if 0
+volatile bool isr_flag = false;
+
+static void WdtApp_ISR(void)
+{
+    /* Avoid continue interrupt*/
+    Cy_WDT_MaskInterrupt();
+    isr_flag = true;
+}
+#endif
 
 void WdtApp_CheckResetCause(void)
 {
@@ -48,6 +60,17 @@ void WdtApp_CleanCounter(void)
     Cy_WDT_ClearInterrupt();
     Cy_WDT_ClearWatchdog();
     TC0App_TimerReset(TIMER_WDTCOUNT);
+#if 0
+    if (isr_flag == true)
+    {
+        Cy_WDT_UnmaskInterrupt();
+        isr_flag = false;
+        /* Update the match count */
+        WdtDriver_UpdateMatchCount();
+        
+    }
+#endif
+    // PortDriver_PinToggle(P1V2_EN_PORT,P1V2_EN_PIN);
 }
 
 void WdtApp_Initial(void)
@@ -56,6 +79,9 @@ void WdtApp_Initial(void)
     WdtDriver_Disable();
     (void)WdtDriver_Initial();
     (void)WdtDriver_SetMatchIfPeriodMode();
+#if 0
+    (void)WdtDriver_RegisterISR(WdtApp_ISR);
+#endif
     (void)WdtDriver_Enable();
     WdtDriver_RegisterDSCallback();
 }

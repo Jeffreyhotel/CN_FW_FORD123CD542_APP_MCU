@@ -29,7 +29,7 @@
 #include "driver/inc/TC0Driver.h"
 #include "app/inc/WdtApp.h"
 
-#define CLOCK_48M_DELAY_MS 7920U
+#define CLOCK_48M_DELAY_MS 5617U
 #define CLOCK_48M_DELAY_US 8U
 
 static long int timercount_ms = 0;

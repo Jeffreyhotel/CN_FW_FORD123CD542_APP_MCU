@@ -8,6 +8,6 @@ void WdtApp_CleanCounter(void);
 void WdtApp_InterruptCallback(void);
 void WdtApp_CheckResetCause(void);
 
-#define WDT_INT_TRIGER_MS    4000U
+#define WDT_INT_TRIGER_MS    2500U
 
 #endif

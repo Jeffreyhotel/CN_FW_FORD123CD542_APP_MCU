@@ -6,7 +6,7 @@
 #define ILO_START_UP_TIME          (2U)
 /* WDT interrupt period in milliseconds.
 Max limit is 1698 ms. */
-#define WDT_INTERRUPT_INTERVAL_MS  (1500U)
+#define WDT_INTERRUPT_INTERVAL_MS  (1500)
 /* Define desired delay in microseconds */
 #define DESIRED_WDT_INTERVAL       (WDT_INTERRUPT_INTERVAL_MS  * 1000U)
 /* WDT interrupt priority */
@@ -89,6 +89,14 @@ bool WdtDriver_SetMatchIfPeriodMode(void)
         bresult = false;
     }
     return bresult;
+}
+
+void WdtDriver_UpdateMatchCount(void)
+{
+    /* Step 4- Write match value if periodic interrupt mode selected */
+    /* Update the match count */
+    Cy_WDT_SetMatch((uint16_t)(Cy_WDT_GetMatch() +\
+                                ilo_compensated_counts));
 }
 
 bool WdtDriver_RegisterISR(cy_israddress user_isr)

@@ -1113,7 +1113,7 @@
                         <Param id="DataWidth" value="8"/>
                         <Param id="DropOnFrameErr" value="false"/>
                         <Param id="DropOnParityErr" value="false"/>
-                        <Param id="EnableInputFilter" value="true"/>
+                        <Param id="EnableInputFilter" value="false"/>
                         <Param id="EnableLinMode" value="false"/>
                         <Param id="FlowControl" value="false"/>
                         <Param id="IntrRxBreakDetected" value="false"/>
