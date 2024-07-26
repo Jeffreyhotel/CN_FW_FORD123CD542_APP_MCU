@@ -110,6 +110,7 @@ static uint8_t MainApp_PreNormal_Mode(uint8_t u8Nothing)
     TC0App_NormalWorkStartSet(TRUE);
     AdcDriver_Initial(ADC_SAR0_TYPE, ADC_SAR0_CONFIG);
     PowerApp_PowerGoodInitial();
+    PowerApp_Sequence(POWER_ON);
     /*Do LCD Power On Sequence*/
     sprintf((char *)u8TxBuffer,"PRENORMAL FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
@@ -180,6 +181,7 @@ static uint8_t MainApp_PreSleep_Mode(uint8_t u8Nothing)
     WdtApp_CleanCounter();
     /* Do LCD Power Off Sequence*/
     INTBApp_InitSwitch(INTB_DEINITIAL);
+    PowerApp_Sequence(POWER_OFF);
     sprintf((char *)u8TxBuffer,"PRESLEEP FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
     u8Return = STATE_SLEEP;
