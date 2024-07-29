@@ -259,6 +259,9 @@ void StackTaskApp_MissionAction(void)
 
         case TASK_PWGFLOW:
             PowerApp_PowerGoodFlow();
+            DiagApp_FaultCheckFlow();
+            DiagApp_FpcCheckFlow();
+            DiagApp_LockCheckFlow();
         break;
 
         case TASK_UPDATE_ERASE:

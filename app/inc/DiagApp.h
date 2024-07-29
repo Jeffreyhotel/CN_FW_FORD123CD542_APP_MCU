@@ -45,5 +45,7 @@ typedef struct{
 void DiagApp_DispStatusClear(uint8_t ByteNumber, uint8_t MaskValue);
 void DiagApp_DispStatusSet(uint8_t ByteNumber, uint8_t MaskValue);
 uint8_t DiagApp_ConsecutiveCheckIO(DiagIO ds);
-
+void DiagApp_FaultCheckFlow(void);
+void DiagApp_FpcCheckFlow(void);
+void DiagApp_LockCheckFlow(void);
 #endif
