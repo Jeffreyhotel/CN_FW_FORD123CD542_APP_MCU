@@ -52,11 +52,12 @@
 /*Flag Register Define*/
 #define DTC_SW_VERSION              0x01U
 #define DTC_BL_VERSION              0x02U
-#define DTC_DDI_VERSION             0x03U
-#define DTC_RESET_CAUSE             0x04U
-#define DTC_BATT_VOLT_ADC           0x05U
-#define DTC_BLT_TEMP_ADC            0x07U
-#define DTC_PCB_TEMP_ADC            0x09U
+#define DTC_HW_VERSION              0x03U
+#define DTC_DDI_VERSION             0x04U
+#define DTC_RESET_CAUSE             0x05U
+#define DTC_BATT_VOLT_ADC           0x06U
+#define DTC_BLT_TEMP_ADC            0x08U
+#define DTC_PCB_TEMP_ADC            0x0AU
 
 typedef struct{
     volatile uint8_t DHU_0X00_DISP_STATUS[RegisterMaxSize];
