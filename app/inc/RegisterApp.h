@@ -45,6 +45,9 @@
 #define CMD_REQ_FOR_MCU             0x03U
 #define CMD_FB_CHECKSUM_PASS        0x00U
 #define CMD_FB_CHECKSUM_FAIL        0x01U
+#define CMD_FB_UPDATE_SUCCESS       0x00U
+#define CMD_FB_UPDATE_FAIL          0x01U
+#define CMD_FB_UPDATE_PROGRESSING   0x02U
 
 /*Flag Register Define*/
 #define DTC_SW_VERSION              0x01U

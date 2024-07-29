@@ -156,6 +156,8 @@ static void I2CSlaveApp_TxWriteTransferDone(uint8_t subaddr)
             case CMD_APP_REQ:
                 RegisterApp_DHU_Setup(CMD_APP_FB,CMD_UPDATE_DATA_POS,CMD_FB_MCU_OK);
                 I2CSlaveApp_UpdateCmdChecksumSet(CMD_APP_FB);
+                RegisterApp_DHU_Setup(CMD_UPDATESTATUS_FB,CMD_UPDATE_DATA_POS,CMD_FB_UPDATE_PROGRESSING);
+                I2CSlaveApp_UpdateCmdChecksumSet(CMD_UPDATESTATUS_FB);
                 break;
 
             case CMD_BL_REQ:

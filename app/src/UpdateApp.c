@@ -254,9 +254,12 @@ bool UpdateApp_ChecksumFlashMCU(void)
     {
         RegisterApp_DHU_Setup(CMD_CRC_FB,CMD_UPDATE_DATA_POS,CMD_FB_CHECKSUM_PASS);
         I2CSlaveApp_UpdateCmdChecksumSet(CMD_CRC_FB);
+        /* Update Flag would return pass after software reset (Default value)*/
     }else{
         RegisterApp_DHU_Setup(CMD_CRC_FB,CMD_UPDATE_DATA_POS,CMD_FB_CHECKSUM_FAIL);
         I2CSlaveApp_UpdateCmdChecksumSet(CMD_CRC_FB);
+        RegisterApp_DHU_Setup(CMD_UPDATESTATUS_FB,CMD_UPDATE_DATA_POS,CMD_FB_UPDATE_FAIL);
+        I2CSlaveApp_UpdateCmdChecksumSet(CMD_UPDATESTATUS_FB);
     }
 
     return breturn;
