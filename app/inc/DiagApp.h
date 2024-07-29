@@ -26,7 +26,24 @@
 #define DISP1_TSCST_MASK    0x02U   /* Touch Controller Status (No use)*/
 #define DISP1_DISPST_MASK   0x01U   /* I2C Client Status (Formerly Display Status)*/
 
+#define IO_HIGH     1U
+#define IO_LOW      0U
+
+#define IO_STATUS_HIGH  0x01U
+#define IO_STATUS_LOW   0x00U
+#define IO_STATUS_SWIM  0x02U
+
+typedef struct{
+    uint8_t Status;
+    const GPIO_PRT_Type *Port;
+    uint32_t PortNumber;
+    uint8_t Threshlod;
+    uint8_t ConsecutiveHighCnt;
+    uint8_t ConsecutiveLowCnt;
+}DiagIO;
+
 void DiagApp_DispStatusClear(uint8_t ByteNumber, uint8_t MaskValue);
 void DiagApp_DispStatusSet(uint8_t ByteNumber, uint8_t MaskValue);
+uint8_t DiagApp_ConsecutiveCheckIO(DiagIO ds);
 
 #endif

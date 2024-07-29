@@ -107,13 +107,14 @@ static uint8_t MainApp_PreNormal_Mode(uint8_t u8Nothing)
 {
     WdtApp_CleanCounter();
     /*ADC initial*/
-    TC0App_NormalWorkStartSet(TRUE);
     AdcDriver_Initial(ADC_SAR0_TYPE, ADC_SAR0_CONFIG);
     PowerApp_PowerGoodInitial();
     PowerApp_Sequence(POWER_ON);
     /*Do LCD Power On Sequence*/
     sprintf((char *)u8TxBuffer,"PRENORMAL FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
+    /* Need to put at the end of prenormal task*/
+    TC0App_NormalWorkStartSet(TRUE);
     (void) u8Nothing;
     return STATE_HANDSHAKE;
 }

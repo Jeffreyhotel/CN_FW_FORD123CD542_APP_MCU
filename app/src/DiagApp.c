@@ -1,6 +1,7 @@
 #include "app/inc/DiagApp.h"
 #include "app/inc/RegisterApp.h"
 #include "app/inc/INTBApp.h"
+#include "driver/inc/PortDriver.h"
 
 static uint8_t u8DiagDispByte0 = 0x00U;
 static uint8_t u8DiagDispByte1 = 0x01U;
@@ -57,4 +58,27 @@ void DiagApp_DispStatusSet(uint8_t ByteNumber, uint8_t MaskValue)
     }
     (void)u8OldByte0;
     (void)u8OldByte1;
+}
+
+uint8_t DiagApp_ConsecutiveCheckIO(DiagIO ds)
+{
+    if (IO_HIGH == PortDrvier_PinRead(ds.Port,ds.PortNumber)){
+        ds.ConsecutiveHighCnt += 1;
+        ds.ConsecutiveLowCnt = 0;
+    }else{
+        ds.ConsecutiveHighCnt = 0;
+        ds.ConsecutiveLowCnt += 1;
+    }
+
+    if (ds.ConsecutiveHighCnt >= ds.Threshlod){
+        ds.ConsecutiveHighCnt = ds.Threshlod;
+        ds.Status = IO_STATUS_HIGH;
+    }else if(ds.ConsecutiveLowCnt >= ds.Threshlod){
+        ds.ConsecutiveLowCnt = ds.Threshlod;
+        ds.Status = IO_STATUS_LOW;
+    }else{
+        /* status no change*/
+        ds.Status = IO_STATUS_SWIM;
+    }
+    return ds.Status;
 }

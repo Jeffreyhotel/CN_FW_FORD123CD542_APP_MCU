@@ -92,6 +92,7 @@ bool NVMDriver_RowErase(uint32_t address)
 bool NVMDriver_IsBusy(void)
 {
     bool bresult = true;
+    /* Need to check the warning information*/
     if (Cy_Flash_IsOperationComplete() == CY_FLASH_DRV_PROGRESS_NO_ERROR )
     {
         bresult = true;
