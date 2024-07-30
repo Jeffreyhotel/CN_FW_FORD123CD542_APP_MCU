@@ -429,8 +429,8 @@ const cyhal_resource_inst_t DES_PASS_obj =
 
 const cy_stc_gpio_pin_config_t EXFLASH_WP_config =
 {
-    .outVal = 1,
-    .driveMode = CY_GPIO_DM_OD_DRIVESLOW,
+    .outVal = 0,
+    .driveMode = CY_GPIO_DM_PULLUP_IN_OFF,
     .hsiom = EXFLASH_WP_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -448,8 +448,8 @@ const cyhal_resource_inst_t EXFLASH_WP_obj =
 
 const cy_stc_gpio_pin_config_t DISP_FAULT_config =
 {
-    .outVal = 1,
-    .driveMode = CY_GPIO_DM_OD_DRIVESLOW,
+    .outVal = 0,
+    .driveMode = CY_GPIO_DM_HIGHZ,
     .hsiom = DISP_FAULT_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,

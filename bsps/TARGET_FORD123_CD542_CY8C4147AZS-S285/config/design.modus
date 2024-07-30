@@ -3,6 +3,7 @@
     <Devices>
         <Device mpn="CY8C4147AZS-S285">
             <BlockConfig>
+                <Block location="scb[1]"/>
                 <Personality template="m0s8dap" version="1.0">
                     <Block location="cpuss[0].dap[0]" locked="true"/>
                     <Parameters>
@@ -348,9 +349,9 @@
                         </Aliases>
                     </Block>
                     <Parameters>
-                        <Param id="DriveModes" value="CY_GPIO_DM_OD_DRIVESLOW"/>
+                        <Param id="DriveModes" value="CY_GPIO_DM_PULLUP_IN_OFF"/>
                         <Param id="inFlash" value="true"/>
-                        <Param id="initialState" value="1"/>
+                        <Param id="initialState" value="0"/>
                         <Param id="isrTrigger" value="CY_GPIO_INTR_DISABLE"/>
                         <Param id="portLevelConfig" value="false"/>
                         <Param id="slewRate" value="CY_GPIO_SLEW_FAST"/>
@@ -364,9 +365,9 @@
                         </Aliases>
                     </Block>
                     <Parameters>
-                        <Param id="DriveModes" value="CY_GPIO_DM_OD_DRIVESLOW"/>
+                        <Param id="DriveModes" value="CY_GPIO_DM_HIGHZ"/>
                         <Param id="inFlash" value="true"/>
-                        <Param id="initialState" value="1"/>
+                        <Param id="initialState" value="0"/>
                         <Param id="isrTrigger" value="CY_GPIO_INTR_DISABLE"/>
                         <Param id="portLevelConfig" value="false"/>
                         <Param id="slewRate" value="CY_GPIO_SLEW_FAST"/>
@@ -1046,32 +1047,6 @@
                     </Parameters>
                 </Personality>
                 <Personality template="m0s8i2c" version="1.0">
-                    <Block location="scb[1]" locked="true">
-                        <Aliases>
-                            <Alias value="SCB_I2C1M"/>
-                        </Aliases>
-                    </Block>
-                    <Parameters>
-                        <Param id="AcceptAddress" value="false"/>
-                        <Param id="AcceptGeneralCall" value="false"/>
-                        <Param id="CallbackDS" value="false"/>
-                        <Param id="CallbackDSName" value="DsClockConfigCallback"/>
-                        <Param id="DataRate" value="400"/>
-                        <Param id="EnableRxFifo" value="true"/>
-                        <Param id="EnableTxFifo" value="true"/>
-                        <Param id="EnableWakeup" value="false"/>
-                        <Param id="ManualDataRateCtrl" value="false"/>
-                        <Param id="ManualDigitalFilter" value="true"/>
-                        <Param id="ManualHighPhaseDutyCycle" value="9"/>
-                        <Param id="ManualLowPhaseDutyCycle" value="16"/>
-                        <Param id="ModeUser" value="CY_SCB_I2C_MASTER"/>
-                        <Param id="RxAddressFifoDelay" value="6"/>
-                        <Param id="SlaveAddress" value="16"/>
-                        <Param id="SlaveAddressMask" value="254"/>
-                        <Param id="inFlash" value="true"/>
-                    </Parameters>
-                </Personality>
-                <Personality template="m0s8i2c" version="1.0">
                     <Block location="scb[2]" locked="true">
                         <Aliases>
                             <Alias value="SCB_I2C2S"/>
@@ -1343,14 +1318,6 @@
                     <Port name="scb[2].i2c_sda[0]"/>
                 </Net>
                 <Net>
-                    <Port name="ioss[0].port[3].pin[0].digital_inout[0]"/>
-                    <Port name="scb[1].i2c_scl[0]"/>
-                </Net>
-                <Net>
-                    <Port name="ioss[0].port[3].pin[1].digital_inout[0]"/>
-                    <Port name="scb[1].i2c_sda[0]"/>
-                </Net>
-                <Net>
                     <Port name="ioss[0].port[4].pin[0].digital_inout[0]"/>
                     <Port name="scb[0].spi_mosi[0]"/>
                 </Net>
@@ -1413,10 +1380,6 @@
                 <Net>
                     <Port name="peri[0].div_16[6].clk[0]"/>
                     <Port name="tcpwm[0].cnt[0].clock[0]"/>
-                </Net>
-                <Net>
-                    <Port name="peri[0].div_16[7].clk[0]"/>
-                    <Port name="scb[1].clock[0]"/>
                 </Net>
                 <Net>
                     <Port name="peri[0].div_16[8].clk[0]"/>

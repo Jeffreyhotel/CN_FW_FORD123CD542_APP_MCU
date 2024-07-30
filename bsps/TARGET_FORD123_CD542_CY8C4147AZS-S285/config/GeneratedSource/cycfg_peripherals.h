@@ -55,9 +55,6 @@ extern "C" {
 #define SCB_SPI0M_ENABLED 1U
 #define SCB_SPI0M_HW SCB0
 #define SCB_SPI0M_IRQ scb_0_interrupt_IRQn
-#define SCB_I2C1M_ENABLED 1U
-#define SCB_I2C1M_HW SCB1
-#define SCB_I2C1M_IRQ scb_1_interrupt_IRQn
 #define SCB_I2C2S_ENABLED 1U
 #define SCB_I2C2S_HW SCB2
 #define SCB_I2C2S_IRQ scb_2_interrupt_IRQn
@@ -95,12 +92,6 @@ extern const cy_stc_scb_spi_config_t SCB_SPI0M_config;
 
 #if defined (CY_USING_HAL)
 extern const cyhal_resource_inst_t SCB_SPI0M_obj;
-#endif /* defined (CY_USING_HAL) */
-
-extern const cy_stc_scb_i2c_config_t SCB_I2C1M_config;
-
-#if defined (CY_USING_HAL)
-extern const cyhal_resource_inst_t SCB_I2C1M_obj;
 #endif /* defined (CY_USING_HAL) */
 
 extern const cy_stc_scb_i2c_config_t SCB_I2C2S_config;

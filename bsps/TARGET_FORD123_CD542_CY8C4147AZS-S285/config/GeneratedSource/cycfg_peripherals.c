@@ -136,31 +136,6 @@ const cyhal_resource_inst_t SCB_SPI0M_obj =
 };
 #endif /* defined (CY_USING_HAL) */
 
-const cy_stc_scb_i2c_config_t SCB_I2C1M_config =
-{
-    .i2cMode = CY_SCB_I2C_MASTER,
-    .useRxFifo = true,
-    .useTxFifo = true,
-    .slaveAddress = 0U,
-    .slaveAddressMask = 0U,
-    .acceptAddrInFifo = false,
-    .ackGeneralAddr = false,
-    .enableWakeFromSleep = false,
-    .enableDigitalFilter = false,
-    .lowPhaseDutyCycle = 16,
-    .highPhaseDutyCycle = 9,
-    .delayInFifoAddress = 0,
-};
-
-#if defined (CY_USING_HAL)
-const cyhal_resource_inst_t SCB_I2C1M_obj =
-{
-    .type = CYHAL_RSC_SCB,
-    .block_num = 1U,
-    .channel_num = 0U,
-};
-#endif /* defined (CY_USING_HAL) */
-
 const cy_stc_scb_i2c_config_t SCB_I2C2S_config =
 {
     .i2cMode = CY_SCB_I2C_SLAVE,
@@ -362,7 +337,6 @@ void init_cycfg_peripherals(void)
 {
     Cy_SysClk_PeriphAssignDivider(PCLK_PASS0_CLOCK_SAR, CY_SYSCLK_DIV_16_BIT, 0U);
     Cy_SysClk_PeriphAssignDivider(PCLK_SCB0_CLOCK, CY_SYSCLK_DIV_16_BIT, 1U);
-    Cy_SysClk_PeriphAssignDivider(PCLK_SCB1_CLOCK, CY_SYSCLK_DIV_16_BIT, 7U);
     Cy_SysClk_PeriphAssignDivider(PCLK_SCB2_CLOCK, CY_SYSCLK_DIV_16_BIT, 2U);
     Cy_SysClk_PeriphAssignDivider(PCLK_SCB3_CLOCK, CY_SYSCLK_DIV_16_BIT, 3U);
     Cy_SysClk_PeriphAssignDivider(PCLK_SCB4_CLOCK, CY_SYSCLK_DIV_16_BIT, 4U);
@@ -378,7 +352,6 @@ void reserve_cycfg_peripherals(void)
 #if defined (CY_USING_HAL)
     cyhal_hwmgr_reserve(&PASS_ADC_SENSE_obj);
     cyhal_hwmgr_reserve(&SCB_SPI0M_obj);
-    cyhal_hwmgr_reserve(&SCB_I2C1M_obj);
     cyhal_hwmgr_reserve(&SCB_I2C2S_obj);
     cyhal_hwmgr_reserve(&SCB_UART3_DEBUG_obj);
     cyhal_hwmgr_reserve(&SCB_I2C4M_obj);

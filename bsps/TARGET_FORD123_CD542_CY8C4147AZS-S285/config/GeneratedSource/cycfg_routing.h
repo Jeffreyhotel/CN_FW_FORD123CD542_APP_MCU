@@ -42,8 +42,6 @@ extern "C" {
 #define ioss_0_port_2_pin_0_ANALOG P2_0_PASS0_SARMUX_PADS0
 #define ioss_0_port_2_pin_1_ANALOG P2_1_PASS0_SARMUX_PADS1
 #define ioss_0_port_2_pin_2_ANALOG P2_2_PASS0_SARMUX_PADS2
-#define ioss_0_port_3_pin_0_HSIOM P3_0_SCB1_I2C_SCL
-#define ioss_0_port_3_pin_1_HSIOM P3_1_SCB1_I2C_SDA
 #define ioss_0_port_3_pin_2_HSIOM P3_2_CPUSS_SWD_DATA
 #define ioss_0_port_3_pin_3_HSIOM P3_3_CPUSS_SWD_CLK
 #define ioss_0_port_4_pin_0_HSIOM P4_0_SCB0_SPI_MOSI

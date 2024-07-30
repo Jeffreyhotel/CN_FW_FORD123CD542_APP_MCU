@@ -34,7 +34,7 @@
 #include "app/inc/FlashApp.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/AdcDriver.h"
-#include "driver/inc/I2C1MDriver.h"
+#include "driver/inc/I2C4MDriver.h"
 #include "driver/inc/PwmDriver.h"
 
 #define CY_ASSERT_FAILED          (0u)
@@ -73,7 +73,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     /* Configure and enable the UART peripheral */
     UartDriver_Initial();
     TC0App_Initial();
-    if(I2C1MDriver_Initialize() == false)
+    if(I2C4MDriver_Initialize() == false)
     {
         UartDriver_TxWriteString((uint8_t *)"I2C M driver init fail\r\n");
     }
