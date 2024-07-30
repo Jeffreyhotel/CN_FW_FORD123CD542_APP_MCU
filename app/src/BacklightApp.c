@@ -287,7 +287,7 @@ void BacklightApp_DeratingFlow(void)
     uint8_t CurrentStatus = BLT_NORMAL_MODE;
     uint16_t TempVolt = 0U;
     uint16_t u16MATemp = 0U;
-    TempVolt = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE,ADC_SAR0_CH1_BLTTEMP);
+    TempVolt = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE,ADC_SAR0_CH0_BLTTEMP);
 
     /* Do check the data base(samples) is ready for result output (BLT_SAMPLE_CNT = 16 times)*/
     u16TempVoltSample[u8BLSampleCount] = TempVolt;
@@ -339,13 +339,13 @@ void BacklightApp_TempMonitor(void)
 {
     uint16_t BltTempVolt = 0U;
     uint16_t PcbTempVolt = 0U;
-    PcbTempVolt = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE,ADC_SAR0_CH0_PCBTEMP);
+    PcbTempVolt = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE,ADC_SAR0_CH1_PCBTEMP);
     sprintf((char *)u8TxBuffer,"PCB TEMP %d \r\n",PcbTempVolt);
     UartDriver_TxWriteString((uint8_t*)u8TxBuffer);
     RegisterApp_DHU_Setup(CMD_DTC,DTC_PCB_TEMP_ADC,(uint8_t)(PcbTempVolt >> 8));
     RegisterApp_DHU_Setup(CMD_DTC,DTC_PCB_TEMP_ADC+1U,(uint8_t)(PcbTempVolt));
 
-    BltTempVolt = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE,ADC_SAR0_CH1_BLTTEMP);
+    BltTempVolt = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE,ADC_SAR0_CH0_BLTTEMP);
     sprintf((char *)u8TxBuffer,"BLT TEMP %d DERATE %d STATE %d\r\n",BltTempVolt,u8BLT_DERATING_EN,u8BLT_DERATING_STATUS);
     UartDriver_TxWriteString((uint8_t*)u8TxBuffer);
 }

@@ -105,8 +105,8 @@ void DiagApp_CheckFlowInitial()
     FAULT_LCD.ConsecutiveLowCnt = 0;
 
     STATUS_FPC.Status = IO_STATUS_SWIM;
-    STATUS_FPC.Port = FPCACHK_OUT_PORT;
-    STATUS_FPC.PortNumber = FPCACHK_OUT_PIN;
+    STATUS_FPC.Port = FPCACHK_ROUT_PORT;
+    STATUS_FPC.PortNumber = FPCACHK_ROUT_PIN;
     STATUS_FPC.Threshlod = 5;
     STATUS_FPC.ConsecutiveHighCnt = 0;
     STATUS_FPC.ConsecutiveLowCnt = 0;
