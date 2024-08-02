@@ -31,7 +31,7 @@
 const cy_stc_gpio_pin_config_t PCBA_A0_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN,
+    .driveMode = CY_GPIO_DM_HIGHZ,
     .hsiom = PCBA_A0_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -50,7 +50,7 @@ const cyhal_resource_inst_t PCBA_A0_obj =
 const cy_stc_gpio_pin_config_t PCBA_A1_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN,
+    .driveMode = CY_GPIO_DM_HIGHZ,
     .hsiom = PCBA_A1_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -69,7 +69,7 @@ const cyhal_resource_inst_t PCBA_A1_obj =
 const cy_stc_gpio_pin_config_t PCBA_A2_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN,
+    .driveMode = CY_GPIO_DM_HIGHZ,
     .hsiom = PCBA_A2_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -88,7 +88,7 @@ const cyhal_resource_inst_t PCBA_A2_obj =
 const cy_stc_gpio_pin_config_t PCBA_A3_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN,
+    .driveMode = CY_GPIO_DM_HIGHZ,
     .hsiom = PCBA_A3_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -145,7 +145,7 @@ const cyhal_resource_inst_t RTC_WCO_OUT_obj =
 const cy_stc_gpio_pin_config_t P1V2_EN_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN_IN_OFF,
+    .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
     .hsiom = P1V2_EN_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -202,7 +202,7 @@ const cyhal_resource_inst_t BIAS_FAULT_obj =
 const cy_stc_gpio_pin_config_t BIAS_EN_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN_IN_OFF,
+    .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
     .hsiom = BIAS_EN_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -354,7 +354,7 @@ const cyhal_resource_inst_t SYNC_CHECK_obj =
 const cy_stc_gpio_pin_config_t FPCACHK_ROUT_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN_IN_OFF,
+    .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
     .hsiom = FPCACHK_ROUT_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -430,7 +430,7 @@ const cyhal_resource_inst_t DES_PASS_obj =
 const cy_stc_gpio_pin_config_t EXFLASH_WP_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLUP_IN_OFF,
+    .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
     .hsiom = EXFLASH_WP_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -506,7 +506,7 @@ const cyhal_resource_inst_t MCU_SWCLK_obj =
 const cy_stc_gpio_pin_config_t FPCACHK_LOUT_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN_IN_OFF,
+    .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
     .hsiom = FPCACHK_LOUT_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -524,7 +524,7 @@ const cyhal_resource_inst_t FPCACHK_LOUT_obj =
 
 const cy_stc_gpio_pin_config_t FPCACHK_LIN_config =
 {
-    .outVal = 1,
+    .outVal = 0,
     .driveMode = CY_GPIO_DM_HIGHZ,
     .hsiom = FPCACHK_LIN_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
@@ -544,7 +544,7 @@ const cyhal_resource_inst_t FPCACHK_LIN_obj =
 const cy_stc_gpio_pin_config_t DDIC_WP_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN_IN_OFF,
+    .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
     .hsiom = DDIC_WP_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -658,7 +658,7 @@ const cyhal_resource_inst_t P3V3_PG_obj =
 const cy_stc_gpio_pin_config_t P3V3_EN_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN_IN_OFF,
+    .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
     .hsiom = P3V3_EN_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -677,7 +677,7 @@ const cyhal_resource_inst_t P3V3_EN_obj =
 const cy_stc_gpio_pin_config_t VBATT_EN_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN_IN_OFF,
+    .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
     .hsiom = VBATT_EN_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -696,7 +696,7 @@ const cyhal_resource_inst_t VBATT_EN_obj =
 const cy_stc_gpio_pin_config_t LED_EN_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN_IN_OFF,
+    .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
     .hsiom = LED_EN_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -715,7 +715,7 @@ const cyhal_resource_inst_t LED_EN_obj =
 const cy_stc_gpio_pin_config_t HVLDO_EN_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN_IN_OFF,
+    .driveMode = CY_GPIO_DM_HIGHZ,
     .hsiom = HVLDO_EN_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -753,7 +753,7 @@ const cyhal_resource_inst_t DES_INTB_obj =
 const cy_stc_gpio_pin_config_t DES_PDB_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN_IN_OFF,
+    .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
     .hsiom = DES_PDB_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -771,7 +771,7 @@ const cyhal_resource_inst_t DES_PDB_obj =
 
 const cy_stc_gpio_pin_config_t LED_DIM_config =
 {
-    .outVal = 1,
+    .outVal = 0,
     .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
     .hsiom = LED_DIM_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
@@ -810,7 +810,7 @@ const cyhal_resource_inst_t LED_FAULT_obj =
 const cy_stc_gpio_pin_config_t DES_BISTEN_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN_IN_OFF,
+    .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
     .hsiom = DES_BISTEN_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
@@ -829,7 +829,7 @@ const cyhal_resource_inst_t DES_BISTEN_obj =
 const cy_stc_gpio_pin_config_t DISP_RESX_config =
 {
     .outVal = 0,
-    .driveMode = CY_GPIO_DM_PULLDOWN_IN_OFF,
+    .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
     .hsiom = DISP_RESX_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
