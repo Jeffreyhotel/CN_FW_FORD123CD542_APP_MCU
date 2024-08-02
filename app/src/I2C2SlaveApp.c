@@ -4,6 +4,7 @@
 #include "app/inc/INTBApp.h"
 #include "app/inc/TC0App.h"
 #include "app/inc/StackTaskApp.h"
+#include "app/inc/BacklightApp.h"
 
 #define DHU_CMD_TOTAL_NUM    25U
 #define DHU_WRITE_APPROVED_CMD_NUM    10U
@@ -207,6 +208,7 @@ static void I2CSlaveApp_TxWriteTransferDone(uint8_t subaddr)
             break;
 
         case CMD_BL_PWM:
+            BacklightApp_UpdateDimmingStep();
             break;
 
         case CMD_DISP_EN:

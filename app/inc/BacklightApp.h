@@ -39,6 +39,7 @@
 
 void BacklightApp_BattProtectSet(uint8_t u8Set);
 void BacklightApp_Initial(void);
+void BacklightApp_UpdateDimmingStep(void);
 void BacklightApp_DimmingControl(void);
 void BacklightApp_TempMonitor(void);
 void BacklightApp_DeratingFlow(void);
