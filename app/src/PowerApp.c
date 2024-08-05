@@ -14,9 +14,8 @@ void PowerApp_Sequence(uint8_t u8Action)
         /* code */
         PortDriver_PinSet(VBATT_EN_PORT,VBATT_EN_PIN);
         PortDriver_PinSet(P3V3_EN_PORT,P3V3_EN_PIN);
-        TC0App_DelayMS(5U);
+        TC0App_DelayMS(10U);
         PortDriver_PinSet(P1V2_EN_PORT,P1V2_EN_PIN);
-        TC0App_DelayMS(2U);
         PortDriver_PinSet(DES_PDB_PORT,DES_PDB_PIN);
         TC0App_DelayMS(2U);
         PortDriver_PinSet(BIAS_EN_PORT,BIAS_EN_PIN);

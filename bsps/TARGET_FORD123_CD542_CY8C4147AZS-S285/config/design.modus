@@ -3,6 +3,16 @@
     <Devices>
         <Device mpn="CY8C4147AZS-S285">
             <BlockConfig>
+                <Block location="scb[1]">
+                    <Aliases>
+                        <Alias value="SCB_I2C1M"/>
+                    </Aliases>
+                </Block>
+                <Block location="wco[0]">
+                    <Aliases>
+                        <Alias value="RTC_OSC"/>
+                    </Aliases>
+                </Block>
                 <Personality template="m0s8dap" version="1.0">
                     <Block location="cpuss[0].dap[0]" locked="true"/>
                     <Parameters>
@@ -444,9 +454,9 @@
                         </Aliases>
                     </Block>
                     <Parameters>
-                        <Param id="DriveModes" value="CY_GPIO_DM_STRONG_IN_OFF"/>
+                        <Param id="DriveModes" value="CY_GPIO_DM_PULLUP_IN_OFF"/>
                         <Param id="inFlash" value="true"/>
-                        <Param id="initialState" value="0"/>
+                        <Param id="initialState" value="1"/>
                         <Param id="isrTrigger" value="CY_GPIO_INTR_DISABLE"/>
                         <Param id="portLevelConfig" value="false"/>
                         <Param id="slewRate" value="CY_GPIO_SLEW_FAST"/>
@@ -604,7 +614,7 @@
                         </Aliases>
                     </Block>
                     <Parameters>
-                        <Param id="DriveModes" value="CY_GPIO_DM_STRONG_IN_OFF"/>
+                        <Param id="DriveModes" value="CY_GPIO_DM_PULLUP_IN_OFF"/>
                         <Param id="inFlash" value="true"/>
                         <Param id="initialState" value="1"/>
                         <Param id="isrTrigger" value="CY_GPIO_INTR_DISABLE"/>
@@ -734,7 +744,7 @@
                     <Parameters>
                         <Param id="DriveModes" value="CY_GPIO_DM_HIGHZ"/>
                         <Param id="inFlash" value="true"/>
-                        <Param id="initialState" value="0"/>
+                        <Param id="initialState" value="1"/>
                         <Param id="isrTrigger" value="CY_GPIO_INTR_DISABLE"/>
                         <Param id="portLevelConfig" value="false"/>
                         <Param id="slewRate" value="CY_GPIO_SLEW_FAST"/>
@@ -1295,17 +1305,6 @@
                         <Param id="inFlash" value="true"/>
                     </Parameters>
                 </Personality>
-                <Personality template="m0s8wco" version="2.0">
-                    <Block location="wco[0]" locked="true">
-                        <Aliases>
-                            <Alias value="RTC_OSC"/>
-                        </Aliases>
-                    </Block>
-                    <Parameters>
-                        <Param id="accuracyPpm" value="150"/>
-                        <Param id="clockPort" value="CY_SYSCLK_WCO_NOT_BYPASSED"/>
-                    </Parameters>
-                </Personality>
             </BlockConfig>
             <Netlist>
                 <Net>
@@ -1315,14 +1314,6 @@
                 <Net>
                     <Port name="cpuss[0].dap[0].swd_data[0]"/>
                     <Port name="ioss[0].port[3].pin[2].digital_inout[0]"/>
-                </Net>
-                <Net>
-                    <Port name="ioss[0].port[0].pin[4].analog[0]"/>
-                    <Port name="wco[0].wco_in[0]"/>
-                </Net>
-                <Net>
-                    <Port name="ioss[0].port[0].pin[5].analog[0]"/>
-                    <Port name="wco[0].wco_out[0]"/>
                 </Net>
                 <Net>
                     <Port name="ioss[0].port[1].pin[2].digital_inout[0]"/>

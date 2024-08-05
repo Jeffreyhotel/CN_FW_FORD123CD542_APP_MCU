@@ -37,7 +37,6 @@
 #define CY_CFG_SYSCLK_CLKSYS_ENABLED 1
 #define CY_CFG_SYSCLK_CLKSYS_DIVIDER CY_SYSCLK_NO_DIV
 #define CY_CFG_SYSCLK_CLKSYS_FREQ_MHZ 48UL
-#define CY_CFG_SYSCLK_WCO_ENABLED 1
 
 __WEAK void cycfg_ClockStartupError(uint32_t error, cy_en_sysclk_status_t status)
 {
@@ -66,13 +65,6 @@ __STATIC_INLINE void Cy_SysClk_ImoInit()
 __STATIC_INLINE void Cy_SysClk_ClkSysInit()
 {
     Cy_SysClk_ClkSysSetDivider(CY_CFG_SYSCLK_CLKSYS_DIVIDER);
-}
-__STATIC_INLINE void Cy_SysClk_WcoInit()
-{
-    (void)Cy_GPIO_Pin_FastInit(GPIO_PRT0, 4U, CY_GPIO_DM_ANALOG, 0x00U, HSIOM_SEL_GPIO);
-    (void)Cy_GPIO_Pin_FastInit(GPIO_PRT0, 5U, CY_GPIO_DM_ANALOG, 0x00U, HSIOM_SEL_GPIO);
-    Cy_SysClk_WcoBypass(false);
-    Cy_SysClk_WcoEnable(500000UL);
 }
 void init_cycfg_system(void)
 {

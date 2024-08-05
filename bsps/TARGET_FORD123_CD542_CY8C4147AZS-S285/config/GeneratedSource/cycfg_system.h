@@ -32,7 +32,6 @@
 #include "cycfg_notices.h"
 #include "cy_sysclk.h"
 #include "cy_syspm.h"
-#include "cy_gpio.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -64,7 +63,6 @@ extern "C" {
 #define CY_CFG_PWR_DEEPSLEEP_LATENCY 0UL
 #define CY_CFG_PWR_VDDA_MV 3300
 #define CY_CFG_PWR_VDDD_MV 3300
-#define RTC_OSC_ENABLED 1U
 
 __WEAK void cycfg_ClockStartupError(uint32_t error, cy_en_sysclk_status_t status);
 void init_cycfg_system(void);
