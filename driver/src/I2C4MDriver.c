@@ -75,7 +75,7 @@ uint8_t I2C4MDriver_Read(uint16_t address, uint8_t* rdData, uint32_t rdLength)
     cy_en_scb_i2c_status_t errorStatus;
     uint32_t masterStatus;
     /* Timeout 1 sec (one unit is us) */
-    uint32_t timeout = 1000000UL;
+    uint32_t timeout = 8000UL;
 
     /* Setup transfer specific parameters */
     masterTransferCfg.slaveAddress = (uint8_t)(address & 0x00FF);
@@ -105,12 +105,39 @@ uint8_t I2C4MDriver_Read(uint16_t address, uint8_t* rdData, uint32_t rdLength)
         else
         {
             /* Check transfer status */
-            if (0u == (MASTER_ERROR_MASK & masterStatus))
+            switch (masterStatus & MASTER_ERROR_MASK)
             {
+            case 0:
                 status = ERROR_NONE;
-                /* Check packet structure and status */
-            }else{
+                break;
+            case CY_SCB_I2C_MASTER_DATA_NAK:
+                /* code */
+                status = ERROR_NAK;
+                break;
+            
+            case CY_SCB_I2C_MASTER_ADDR_NAK:
+                /* code */
+                status = ERROR_NAK;
+                break;
+
+            case CY_SCB_I2C_MASTER_ARB_LOST:
+                /* code */
                 status = ERROR_FAIL;
+                break;
+
+            case CY_SCB_I2C_MASTER_ABORT_START:
+                /* code */
+                status = ERROR_FAIL;
+                break;
+
+            case CY_SCB_I2C_MASTER_BUS_ERR:
+                /* code */
+                status = ERROR_FAIL;
+                break;
+
+            default:
+                status = ERROR_FAIL;
+                break;
             }
         }
     }
@@ -123,7 +150,7 @@ uint8_t I2C4MDriver_Write(uint16_t address, uint8_t* wrData, uint32_t wrLength)
     cy_en_scb_i2c_status_t  errorStatus;
     uint32_t masterStatus;
     /* Timeout 1 sec (one unit is us) */
-    uint32_t timeout = 10000UL;
+    uint32_t timeout = 8000UL;
 
     /* Setup transfer specific parameters */
     masterTransferCfg.slaveAddress = (uint8_t)(address & 0x00FF);
@@ -152,12 +179,40 @@ uint8_t I2C4MDriver_Write(uint16_t address, uint8_t* wrData, uint32_t wrLength)
         }
         else
         {
-            if ((0u == (MASTER_ERROR_MASK & masterStatus)) &&
-                (wrLength == Cy_SCB_I2C_MasterGetTransferCount(I2C4M_MCU_HW, &I2C4M_MCU_context)))
+            /* Check transfer status */
+            switch (masterStatus & MASTER_ERROR_MASK)
             {
+            case 0:
                 status = ERROR_NONE;
-            }else{
+                break;
+            case CY_SCB_I2C_MASTER_DATA_NAK:
+                /* code */
+                status = ERROR_NAK;
+                break;
+            
+            case CY_SCB_I2C_MASTER_ADDR_NAK:
+                /* code */
+                status = ERROR_NAK;
+                break;
+
+            case CY_SCB_I2C_MASTER_ARB_LOST:
+                /* code */
                 status = ERROR_FAIL;
+                break;
+
+            case CY_SCB_I2C_MASTER_ABORT_START:
+                /* code */
+                status = ERROR_FAIL;
+                break;
+
+            case CY_SCB_I2C_MASTER_BUS_ERR:
+                /* code */
+                status = ERROR_FAIL;
+                break;
+
+            default:
+                status = ERROR_FAIL;
+                break;
             }
         }
     }
@@ -168,7 +223,7 @@ uint8_t I2C4MDriver_WriteRead(uint16_t address, uint8_t* wrData, uint32_t wrLeng
 {
     cy_en_scb_i2c_status_t status;
     /* Timeout 1 sec (one unit is us) */
-    uint32_t timeout = 10000UL;
+    uint32_t timeout = 8000UL;
 
     /* Send Start condition, address and receive ACK/NACK response from slave */
 	status = Cy_SCB_I2C_MasterSendStart(I2C4M_MCU_HW, address, CY_SCB_I2C_WRITE_XFER, timeout, &I2C4M_MCU_context);
