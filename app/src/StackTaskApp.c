@@ -213,6 +213,8 @@ void StackTaskApp_MissionAction(void)
             }
             INTBApp_PullReqSetOrClear(INTB_REQ_SET);
             UartApp_ReadFlow();
+            PowerApp_RTQ6749_FaultCheck();
+            PowerApp_LP8664_FaultCheck();
         break;
 
         case TASK_MONITOR:

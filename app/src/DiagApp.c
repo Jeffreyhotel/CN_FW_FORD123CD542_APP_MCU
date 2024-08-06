@@ -61,8 +61,9 @@ void DiagApp_DispStatusSet(uint8_t ByteNumber, uint8_t MaskValue)
     (void)u8OldByte1;
 }
 
-uint8_t DiagApp_ConsecutiveCheckIO(DiagIO ds)
+uint8_t DiagApp_ConsecutiveCheckIO(DiagIO* ds1)
 {
+    DiagIO ds = *ds1;
     if (IO_HIGH == PortDrvier_PinRead(ds.Port,ds.PortNumber)){
         ds.ConsecutiveHighCnt += 1;
         ds.ConsecutiveLowCnt = 0;
@@ -81,6 +82,32 @@ uint8_t DiagApp_ConsecutiveCheckIO(DiagIO ds)
         /* status no change*/
         ds.Status = IO_STATUS_SWIM;
     }
+    *ds1 = ds;
+    return ds.Status;
+}
+
+uint8_t DiagApp_ConsecutiveCheckRegister(DiagIO* ds1,bool isgood)
+{
+    DiagIO ds = *ds1;
+    if (true == isgood){
+        ds.ConsecutiveHighCnt += 1;
+        ds.ConsecutiveLowCnt = 0;
+    }else{
+        ds.ConsecutiveHighCnt = 0;
+        ds.ConsecutiveLowCnt += 1;
+    }
+
+    if (ds.ConsecutiveHighCnt >= ds.Threshlod){
+        ds.ConsecutiveHighCnt = ds.Threshlod;
+        ds.Status = IO_STATUS_HIGH;
+    }else if(ds.ConsecutiveLowCnt >= ds.Threshlod){
+        ds.ConsecutiveLowCnt = ds.Threshlod;
+        ds.Status = IO_STATUS_LOW;
+    }else{
+        /* status no change*/
+        ds.Status = IO_STATUS_SWIM;
+    }
+    *ds1 = ds;
     return ds.Status;
 }
 
@@ -123,7 +150,7 @@ void DiagApp_FaultCheckFlow(void)
 {
     uint8_t u8Status1 = IO_STATUS_SWIM;
     uint8_t u8Status2 = IO_STATUS_SWIM;
-    u8Status1 = DiagApp_ConsecutiveCheckIO(FAULT_LED);
+    u8Status1 = DiagApp_ConsecutiveCheckIO(&FAULT_LED);
     if(IO_STATUS_HIGH == u8Status1){
         DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_BLERR_MASK);
     }else if(IO_STATUS_LOW == u8Status1){
@@ -132,7 +159,7 @@ void DiagApp_FaultCheckFlow(void)
         /* When voltage at swim state, Do nothing*/
     }
 
-    u8Status2 = DiagApp_ConsecutiveCheckIO(FAULT_LCD);
+    u8Status2 = DiagApp_ConsecutiveCheckIO(&FAULT_LCD);
     if(IO_STATUS_HIGH == u8Status2){
         DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
     }else if(IO_STATUS_LOW == u8Status2){
@@ -147,7 +174,7 @@ void DiagApp_FaultCheckFlow(void)
 void DiagApp_FpcCheckFlow(void)
 {
     uint8_t u8Status1 = IO_STATUS_SWIM;
-    u8Status1 = DiagApp_ConsecutiveCheckIO(STATUS_FPC);
+    u8Status1 = DiagApp_ConsecutiveCheckIO(&STATUS_FPC);
     if(IO_STATUS_HIGH == u8Status1){
         DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_DCERR_MASK);
     }else if(IO_STATUS_LOW == u8Status1){
@@ -162,7 +189,7 @@ void DiagApp_FpcCheckFlow(void)
 void DiagApp_LockCheckFlow(void)
 {
     uint8_t u8Status1 = IO_STATUS_SWIM;
-    u8Status1 = DiagApp_ConsecutiveCheckIO(STATUS_LOCK);
+    u8Status1 = DiagApp_ConsecutiveCheckIO(&STATUS_LOCK);
     if(IO_STATUS_HIGH == u8Status1){
         DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_LLOSS_MASK);
     }else if(IO_STATUS_LOW == u8Status1){
