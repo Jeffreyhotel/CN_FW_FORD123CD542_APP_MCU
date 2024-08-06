@@ -60,17 +60,12 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     uint32_t result = 0U;
     /* Initialize the device and board peripherals */
     uint32_t PC = (uint32_t)(&MainApp_Task);
-    if(PC > APP_START_ADDR)
-    {
-        /* Bootloader already inited device and board peripherals*/
-    }else{
-        result = cybsp_init();
-        (void)Cy_GPIO_Pin_FastInit(GPIO_PRT0, 4U, CY_GPIO_DM_ANALOG, 0x00U, HSIOM_SEL_GPIO);
-        (void)Cy_GPIO_Pin_FastInit(GPIO_PRT0, 5U, CY_GPIO_DM_ANALOG, 0x00U, HSIOM_SEL_GPIO);
-        Cy_SysClk_WcoBypass(false);
-        /* Cypress WCO chip spec request 500ms for TS START (set as 500000UL)*/
-        Cy_SysClk_WcoEnable(1000UL);
-    }
+    result = cybsp_init();
+    (void)Cy_GPIO_Pin_FastInit(GPIO_PRT0, 4U, CY_GPIO_DM_ANALOG, 0x00U, HSIOM_SEL_GPIO);
+    (void)Cy_GPIO_Pin_FastInit(GPIO_PRT0, 5U, CY_GPIO_DM_ANALOG, 0x00U, HSIOM_SEL_GPIO);
+    Cy_SysClk_WcoBypass(false);
+    /* Cypress WCO chip spec request 500ms for TS START (set as 500000UL)*/
+    Cy_SysClk_WcoEnable(1000UL);
 
     /* Board init failed. Stop program execution */
     if (result != CY_RSLT_SUCCESS)
