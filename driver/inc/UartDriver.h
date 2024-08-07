@@ -36,6 +36,7 @@ uint8_t UartDriver_Receive(uint8_t RxBuffer[], uint32_t u32RxSize);
 uint32_t UartDriver_GetNumReceived();
 void UartDriver_AbortReceive();
 void UartDriver_TxWriteString(uint8_t* u8TxBuffer);
+void UartDriver_TxWriteArray(uint8_t* u8TxBuffer, uint32_t size);
 uint8_t UartDriver_Initial();
 
 #endif /* _EXAMPLE_FILE_NAME_H */

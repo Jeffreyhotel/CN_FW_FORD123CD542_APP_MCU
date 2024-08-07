@@ -63,13 +63,25 @@ void UartApp_ReadFlow()
 
                 case 0xFFU:
                     /* Write-Read code */
-                    u8CmdLength = rdBuffer[0] - UART_CMD_WR_DATA_POS;
-                    for(uint8_t index = 0U; index < u8CmdLength;index++)
+                    if(rdBuffer[0] > UART_CMD_WR_DATA_POS)
                     {
-                        u8ParseTxBuffer[index] = rdBuffer[index+UART_CMD_WR_DATA_POS];
+                        u8CmdLength = rdBuffer[0] - UART_CMD_WR_DATA_POS;
+                        for(uint8_t index = 0U; index < u8CmdLength;index++)
+                        {
+                            u8ParseTxBuffer[index] = rdBuffer[index+UART_CMD_WR_DATA_POS];
+                        }
+                        I2C4MDriver_WriteRead(rdBuffer[UART_CMD_ADDR_POS],&u8ParseTxBuffer[0],u8CmdLength,u8ParseRxBuffer,rdBuffer[UART_CMD_WR_LEN_POS]);
+                        if(rdBuffer[UART_CMD_WR_LEN_POS] > 0U)
+                        {
+                            UartDriver_TxWriteArray(u8ParseRxBuffer,(uint32_t)rdBuffer[UART_CMD_WR_LEN_POS]);
+                            UartDriver_TxWriteString((uint8_t *)"\r\n");
+                        }else{
+                            /* No read need*/
+                        }
+                    }else{
+                        /* No read need*/
                     }
-                    I2C4MDriver_WriteRead(rdBuffer[UART_CMD_ADDR_POS],&u8ParseTxBuffer[0],u8CmdLength,&u8ParseRxBuffer[0],rdBuffer[UART_CMD_WR_LEN_POS]);
-                    UartDriver_TxWriteString(u8ParseRxBuffer);
+                    
                     break;
 
                 default:

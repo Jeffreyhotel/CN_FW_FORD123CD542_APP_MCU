@@ -61,6 +61,11 @@ void UartDriver_TxWriteString(uint8_t* u8TxBuffer)
     Cy_SCB_UART_PutString(SCB_UART3_DEBUG_HW, (const char_t *)u8TxBuffer);
 }
 
+void UartDriver_TxWriteArray(uint8_t* u8TxBuffer, uint32_t size)
+{
+    Cy_SCB_UART_PutArrayBlocking(SCB_UART3_DEBUG_HW, u8TxBuffer, size);
+}
+
 /* *****************************************************************************
  End of File
  */

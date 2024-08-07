@@ -239,26 +239,31 @@ uint8_t I2C4MDriver_WriteRead(uint16_t address, uint8_t* wrData, uint32_t wrLeng
 		}
         if(status == CY_SCB_I2C_SUCCESS)
         {
-            /*Send restart bit*/
-            Cy_SCB_I2C_MasterSendReStart(I2C4M_MCU_HW,
-                                        address,
-                                        CY_SCB_I2C_READ_XFER,
-                                        timeout,
-                                        &I2C4M_MCU_context);
-            /*Read data & send NAK*/
-            uint32_t cnt = 0UL;
-            cy_en_scb_i2c_command_t cmd = CY_SCB_I2C_ACK;
-            while ((status == CY_SCB_I2C_SUCCESS) && (cnt < rdLength))
+            if(rdLength > 0U)
             {
-                /* code */
-                if (cnt == (rdLength - 1UL))
+                /*Send restart bit*/
+                Cy_SCB_I2C_MasterSendReStart(I2C4M_MCU_HW,
+                                            address,
+                                            CY_SCB_I2C_READ_XFER,
+                                            timeout,
+                                            &I2C4M_MCU_context);
+                /*Read data & send NAK*/
+                uint32_t cnt = 0UL;
+                cy_en_scb_i2c_command_t cmd = CY_SCB_I2C_ACK;
+                while ((status == CY_SCB_I2C_SUCCESS) && (cnt < rdLength))
                 {
-                    /* The last byte must be NACKed */
-                    cmd = CY_SCB_I2C_NAK;
+                    /* code */
+                    if (cnt == (rdLength - 1UL))
+                    {
+                        /* The last byte must be NACKed */
+                        cmd = CY_SCB_I2C_NAK;
+                    }
+                    /* Read byte and generate ACK / or prepare for NACK */
+                    status = Cy_SCB_I2C_MasterReadByte(I2C4M_MCU_HW, cmd, &rdData[cnt], timeout, &I2C4M_MCU_context);
+                    ++cnt;
                 }
-                /* Read byte and generate ACK / or prepare for NACK */
-                status = Cy_SCB_I2C_MasterReadByte(I2C4M_MCU_HW, cmd, &rdData[cnt], timeout, &I2C4M_MCU_context);
-                ++cnt;
+            }else{
+                /* Do nothing*/
             }
 
             /* Send Stop condition on the bus */
