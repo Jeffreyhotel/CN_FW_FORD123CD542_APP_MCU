@@ -199,25 +199,50 @@ static void I2CSlaveApp_TxWriteTransferDone(uint8_t subaddr)
         }
     }else{
         /* Do common cmd id task*/
+        uint8_t u8temp = 0xFFU;
         switch (subaddr)
         {
         case CMD_DISP_STATUS:
+            /* IFS-MMI2C-SR-REQ-140566/D-Reserved Bits*/
+            u8temp = RegisterApp_DHU_Read(CMD_DISP_STATUS,CMD_DATA_POS+2U);
+            RegisterApp_DHU_Setup(CMD_DISP_STATUS,CMD_DATA_POS+2U,u8temp & 0x00U);
+            /* Do task*/
             break;
 
         case CMD_DISP_ID:
             break;
 
         case CMD_BL_PWM:
+            /* IFS-MMI2C-SR-REQ-140566/D-Reserved Bits*/
+            u8temp = RegisterApp_DHU_Read(CMD_BL_PWM,CMD_DATA_POS+1U);
+            RegisterApp_DHU_Setup(CMD_BL_PWM,CMD_DATA_POS+1U,u8temp & 0x03U);
+            /* Do task*/
             BacklightApp_UpdateDimmingStep();
             break;
 
+        case CMD_DISP_UD:
+            /* IFS-MMI2C-SR-REQ-140566/D-Reserved Bits*/
+            u8temp = RegisterApp_DHU_Read(CMD_DISP_UD,CMD_DATA_POS);
+            RegisterApp_DHU_Setup(CMD_DISP_UD,CMD_DATA_POS,u8temp & 0x03U);
+            /* Do task*/
+            break;
+
         case CMD_DISP_EN:
+            /* IFS-MMI2C-SR-REQ-140566/D-Reserved Bits*/
+            u8temp = RegisterApp_DHU_Read(CMD_DISP_EN,CMD_DATA_POS);
+            RegisterApp_DHU_Setup(CMD_DISP_EN,CMD_DATA_POS,u8temp & 0x03U);
+            /* Do task*/
             break;
 
         case CMD_DISP_SHUTD:
+            /* IFS-MMI2C-SR-REQ-140566/D-Reserved Bits*/
+            u8temp = RegisterApp_DHU_Read(CMD_DISP_SHUTD,CMD_DATA_POS);
+            RegisterApp_DHU_Setup(CMD_DISP_SHUTD,CMD_DATA_POS,u8temp & 0x01U);
+            /* Do task*/
             break;
 
         default:
+            (void)u8temp;
             break;
         }
     }
