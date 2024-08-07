@@ -2,6 +2,7 @@
 #include "app/inc/StackTaskApp.h"
 #include "driver/inc/I2C4MDriver.h"
 #include "driver/inc/UartDriver.h"
+#include "driver/inc/PortDriver.h"
 
 #define UART_MARK_POS   7U
 #define UART_CMD_ADDR_POS       (UART_MARK_POS+1U)
@@ -9,6 +10,9 @@
 #define UART_CMD_R_DATA_POS     (UART_CMD_ADDR_POS+1U)
 #define UART_CMD_WR_LEN_POS     (UART_CMD_ADDR_POS+1U)
 #define UART_CMD_WR_DATA_POS    (UART_CMD_ADDR_POS+2U)
+#define UART_CTRL_SET_POS       8U
+#define UART_CTRL_PORT_POS      9U
+#define UART_CTRL_PIN_POS       10U
 
 bool UartApp_CompareBuffer(char *StringSource, uint8_t rdBuffer[], uint8_t start_pos, uint8_t stop_pos)
 {
@@ -60,7 +64,30 @@ void UartApp_ReadFlow()
                     /* Read cmd code */
                     I2C4MDriver_Read(rdBuffer[UART_CMD_ADDR_POS],&u8ParseRxBuffer[0],rdBuffer[UART_CMD_R_DATA_POS]);
                     break;
-
+                case 0xFEU:
+                    /* Control GPIO*/
+                    uint8_t u8temp[1] = {0U};
+                    if(rdBuffer[UART_CTRL_PORT_POS] < 7U && rdBuffer[UART_CTRL_PIN_POS] < 8U)
+                    {
+                        if (rdBuffer[UART_CTRL_SET_POS] == 0x01)
+                        {
+                            PortDriver_PinSet(((GPIO_PRT_Type*) &GPIO->PRT[rdBuffer[UART_CTRL_PORT_POS]]),(uint32_t)rdBuffer[UART_CTRL_PIN_POS]);
+                        }else if(rdBuffer[UART_CTRL_SET_POS] == 0x02){
+                            PortDriver_PinClear(((GPIO_PRT_Type*) &GPIO->PRT[rdBuffer[UART_CTRL_PORT_POS]]),(uint32_t)rdBuffer[UART_CTRL_PIN_POS]);
+                        }else if(rdBuffer[UART_CTRL_SET_POS] == 0x03){
+                            PortDriver_PinToggle(((GPIO_PRT_Type*) &GPIO->PRT[rdBuffer[UART_CTRL_PORT_POS]]),(uint32_t)rdBuffer[UART_CTRL_PIN_POS]);
+                        }else if(rdBuffer[UART_CTRL_SET_POS] == 0x04){
+                            u8temp[0] = (uint8_t)PortDrvier_PinRead(((GPIO_PRT_Type*) &GPIO->PRT[rdBuffer[UART_CTRL_PORT_POS]]),(uint32_t)rdBuffer[UART_CTRL_PIN_POS]);
+                            UartDriver_TxWriteString((uint8_t *)"\r\nGPIO Read : ");
+                            UartDriver_TxWriteArray(u8temp,1U);
+                            UartDriver_TxWriteString((uint8_t *)"\r\n");
+                        }else{
+                            /* Do nothing*/
+                        }
+                    }else{
+                        /* Do nothing*/
+                    }
+                    break;
                 case 0xFFU:
                     /* Write-Read code */
                     if(rdBuffer[0] > UART_CMD_WR_DATA_POS)
@@ -73,6 +100,7 @@ void UartApp_ReadFlow()
                         I2C4MDriver_WriteRead(rdBuffer[UART_CMD_ADDR_POS],&u8ParseTxBuffer[0],u8CmdLength,u8ParseRxBuffer,rdBuffer[UART_CMD_WR_LEN_POS]);
                         if(rdBuffer[UART_CMD_WR_LEN_POS] > 0U)
                         {
+                            UartDriver_TxWriteString((uint8_t *)"\r\nI2C Master Read : ");
                             UartDriver_TxWriteArray(u8ParseRxBuffer,(uint32_t)rdBuffer[UART_CMD_WR_LEN_POS]);
                             UartDriver_TxWriteString((uint8_t *)"\r\n");
                         }else{
@@ -81,10 +109,10 @@ void UartApp_ReadFlow()
                     }else{
                         /* No read need*/
                     }
-                    
                     break;
 
                 default:
+                    UartDriver_TxWriteString((uint8_t *)"Wrong Uart Message!\r\n");
                     break;
                 }
             }
