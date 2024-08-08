@@ -78,7 +78,7 @@ void UartApp_ReadFlow()
                             PortDriver_PinToggle(((GPIO_PRT_Type*) &GPIO->PRT[rdBuffer[UART_CTRL_PORT_POS]]),(uint32_t)rdBuffer[UART_CTRL_PIN_POS]);
                         }else if(rdBuffer[UART_CTRL_SET_POS] == 0x04){
                             u8temp[0] = (uint8_t)PortDrvier_PinRead(((GPIO_PRT_Type*) &GPIO->PRT[rdBuffer[UART_CTRL_PORT_POS]]),(uint32_t)rdBuffer[UART_CTRL_PIN_POS]);
-                            UartDriver_TxWriteString((uint8_t *)"\r\nGPIO Read : ");
+                            UartDriver_TxWriteString((uint8_t *)"\r\n[DEBUG]:");
                             UartDriver_TxWriteArray(u8temp,1U);
                             UartDriver_TxWriteString((uint8_t *)"\r\n");
                         }else{
@@ -100,7 +100,7 @@ void UartApp_ReadFlow()
                         I2C4MDriver_WriteRead(rdBuffer[UART_CMD_ADDR_POS],&u8ParseTxBuffer[0],u8CmdLength,u8ParseRxBuffer,rdBuffer[UART_CMD_WR_LEN_POS]);
                         if(rdBuffer[UART_CMD_WR_LEN_POS] > 0U)
                         {
-                            UartDriver_TxWriteString((uint8_t *)"\r\nI2C Master Read : ");
+                            UartDriver_TxWriteString((uint8_t *)"\r\n[DEBUG]:");
                             UartDriver_TxWriteArray(u8ParseRxBuffer,(uint32_t)rdBuffer[UART_CMD_WR_LEN_POS]);
                             UartDriver_TxWriteString((uint8_t *)"\r\n");
                         }else{
