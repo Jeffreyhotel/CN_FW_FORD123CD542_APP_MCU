@@ -7,7 +7,7 @@
 #define UART_MARK_POS   7U
 #define UART_CMD_ADDR_POS       (UART_MARK_POS+1U)
 #define UART_CMD_W_DATA_POS     (UART_CMD_ADDR_POS+1U)
-#define UART_CMD_R_DATA_POS     (UART_CMD_ADDR_POS+1U)
+#define UART_CMD_R_LEN_POS     (UART_CMD_ADDR_POS+1U)
 #define UART_CMD_WR_LEN_POS     (UART_CMD_ADDR_POS+1U)
 #define UART_CMD_WR_DATA_POS    (UART_CMD_ADDR_POS+2U)
 #define UART_CTRL_SET_POS       8U
@@ -42,6 +42,7 @@ void UartApp_ReadFlow()
     uint8_t u8ParseRxBuffer[255] = {0};
     uint8_t u8CmdLength = 0U;
     uint8_t result = UART_RX_EMPTY;
+    uint8_t u8i2cstatus = ERROR_FAIL;
     result = UartDriver_Receive(&rdBuffer[0],sizeof(rdBuffer));
     if(result == UART_SUCCESS)
     {
@@ -57,12 +58,35 @@ void UartApp_ReadFlow()
                     {
                         u8ParseTxBuffer[index] = rdBuffer[index+UART_CMD_W_DATA_POS];
                     }
-                    I2C4MDriver_Write(rdBuffer[UART_CMD_ADDR_POS],&u8ParseTxBuffer[0],u8CmdLength);
+                    u8i2cstatus = I2C4MDriver_Write(rdBuffer[UART_CMD_ADDR_POS],&u8ParseTxBuffer[0],u8CmdLength);
+                    if(u8i2cstatus == CY_SCB_I2C_SUCCESS)
+                    {
+
+                    }else{
+                        uint8_t u8TxBuffer[30] = {0};
+                        sprintf((char *)u8TxBuffer,"I2C FAIL> 0x%02x\r\n",u8i2cstatus);
+                        UartDriver_TxWriteString(u8TxBuffer);
+                    }
                     break;
 
                 case 0x52U:
                     /* Read cmd code */
-                    I2C4MDriver_Read(rdBuffer[UART_CMD_ADDR_POS],&u8ParseRxBuffer[0],rdBuffer[UART_CMD_R_DATA_POS]);
+                    u8i2cstatus = I2C4MDriver_Read(rdBuffer[UART_CMD_ADDR_POS],&u8ParseRxBuffer[0],rdBuffer[UART_CMD_R_LEN_POS]);
+                    if(u8i2cstatus == CY_SCB_I2C_SUCCESS)
+                    {
+                        if(rdBuffer[UART_CMD_R_LEN_POS] > 0U)
+                        {
+                            UartDriver_TxWriteString((uint8_t *)"\r\n[DEBUG]:");
+                            UartDriver_TxWriteArray(u8ParseRxBuffer,(uint32_t)rdBuffer[UART_CMD_R_LEN_POS]);
+                            UartDriver_TxWriteString((uint8_t *)"\r\n");
+                        }else{
+                            /* No read need*/
+                        }
+                    }else{
+                        uint8_t u8TxBuffer[30] = {0};
+                        sprintf((char *)u8TxBuffer,"I2C FAIL> 0x%02x\r\n",u8i2cstatus);
+                        UartDriver_TxWriteString(u8TxBuffer);
+                    }
                     break;
                 case 0xFEU:
                     /* Control GPIO*/
@@ -97,14 +121,22 @@ void UartApp_ReadFlow()
                         {
                             u8ParseTxBuffer[index] = rdBuffer[index+UART_CMD_WR_DATA_POS];
                         }
-                        I2C4MDriver_WriteRead(rdBuffer[UART_CMD_ADDR_POS],&u8ParseTxBuffer[0],u8CmdLength,u8ParseRxBuffer,rdBuffer[UART_CMD_WR_LEN_POS]);
-                        if(rdBuffer[UART_CMD_WR_LEN_POS] > 0U)
+                        u8i2cstatus = I2C4MDriver_WriteRead(rdBuffer[UART_CMD_ADDR_POS],&u8ParseTxBuffer[0],u8CmdLength,u8ParseRxBuffer,rdBuffer[UART_CMD_WR_LEN_POS]);
+                        if(u8i2cstatus == CY_SCB_I2C_SUCCESS)
                         {
-                            UartDriver_TxWriteString((uint8_t *)"\r\n[DEBUG]:");
-                            UartDriver_TxWriteArray(u8ParseRxBuffer,(uint32_t)rdBuffer[UART_CMD_WR_LEN_POS]);
-                            UartDriver_TxWriteString((uint8_t *)"\r\n");
+                            if(rdBuffer[UART_CMD_WR_LEN_POS] > 0U)
+                            {
+                                UartDriver_TxWriteString((uint8_t *)"\r\n[DEBUG]:");
+                                UartDriver_TxWriteArray(u8ParseRxBuffer,(uint32_t)rdBuffer[UART_CMD_WR_LEN_POS]);
+                                UartDriver_TxWriteString((uint8_t *)"\r\n");
+                            }else{
+                                /* No read need*/
+                                UartDriver_TxWriteString((uint8_t *)"Write Only\r\n");
+                            }
                         }else{
-                            /* No read need*/
+                            uint8_t u8TxBuffer[30] = {0};
+                            sprintf((char *)u8TxBuffer,"I2C FAIL> 0x%02x\r\n",u8i2cstatus);
+                            UartDriver_TxWriteString(u8TxBuffer);
                         }
                     }else{
                         /* No read need*/

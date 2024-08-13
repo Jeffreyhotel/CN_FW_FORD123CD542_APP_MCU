@@ -25,10 +25,11 @@
 #include "main.h"
 
 #define ERROR_NONE    0x00U
-#define ERROR_NAK     0x01U
+#define ERROR_PARA    0x01U
 #define ERROR_BUSNG   0x02U
-#define ERROR_FAIL    0x03U
-#define ERROR_TIMEOUT 0x04U
+#define ERROR_TIMEOUT 0x03U
+#define ERROR_NAK     0x04U
+#define ERROR_FAIL    0xFAU
 
 /* Re-Name Macro for project use*/
 #define I2C4M_MCU_HW    SCB_I2C4M_HW

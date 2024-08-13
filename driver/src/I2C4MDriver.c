@@ -94,7 +94,6 @@ uint8_t I2C4MDriver_Read(uint16_t address, uint8_t* rdData, uint32_t rdLength)
             timeout--;
 
         } while ((0UL != (masterStatus & CY_SCB_I2C_MASTER_BUSY)) && (timeout > 0));
-
         if (timeout <= 0)
         {
             status = ERROR_TIMEOUT;
@@ -207,7 +206,7 @@ uint8_t I2C4MDriver_Write(uint16_t address, uint8_t* wrData, uint32_t wrLength)
 
             case CY_SCB_I2C_MASTER_BUS_ERR:
                 /* code */
-                status = ERROR_FAIL;
+                status = ERROR_BUSNG;
                 break;
 
             default:
@@ -222,16 +221,15 @@ uint8_t I2C4MDriver_Write(uint16_t address, uint8_t* wrData, uint32_t wrLength)
 uint8_t I2C4MDriver_WriteRead(uint16_t address, uint8_t* wrData, uint32_t wrLength, uint8_t* rdData, uint32_t rdLength)
 {
     cy_en_scb_i2c_status_t status;
-    /* Timeout 1 sec (one unit is us) */
-    uint32_t timeout = 8000UL;
-
+    /* Timeout 8 msec (one unit is ms) */
+    uint32_t timeoutMs = 8UL;
     /* Send Start condition, address and receive ACK/NACK response from slave */
-	status = Cy_SCB_I2C_MasterSendStart(I2C4M_MCU_HW, address, CY_SCB_I2C_WRITE_XFER, timeout, &I2C4M_MCU_context);
+	status = Cy_SCB_I2C_MasterSendStart(I2C4M_MCU_HW, address, CY_SCB_I2C_WRITE_XFER, timeoutMs, &I2C4M_MCU_context);
 	if (CY_SCB_I2C_SUCCESS == status)
 	{
         for (uint32_t i = 0 ; i < wrLength ; i ++)
 		{
-			  status = Cy_SCB_I2C_MasterWriteByte(I2C4M_MCU_HW, wrData[i], timeout, &I2C4M_MCU_context);
+			  status = Cy_SCB_I2C_MasterWriteByte(I2C4M_MCU_HW, wrData[i], timeoutMs, &I2C4M_MCU_context);
 			  if (status != CY_SCB_I2C_SUCCESS)
 			  	  {break;}
 			  else
@@ -245,7 +243,7 @@ uint8_t I2C4MDriver_WriteRead(uint16_t address, uint8_t* wrData, uint32_t wrLeng
                 Cy_SCB_I2C_MasterSendReStart(I2C4M_MCU_HW,
                                             address,
                                             CY_SCB_I2C_READ_XFER,
-                                            timeout,
+                                            timeoutMs,
                                             &I2C4M_MCU_context);
                 /*Read data & send NAK*/
                 uint32_t cnt = 0UL;
@@ -259,7 +257,7 @@ uint8_t I2C4MDriver_WriteRead(uint16_t address, uint8_t* wrData, uint32_t wrLeng
                         cmd = CY_SCB_I2C_NAK;
                     }
                     /* Read byte and generate ACK / or prepare for NACK */
-                    status = Cy_SCB_I2C_MasterReadByte(I2C4M_MCU_HW, cmd, &rdData[cnt], timeout, &I2C4M_MCU_context);
+                    status = Cy_SCB_I2C_MasterReadByte(I2C4M_MCU_HW, cmd, &rdData[cnt], timeoutMs, &I2C4M_MCU_context);
                     ++cnt;
                 }
             }else{
@@ -273,7 +271,7 @@ uint8_t I2C4MDriver_WriteRead(uint16_t address, uint8_t* wrData, uint32_t wrLeng
                 (status == CY_SCB_I2C_MASTER_MANUAL_ADDR_NAK))
             {
                 /* Send Stop condition on the bus */
-                status = Cy_SCB_I2C_MasterSendStop(I2C4M_MCU_HW, timeout, &I2C4M_MCU_context);
+                status = Cy_SCB_I2C_MasterSendStop(I2C4M_MCU_HW, timeoutMs, &I2C4M_MCU_context);
             }
             else
             {

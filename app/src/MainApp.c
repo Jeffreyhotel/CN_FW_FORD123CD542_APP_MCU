@@ -117,6 +117,8 @@ static uint8_t MainApp_PreNormal_Mode(uint8_t u8Nothing)
     AdcDriver_Initial(ADC_SAR0_TYPE, ADC_SAR0_CONFIG);
     PowerApp_PowerGoodInitial();
     PowerApp_Sequence(POWER_ON);
+    /* Due to Bus pull up with P3V3 vout, Init after Power on seq; HW would change PCBA (pull up with MCU_3V3)*/
+    I2C4MDriver_Initialize();
     /*Do LCD Power On Sequence*/
     sprintf((char *)u8TxBuffer,"PRENORMAL FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
