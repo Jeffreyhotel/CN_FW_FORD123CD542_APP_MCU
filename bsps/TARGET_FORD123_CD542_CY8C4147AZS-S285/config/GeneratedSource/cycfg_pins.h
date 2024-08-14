@@ -313,46 +313,46 @@ extern "C" {
 #define ioss_0_port_1_pin_7_HAL_DRIVEMODE CYHAL_GPIO_DRIVE_ANALOG
 #endif /* defined (CY_USING_HAL) */
 
-#define ADC_BLTTEMP_ENABLED 1U
-#define ADC_BLTTEMP_PORT GPIO_PRT2
-#define ADC_BLTTEMP_PORT_NUM 2U
-#define ADC_BLTTEMP_PIN 0U
-#define ADC_BLTTEMP_NUM 0U
-#define ADC_BLTTEMP_DRIVEMODE CY_GPIO_DM_ANALOG
-#define ADC_BLTTEMP_INIT_DRIVESTATE 1
-#ifndef ioss_0_port_2_pin_0_HSIOM
-    #define ioss_0_port_2_pin_0_HSIOM HSIOM_SEL_GPIO
-#endif
-#define ADC_BLTTEMP_HSIOM ioss_0_port_2_pin_0_HSIOM
-#define ADC_BLTTEMP_IRQ ioss_interrupts_gpio_2_IRQn
-
-#if defined (CY_USING_HAL)
-#define ADC_BLTTEMP_HAL_PORT_PIN P2_0
-#define ADC_BLTTEMP P2_0
-#define ADC_BLTTEMP_HAL_IRQ CYHAL_GPIO_IRQ_NONE
-#define ADC_BLTTEMP_HAL_DIR CYHAL_GPIO_DIR_INPUT 
-#define ADC_BLTTEMP_HAL_DRIVEMODE CYHAL_GPIO_DRIVE_ANALOG
-#endif /* defined (CY_USING_HAL) */
-
 #define ADC_PCBTEMP_ENABLED 1U
 #define ADC_PCBTEMP_PORT GPIO_PRT2
 #define ADC_PCBTEMP_PORT_NUM 2U
-#define ADC_PCBTEMP_PIN 1U
-#define ADC_PCBTEMP_NUM 1U
+#define ADC_PCBTEMP_PIN 0U
+#define ADC_PCBTEMP_NUM 0U
 #define ADC_PCBTEMP_DRIVEMODE CY_GPIO_DM_ANALOG
 #define ADC_PCBTEMP_INIT_DRIVESTATE 1
-#ifndef ioss_0_port_2_pin_1_HSIOM
-    #define ioss_0_port_2_pin_1_HSIOM HSIOM_SEL_GPIO
+#ifndef ioss_0_port_2_pin_0_HSIOM
+    #define ioss_0_port_2_pin_0_HSIOM HSIOM_SEL_GPIO
 #endif
-#define ADC_PCBTEMP_HSIOM ioss_0_port_2_pin_1_HSIOM
+#define ADC_PCBTEMP_HSIOM ioss_0_port_2_pin_0_HSIOM
 #define ADC_PCBTEMP_IRQ ioss_interrupts_gpio_2_IRQn
 
 #if defined (CY_USING_HAL)
-#define ADC_PCBTEMP_HAL_PORT_PIN P2_1
-#define ADC_PCBTEMP P2_1
+#define ADC_PCBTEMP_HAL_PORT_PIN P2_0
+#define ADC_PCBTEMP P2_0
 #define ADC_PCBTEMP_HAL_IRQ CYHAL_GPIO_IRQ_NONE
 #define ADC_PCBTEMP_HAL_DIR CYHAL_GPIO_DIR_INPUT 
 #define ADC_PCBTEMP_HAL_DRIVEMODE CYHAL_GPIO_DRIVE_ANALOG
+#endif /* defined (CY_USING_HAL) */
+
+#define ADC_BLTTEMP_ENABLED 1U
+#define ADC_BLTTEMP_PORT GPIO_PRT2
+#define ADC_BLTTEMP_PORT_NUM 2U
+#define ADC_BLTTEMP_PIN 1U
+#define ADC_BLTTEMP_NUM 1U
+#define ADC_BLTTEMP_DRIVEMODE CY_GPIO_DM_ANALOG
+#define ADC_BLTTEMP_INIT_DRIVESTATE 1
+#ifndef ioss_0_port_2_pin_1_HSIOM
+    #define ioss_0_port_2_pin_1_HSIOM HSIOM_SEL_GPIO
+#endif
+#define ADC_BLTTEMP_HSIOM ioss_0_port_2_pin_1_HSIOM
+#define ADC_BLTTEMP_IRQ ioss_interrupts_gpio_2_IRQn
+
+#if defined (CY_USING_HAL)
+#define ADC_BLTTEMP_HAL_PORT_PIN P2_1
+#define ADC_BLTTEMP P2_1
+#define ADC_BLTTEMP_HAL_IRQ CYHAL_GPIO_IRQ_NONE
+#define ADC_BLTTEMP_HAL_DIR CYHAL_GPIO_DIR_INPUT 
+#define ADC_BLTTEMP_HAL_DRIVEMODE CYHAL_GPIO_DRIVE_ANALOG
 #endif /* defined (CY_USING_HAL) */
 
 #define ADC_BATTVOLT_ENABLED 1U
@@ -502,25 +502,25 @@ extern "C" {
 #define EXFLASH_WP_HAL_DRIVEMODE CYHAL_GPIO_DRIVE_STRONG
 #endif /* defined (CY_USING_HAL) */
 
-#define DISP_FAULT_ENABLED 1U
-#define DISP_FAULT_PORT GPIO_PRT3
-#define DISP_FAULT_PORT_NUM 3U
-#define DISP_FAULT_PIN 1U
-#define DISP_FAULT_NUM 1U
-#define DISP_FAULT_DRIVEMODE CY_GPIO_DM_HIGHZ
-#define DISP_FAULT_INIT_DRIVESTATE 0
+#define DISP_FAULTO_ENABLED 1U
+#define DISP_FAULTO_PORT GPIO_PRT3
+#define DISP_FAULTO_PORT_NUM 3U
+#define DISP_FAULTO_PIN 1U
+#define DISP_FAULTO_NUM 1U
+#define DISP_FAULTO_DRIVEMODE CY_GPIO_DM_HIGHZ
+#define DISP_FAULTO_INIT_DRIVESTATE 0
 #ifndef ioss_0_port_3_pin_1_HSIOM
     #define ioss_0_port_3_pin_1_HSIOM HSIOM_SEL_GPIO
 #endif
-#define DISP_FAULT_HSIOM ioss_0_port_3_pin_1_HSIOM
-#define DISP_FAULT_IRQ ioss_interrupts_gpio_3_IRQn
+#define DISP_FAULTO_HSIOM ioss_0_port_3_pin_1_HSIOM
+#define DISP_FAULTO_IRQ ioss_interrupts_gpio_3_IRQn
 
 #if defined (CY_USING_HAL)
-#define DISP_FAULT_HAL_PORT_PIN P3_1
-#define DISP_FAULT P3_1
-#define DISP_FAULT_HAL_IRQ CYHAL_GPIO_IRQ_NONE
-#define DISP_FAULT_HAL_DIR CYHAL_GPIO_DIR_INPUT 
-#define DISP_FAULT_HAL_DRIVEMODE CYHAL_GPIO_DRIVE_NONE
+#define DISP_FAULTO_HAL_PORT_PIN P3_1
+#define DISP_FAULTO P3_1
+#define DISP_FAULTO_HAL_IRQ CYHAL_GPIO_IRQ_NONE
+#define DISP_FAULTO_HAL_DIR CYHAL_GPIO_DIR_INPUT 
+#define DISP_FAULTO_HAL_DRIVEMODE CYHAL_GPIO_DRIVE_NONE
 #endif /* defined (CY_USING_HAL) */
 
 #define MCU_SWDIO_ENABLED 1U
@@ -1105,16 +1105,16 @@ extern const cy_stc_gpio_pin_config_t ioss_0_port_1_pin_7_config;
 extern const cyhal_resource_inst_t ioss_0_port_1_pin_7_obj;
 #endif /* defined (CY_USING_HAL) */
 
-extern const cy_stc_gpio_pin_config_t ADC_BLTTEMP_config;
-
-#if defined (CY_USING_HAL)
-extern const cyhal_resource_inst_t ADC_BLTTEMP_obj;
-#endif /* defined (CY_USING_HAL) */
-
 extern const cy_stc_gpio_pin_config_t ADC_PCBTEMP_config;
 
 #if defined (CY_USING_HAL)
 extern const cyhal_resource_inst_t ADC_PCBTEMP_obj;
+#endif /* defined (CY_USING_HAL) */
+
+extern const cy_stc_gpio_pin_config_t ADC_BLTTEMP_config;
+
+#if defined (CY_USING_HAL)
+extern const cyhal_resource_inst_t ADC_BLTTEMP_obj;
 #endif /* defined (CY_USING_HAL) */
 
 extern const cy_stc_gpio_pin_config_t ADC_BATTVOLT_config;
@@ -1159,10 +1159,10 @@ extern const cy_stc_gpio_pin_config_t EXFLASH_WP_config;
 extern const cyhal_resource_inst_t EXFLASH_WP_obj;
 #endif /* defined (CY_USING_HAL) */
 
-extern const cy_stc_gpio_pin_config_t DISP_FAULT_config;
+extern const cy_stc_gpio_pin_config_t DISP_FAULTO_config;
 
 #if defined (CY_USING_HAL)
-extern const cyhal_resource_inst_t DISP_FAULT_obj;
+extern const cyhal_resource_inst_t DISP_FAULTO_obj;
 #endif /* defined (CY_USING_HAL) */
 
 extern const cy_stc_gpio_pin_config_t MCU_SWDIO_config;

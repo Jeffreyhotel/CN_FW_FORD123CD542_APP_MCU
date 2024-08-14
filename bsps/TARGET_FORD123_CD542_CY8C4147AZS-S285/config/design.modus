@@ -226,7 +226,7 @@
                 <Personality template="m0s8pin" version="2.0">
                     <Block location="ioss[0].port[2].pin[0]" locked="true">
                         <Aliases>
-                            <Alias value="ADC_BLTTEMP"/>
+                            <Alias value="ADC_PCBTEMP"/>
                         </Aliases>
                     </Block>
                     <Parameters>
@@ -242,7 +242,7 @@
                 <Personality template="m0s8pin" version="2.0">
                     <Block location="ioss[0].port[2].pin[1]" locked="true">
                         <Aliases>
-                            <Alias value="ADC_PCBTEMP"/>
+                            <Alias value="ADC_BLTTEMP"/>
                         </Aliases>
                     </Block>
                     <Parameters>
@@ -370,7 +370,7 @@
                 <Personality template="m0s8pin" version="2.0">
                     <Block location="ioss[0].port[3].pin[1]" locked="true">
                         <Aliases>
-                            <Alias value="DISP_FAULT"/>
+                            <Alias value="DISP_FAULTO"/>
                         </Aliases>
                     </Block>
                     <Parameters>

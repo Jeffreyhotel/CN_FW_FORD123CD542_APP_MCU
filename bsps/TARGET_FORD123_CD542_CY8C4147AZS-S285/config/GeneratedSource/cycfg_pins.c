@@ -275,25 +275,6 @@ const cyhal_resource_inst_t ioss_0_port_1_pin_7_obj =
 };
 #endif /* defined (CY_USING_HAL) */
 
-const cy_stc_gpio_pin_config_t ADC_BLTTEMP_config =
-{
-    .outVal = 1,
-    .driveMode = CY_GPIO_DM_ANALOG,
-    .hsiom = ADC_BLTTEMP_HSIOM,
-    .intEdge = CY_GPIO_INTR_DISABLE,
-    .vtrip = CY_GPIO_VTRIP_CMOS,
-    .slewRate = CY_GPIO_SLEW_FAST,
-};
-
-#if defined (CY_USING_HAL)
-const cyhal_resource_inst_t ADC_BLTTEMP_obj =
-{
-    .type = CYHAL_RSC_GPIO,
-    .block_num = ADC_BLTTEMP_PORT_NUM,
-    .channel_num = ADC_BLTTEMP_PIN,
-};
-#endif /* defined (CY_USING_HAL) */
-
 const cy_stc_gpio_pin_config_t ADC_PCBTEMP_config =
 {
     .outVal = 1,
@@ -310,6 +291,25 @@ const cyhal_resource_inst_t ADC_PCBTEMP_obj =
     .type = CYHAL_RSC_GPIO,
     .block_num = ADC_PCBTEMP_PORT_NUM,
     .channel_num = ADC_PCBTEMP_PIN,
+};
+#endif /* defined (CY_USING_HAL) */
+
+const cy_stc_gpio_pin_config_t ADC_BLTTEMP_config =
+{
+    .outVal = 1,
+    .driveMode = CY_GPIO_DM_ANALOG,
+    .hsiom = ADC_BLTTEMP_HSIOM,
+    .intEdge = CY_GPIO_INTR_DISABLE,
+    .vtrip = CY_GPIO_VTRIP_CMOS,
+    .slewRate = CY_GPIO_SLEW_FAST,
+};
+
+#if defined (CY_USING_HAL)
+const cyhal_resource_inst_t ADC_BLTTEMP_obj =
+{
+    .type = CYHAL_RSC_GPIO,
+    .block_num = ADC_BLTTEMP_PORT_NUM,
+    .channel_num = ADC_BLTTEMP_PIN,
 };
 #endif /* defined (CY_USING_HAL) */
 
@@ -446,22 +446,22 @@ const cyhal_resource_inst_t EXFLASH_WP_obj =
 };
 #endif /* defined (CY_USING_HAL) */
 
-const cy_stc_gpio_pin_config_t DISP_FAULT_config =
+const cy_stc_gpio_pin_config_t DISP_FAULTO_config =
 {
     .outVal = 0,
     .driveMode = CY_GPIO_DM_HIGHZ,
-    .hsiom = DISP_FAULT_HSIOM,
+    .hsiom = DISP_FAULTO_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
     .slewRate = CY_GPIO_SLEW_FAST,
 };
 
 #if defined (CY_USING_HAL)
-const cyhal_resource_inst_t DISP_FAULT_obj =
+const cyhal_resource_inst_t DISP_FAULTO_obj =
 {
     .type = CYHAL_RSC_GPIO,
-    .block_num = DISP_FAULT_PORT_NUM,
-    .channel_num = DISP_FAULT_PIN,
+    .block_num = DISP_FAULTO_PORT_NUM,
+    .channel_num = DISP_FAULTO_PIN,
 };
 #endif /* defined (CY_USING_HAL) */
 
@@ -936,8 +936,8 @@ void init_cycfg_pins(void)
     Cy_GPIO_Pin_Init(DES_I2C_SCL_PORT, DES_I2C_SCL_PIN, &DES_I2C_SCL_config);
     Cy_GPIO_Pin_Init(DES_I2C_SDA_PORT, DES_I2C_SDA_PIN, &DES_I2C_SDA_config);
     Cy_GPIO_Pin_Init(ioss_0_port_1_pin_7_PORT, ioss_0_port_1_pin_7_PIN, &ioss_0_port_1_pin_7_config);
-    Cy_GPIO_Pin_Init(ADC_BLTTEMP_PORT, ADC_BLTTEMP_PIN, &ADC_BLTTEMP_config);
     Cy_GPIO_Pin_Init(ADC_PCBTEMP_PORT, ADC_PCBTEMP_PIN, &ADC_PCBTEMP_config);
+    Cy_GPIO_Pin_Init(ADC_BLTTEMP_PORT, ADC_BLTTEMP_PIN, &ADC_BLTTEMP_config);
     Cy_GPIO_Pin_Init(ADC_BATTVOLT_PORT, ADC_BATTVOLT_PIN, &ADC_BATTVOLT_config);
     Cy_GPIO_Pin_Init(SYNC_CHECK_PORT, SYNC_CHECK_PIN, &SYNC_CHECK_config);
     Cy_GPIO_Pin_Init(FPCACHK_ROUT_PORT, FPCACHK_ROUT_PIN, &FPCACHK_ROUT_config);
@@ -945,7 +945,7 @@ void init_cycfg_pins(void)
     Cy_GPIO_Pin_Init(DES_LOCK_PORT, DES_LOCK_PIN, &DES_LOCK_config);
     Cy_GPIO_Pin_Init(DES_PASS_PORT, DES_PASS_PIN, &DES_PASS_config);
     Cy_GPIO_Pin_Init(EXFLASH_WP_PORT, EXFLASH_WP_PIN, &EXFLASH_WP_config);
-    Cy_GPIO_Pin_Init(DISP_FAULT_PORT, DISP_FAULT_PIN, &DISP_FAULT_config);
+    Cy_GPIO_Pin_Init(DISP_FAULTO_PORT, DISP_FAULTO_PIN, &DISP_FAULTO_config);
     Cy_GPIO_Pin_Init(MCU_SWDIO_PORT, MCU_SWDIO_PIN, &MCU_SWDIO_config);
     Cy_GPIO_Pin_Init(MCU_SWCLK_PORT, MCU_SWCLK_PIN, &MCU_SWCLK_config);
     Cy_GPIO_Pin_Init(FPCACHK_LOUT_PORT, FPCACHK_LOUT_PIN, &FPCACHK_LOUT_config);
@@ -987,8 +987,8 @@ void reserve_cycfg_pins(void)
     cyhal_hwmgr_reserve(&DES_I2C_SCL_obj);
     cyhal_hwmgr_reserve(&DES_I2C_SDA_obj);
     cyhal_hwmgr_reserve(&ioss_0_port_1_pin_7_obj);
-    cyhal_hwmgr_reserve(&ADC_BLTTEMP_obj);
     cyhal_hwmgr_reserve(&ADC_PCBTEMP_obj);
+    cyhal_hwmgr_reserve(&ADC_BLTTEMP_obj);
     cyhal_hwmgr_reserve(&ADC_BATTVOLT_obj);
     cyhal_hwmgr_reserve(&SYNC_CHECK_obj);
     cyhal_hwmgr_reserve(&FPCACHK_ROUT_obj);
@@ -996,7 +996,7 @@ void reserve_cycfg_pins(void)
     cyhal_hwmgr_reserve(&DES_LOCK_obj);
     cyhal_hwmgr_reserve(&DES_PASS_obj);
     cyhal_hwmgr_reserve(&EXFLASH_WP_obj);
-    cyhal_hwmgr_reserve(&DISP_FAULT_obj);
+    cyhal_hwmgr_reserve(&DISP_FAULTO_obj);
     cyhal_hwmgr_reserve(&MCU_SWDIO_obj);
     cyhal_hwmgr_reserve(&MCU_SWCLK_obj);
     cyhal_hwmgr_reserve(&FPCACHK_LOUT_obj);
