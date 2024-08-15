@@ -289,5 +289,9 @@ uint8_t I2C4MDriver_WriteRead(uint16_t address, uint8_t* wrData, uint32_t wrLeng
     {
         /* do not requite any actions*/
     }
+    if(status != CY_SCB_I2C_SUCCESS){
+        Cy_SCB_I2C_Disable(I2C4M_MCU_HW, &I2C4M_MCU_context);
+        Cy_SCB_I2C_Enable(I2C4M_MCU_HW, &I2C4M_MCU_context);
+    }
     return (status);
 }

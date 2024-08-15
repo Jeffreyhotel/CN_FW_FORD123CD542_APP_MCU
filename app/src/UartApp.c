@@ -1,5 +1,6 @@
 #include "app/inc/UartApp.h"
 #include "app/inc/StackTaskApp.h"
+#include "app/inc/RegisterApp.h"
 #include "driver/inc/I2C4MDriver.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/PortDriver.h"
@@ -7,12 +8,14 @@
 #define UART_MARK_POS   7U
 #define UART_CMD_ADDR_POS       (UART_MARK_POS+1U)
 #define UART_CMD_W_DATA_POS     (UART_CMD_ADDR_POS+1U)
-#define UART_CMD_R_LEN_POS     (UART_CMD_ADDR_POS+1U)
+#define UART_CMD_R_LEN_POS      (UART_CMD_ADDR_POS+1U)
 #define UART_CMD_WR_LEN_POS     (UART_CMD_ADDR_POS+1U)
 #define UART_CMD_WR_DATA_POS    (UART_CMD_ADDR_POS+2U)
 #define UART_CTRL_SET_POS       8U
 #define UART_CTRL_PORT_POS      9U
 #define UART_CTRL_PIN_POS       10U
+#define UART_REG_CMD_POS        (UART_MARK_POS+1U)
+#define UART_REG_R_LEN_POS      (UART_MARK_POS+2U)
 
 bool UartApp_CompareBuffer(char *StringSource, uint8_t rdBuffer[], uint8_t start_pos, uint8_t stop_pos)
 {
@@ -52,6 +55,20 @@ void UartApp_ReadFlow()
             {
                 switch (rdBuffer[UART_MARK_POS])
                 {
+                case 0x01U:
+                    /* Write cmd code */
+                    for(uint8_t index = 0U;index < rdBuffer[UART_REG_R_LEN_POS];index ++)
+                    {
+                        u8ParseRxBuffer[index] = RegisterApp_DHU_Read(rdBuffer[UART_REG_CMD_POS],index);
+                    }
+                    UartDriver_TxWriteString((uint8_t *)"\r\n[DEBUG]:");
+                    /* Return Number# */
+                    u8temp[0] = rdBuffer[UART_REG_R_LEN_POS];
+                    UartDriver_TxWriteArray(u8temp,1U);
+                    /* Return Value */
+                    UartDriver_TxWriteArray(u8ParseRxBuffer,rdBuffer[UART_REG_R_LEN_POS]);
+                    UartDriver_TxWriteString((uint8_t *)"\r\n");
+                    break;
                 case 0x57U:
                     /* Write cmd code */
                     u8CmdLength = rdBuffer[0] - UART_CMD_W_DATA_POS;

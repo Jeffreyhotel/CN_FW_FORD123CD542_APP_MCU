@@ -51,7 +51,7 @@ extern "C" {
 #define PASS_ADC_SENSE_ENABLED 1U
 #define PASS_ADC_SENSE_HW SAR0
 #define PASS_ADC_SENSE_IRQ pass_0_interrupt_sar_IRQn
-#define PASS_ADC_SENSE_VREF_MV 3300UL
+#define PASS_ADC_SENSE_VREF_MV 1650UL
 #define SCB_SPI0M_ENABLED 1U
 #define SCB_SPI0M_HW SCB0
 #define SCB_SPI0M_IRQ scb_0_interrupt_IRQn

@@ -64,8 +64,8 @@ const cy_stc_sar_channel_config_t PASS_ADC_SENSE_channel_2_config =
 };
 const cy_stc_sar_config_t PASS_ADC_SENSE_config =
 {
-    .vrefSel = CY_SAR_VREF_SEL_VDDA,
-    .vrefBypCapEn = false,
+    .vrefSel = CY_SAR_VREF_SEL_VDDA_DIV_2,
+    .vrefBypCapEn = true,
     .negSel = CY_SAR_NEG_SEL_VREF,
     .negVref = CY_SAR_NEGVREF_HW,
     .boostPump = false,

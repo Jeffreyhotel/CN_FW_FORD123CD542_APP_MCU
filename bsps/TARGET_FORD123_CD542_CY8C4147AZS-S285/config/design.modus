@@ -370,7 +370,7 @@
                 <Personality template="m0s8pin" version="2.0">
                     <Block location="ioss[0].port[3].pin[1]" locked="true">
                         <Aliases>
-                            <Alias value="DISP_FAULTO"/>
+                            <Alias value="DISP_FAULT"/>
                         </Aliases>
                     </Block>
                     <Parameters>
@@ -892,8 +892,8 @@
                         <Param id="subRes" value="CY_SAR_SUB_RESOLUTION_10B"/>
                         <Param id="trigger_mode" value="CY_SAR_TRIGGER_MODE_FW_AND_HWEDGE"/>
                         <Param id="vneg_select" value="CY_SAR_NEG_SEL_VREF"/>
-                        <Param id="vref_select" value="CY_SAR_VREF_SEL_VDDA"/>
-                        <Param id="vref_voltage" value="1.800"/>
+                        <Param id="vref_select" value="CY_SAR_VREF_SEL_VDDA_DIV_2_BYP"/>
+                        <Param id="vref_voltage" value="1.650"/>
                     </Parameters>
                 </Personality>
                 <Personality template="m0s8peripheralclock" version="1.0">

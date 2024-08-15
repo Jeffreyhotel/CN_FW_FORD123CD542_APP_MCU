@@ -76,11 +76,11 @@ static void BacklightApp_BrightnessAdgust(uint16_t BrightnessTarget,uint16_t Gra
     }
     /*TARGET VALUE IS SMALLER THAN OLD BRIGHTNESS*/
     else if(u16Brightness > BrightnessTarget){
-        if((u16Brightness - BrightnessTarget) < BLT_GRADUAL_UNIT){
+        if((u16Brightness - BrightnessTarget) < u16DimmingStep){
             u16Brightness = BrightnessTarget;
         }else{
-            if(u16Brightness >= BLT_GRADUAL_UNIT){
-                u16Brightness = u16Brightness - BLT_GRADUAL_UNIT;
+            if(u16Brightness >= u16DimmingStep){
+                u16Brightness = u16Brightness - u16DimmingStep;
             }
 			else
 			{
@@ -91,10 +91,10 @@ static void BacklightApp_BrightnessAdgust(uint16_t BrightnessTarget,uint16_t Gra
     /*TARGET VALUE IS BIGGER THAN OLD BRIGHTNESS*/
     else
     {
-        if((BrightnessTarget - u16Brightness) < BLT_GRADUAL_UNIT){
+        if((BrightnessTarget - u16Brightness) < u16DimmingStep){
             u16Brightness = BrightnessTarget;
         }else{
-            u16Brightness = u16Brightness + BLT_GRADUAL_UNIT;
+            u16Brightness = u16Brightness + u16DimmingStep;
         }
     }
 
@@ -228,12 +228,12 @@ static uint8_t BacklightApp_Scorch_Mode(uint16_t u16MATemp)
 
 void BacklightApp_DimmingControl(void)
 {
-    uint8_t rdData[2U] = {0U};
+    uint8_t rdData[3U] = {0U};
     uint8_t BacklightSwitch = 0U;
     uint16_t BrightnessTarget = 0U;
 
     /*Get DHU command and control the dimming*/
-    for (uint8_t count=0U;count<2U;count++){
+    for (uint8_t count=0U;count<3U;count++){
         rdData[count] = RegisterApp_DHU_Read(CMD_BL_PWM,count);
     }
     /*Backlight On/Off*/
@@ -248,7 +248,7 @@ void BacklightApp_DimmingControl(void)
     if(bDimmingUpdateStepFlag == true)
     {
         /* Delta PWM Mod 0x7F (128 dimming step) and plus 1 (at least 1 step a time)*/
-        u16DimmingStep = ((BrightnessTarget > u16Brightness) ? (BrightnessTarget - u16Brightness)%0x7F : (u16Brightness - BrightnessTarget)%0x7F)
+        u16DimmingStep = ((BrightnessTarget > u16Brightness) ? (BrightnessTarget - u16Brightness)/0x7F : (u16Brightness - BrightnessTarget)/0x7F)
                          + 1U;
         bDimmingUpdateStepFlag = false;
     }
@@ -279,7 +279,7 @@ void BacklightApp_DimmingControl(void)
         //report Derating
         //StackTaskApp_IRQPush(0x62U);
     }else{/*DO NOTHING*/}
-    //sprintf((char *)u8TxBuffer,"SW %d TARGET %d GRAD %d BATT_PT %d\r\n",BacklightSwitch,BrightnessTarget,u16GradientValue,u8BATT_PROTECT_EN);
+    //sprintf((char *)u8TxBuffer,"SW %d TARGET %d GRAD %d BATT_PT %d STEP %d\r\n",BacklightSwitch,BrightnessTarget,u16GradientValue,u8BATT_PROTECT_EN,u16DimmingStep);
     //UartDriver_TxWriteString((uint8_t*)u8TxBuffer);
 }
 

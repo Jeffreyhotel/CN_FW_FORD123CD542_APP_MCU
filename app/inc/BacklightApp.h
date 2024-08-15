@@ -32,10 +32,10 @@
 #define BLT_BOIL_MODE       0x02U
 #define BLT_SCORCH_MODE     0x03U
 
-#define BLT_TEMP80  1862U
-#define BLT_TEMP90  1588U
-#define BLT_TEMP93  1536U
-#define BLT_TEMP105 1229U
+#define BLT_TEMP80  660U
+#define BLT_TEMP90  550U
+#define BLT_TEMP93  440U
+#define BLT_TEMP105 330U
 
 void BacklightApp_BattProtectSet(uint8_t u8Set);
 void BacklightApp_Initial(void);

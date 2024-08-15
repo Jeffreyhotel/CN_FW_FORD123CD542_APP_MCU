@@ -53,6 +53,11 @@ static void TC0APP_TC0_Task_1000msec(void)
     StackTaskApp_MissionPush(TASK_MONITOR);
 }
 
+static void TC0APP_TC0_Task_6msec(void)
+{
+    StackTaskApp_MissionPush(TASK_DIMMING);
+}
+
 static void TC0APP_TC0_Task_10msec(void)
 {
     StackTaskApp_MissionPush(TASK_BATFLOW);
@@ -65,7 +70,7 @@ static void TC0APP_TC0_Task_15msec(void)
 
 static void TC0APP_TC0_Task_20msec(void)
 {
-    StackTaskApp_MissionPush(TASK_DIMMING);
+    /* Empty Work*/
 }
 
 static void TC0APP_TC0_Task_100msec(void)
@@ -102,6 +107,11 @@ static void TC0App_Callback_InterruptHandler(void)
     if(FLAG_STARTTOWORK_START == TRUE)
     {
         TC0APP_TC0_Task_1msec();
+
+        if ((timercount_ms % 6) ==0)
+        {
+            TC0APP_TC0_Task_6msec();
+        }else{/*Do Nothing*/}
 
         if ((timercount_ms % 10) ==0)
         {
