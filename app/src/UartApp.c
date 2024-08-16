@@ -83,7 +83,7 @@ void UartApp_ReadFlow()
                     break;
 
                 case 0x03U:
-                    
+                    I2C4MDriver_Initialize();
                     break;
 
                 case 0x57U:
