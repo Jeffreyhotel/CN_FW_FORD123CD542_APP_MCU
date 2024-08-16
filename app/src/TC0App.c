@@ -53,7 +53,7 @@ static void TC0APP_TC0_Task_1000msec(void)
     StackTaskApp_MissionPush(TASK_MONITOR);
 }
 
-static void TC0APP_TC0_Task_6msec(void)
+static void TC0APP_TC0_Task_5msec(void)
 {
     StackTaskApp_MissionPush(TASK_DIMMING);
 }
@@ -108,9 +108,9 @@ static void TC0App_Callback_InterruptHandler(void)
     {
         TC0APP_TC0_Task_1msec();
 
-        if ((timercount_ms % 6) ==0)
+        if ((timercount_ms % 5) ==0)
         {
-            TC0APP_TC0_Task_6msec();
+            TC0APP_TC0_Task_5msec();
         }else{/*Do Nothing*/}
 
         if ((timercount_ms % 10) ==0)

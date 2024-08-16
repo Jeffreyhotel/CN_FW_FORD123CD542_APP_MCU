@@ -112,9 +112,9 @@ static void BacklightApp_BrightnessAdgust(uint16_t BrightnessTarget,uint16_t Gra
 	
     /*Set dimming value to PWM Driver*/
 	duty = ((duty > BLT_PERIOD) ? BLT_PERIOD : duty);
-    //PortDriver_PinToggle(P1V2_EN_PORT,P1V2_EN_PIN);
-    (void)PwmDriver_DutySet((uint16_t)(duty & 0XFFFFU));
-    //PortDriver_PinToggle(P1V2_EN_PORT,P1V2_EN_PIN);
+    (void)PwmDriver_DutySet((uint16_t)(duty & 0xFFFFU));
+    // sprintf((char *)u8TxBuffer,"DUTY %d\r\n",duty);
+    // UartDriver_TxWriteString((uint8_t*)u8TxBuffer);
 }
 
 static uint8_t BacklightApp_Normal_Mode(uint16_t u16MATemp)
@@ -279,8 +279,8 @@ void BacklightApp_DimmingControl(void)
         //report Derating
         //StackTaskApp_IRQPush(0x62U);
     }else{/*DO NOTHING*/}
-    //sprintf((char *)u8TxBuffer,"SW %d TARGET %d GRAD %d BATT_PT %d STEP %d\r\n",BacklightSwitch,BrightnessTarget,u16GradientValue,u8BATT_PROTECT_EN,u16DimmingStep);
-    //UartDriver_TxWriteString((uint8_t*)u8TxBuffer);
+    // sprintf((char *)u8TxBuffer,"SW %d NOW %02X TARGET %02X GRAD %d BATT_PT %d STEP %d\r\n",BacklightSwitch,u16Brightness,BrightnessTarget,u16GradientValue,u8BATT_PROTECT_EN,u16DimmingStep);
+    // UartDriver_TxWriteString((uint8_t*)u8TxBuffer);
 }
 
 /*SWUV Static Test Need Double Check*/

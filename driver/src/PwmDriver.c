@@ -30,13 +30,25 @@ void PwmDriver_DutySet(uint16_t duty)
 {
     uint32_t cnt = 0U;
     /* Need to double check, the potential take time would cause delay*/
-#if 1
+    /* Take time > 15ms when duty set > 0x03F8*/
+#if 0
     while(duty < Cy_TCPWM_PWM_GetCounter(TC7_PWM_LED_HW,TC7_PWM_LED_NUM) || cnt < (PWM_PERIOD))
     {
         if(Cy_TCPWM_PWM_GetCounter(TC7_PWM_LED_HW,TC7_PWM_LED_NUM) > Cy_TCPWM_PWM_GetCompare0(TC7_PWM_LED_HW,TC7_PWM_LED_NUM)){
             break;
         }
         cnt++;
+    }
+#endif
+
+    /* Take time < 3ms when duty set = 0x03FF*/
+    /* While dead risk*/
+#if 1
+    while(duty < Cy_TCPWM_PWM_GetCounter(TC7_PWM_LED_HW,TC7_PWM_LED_NUM))
+    {
+        if(Cy_TCPWM_PWM_GetCounter(TC7_PWM_LED_HW,TC7_PWM_LED_NUM) > Cy_TCPWM_PWM_GetCompare0(TC7_PWM_LED_HW,TC7_PWM_LED_NUM)){
+            break;
+        }
     }
 #endif
 

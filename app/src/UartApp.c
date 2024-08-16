@@ -56,7 +56,7 @@ void UartApp_ReadFlow()
                 switch (rdBuffer[UART_MARK_POS])
                 {
                 case 0x01U:
-                    /* Write cmd code */
+                    /* Read Register data code */
                     for(uint8_t index = 0U;index < rdBuffer[UART_REG_R_LEN_POS];index ++)
                     {
                         u8ParseRxBuffer[index] = RegisterApp_DHU_Read(rdBuffer[UART_REG_CMD_POS],index);
@@ -69,6 +69,23 @@ void UartApp_ReadFlow()
                     UartDriver_TxWriteArray(u8ParseRxBuffer,rdBuffer[UART_REG_R_LEN_POS]);
                     UartDriver_TxWriteString((uint8_t *)"\r\n");
                     break;
+
+                case 0x02U:
+                    /* Write Register data code */
+                    u8CmdLength = rdBuffer[0] - UART_CMD_W_DATA_POS;
+                    for(uint8_t index = 0U; index < u8CmdLength;index++)
+                    {
+                        RegisterApp_DHU_Setup(rdBuffer[UART_CMD_ADDR_POS],index+1,rdBuffer[index+UART_CMD_W_DATA_POS]);
+                    }
+                    uint8_t u8TxBuffer[30] = {0};
+                    sprintf((char *)u8TxBuffer,"Register CMD 0x%02X Set\r\n",rdBuffer[UART_CMD_ADDR_POS]);
+                    UartDriver_TxWriteString(u8TxBuffer);
+                    break;
+
+                case 0x03U:
+                    
+                    break;
+
                 case 0x57U:
                     /* Write cmd code */
                     u8CmdLength = rdBuffer[0] - UART_CMD_W_DATA_POS;
@@ -110,6 +127,7 @@ void UartApp_ReadFlow()
                         UartDriver_TxWriteString(u8TxBuffer);
                     }
                     break;
+
                 case 0xFEU:
                     /* Control GPIO*/
                     if(rdBuffer[UART_CTRL_PORT_POS] < 7U && rdBuffer[UART_CTRL_PIN_POS] < 8U)
@@ -138,6 +156,7 @@ void UartApp_ReadFlow()
                         /* Do nothing*/
                     }
                     break;
+
                 case 0xFFU:
                     /* Write-Read code */
                     if(rdBuffer[0] > UART_CMD_WR_DATA_POS)

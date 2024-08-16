@@ -175,6 +175,7 @@ static uint8_t StackTaskApp_MissionPop(void)
 uint8_t test_flag = TRUE;
 void StackTaskApp_MissionAction(void)
 {
+    TC0App_TimerReset(TIMER_CPUCOUNT);
     (void)QueneNumber;
     //TC0App_TimerTaskStopper(true);
     QueneNumber = StackTaskApp_MissionReturnQueneNumber();
@@ -185,10 +186,6 @@ void StackTaskApp_MissionAction(void)
     {
         case TASK_DEBUGINFO:
             /*Do nothing*/
-            uint16_t adc0_value = 0U;
-            adc0_value = AdcDriver_ChannelResultGet(ADC_SAR0_TYPE, ADC_SAR0_CH1_BLTTEMP);
-            sprintf((char *)u8TxBuffer,"ADC0 = 0x%04x\r\n",adc0_value);
-            UartDriver_TxWriteString(u8TxBuffer);
             INTBApp_PullReqSetOrClear(INTB_REQ_SET);
             UartApp_ReadFlow();
             //PowerApp_RTQ6749_FaultCheck();
@@ -237,11 +234,15 @@ void StackTaskApp_MissionAction(void)
         break;
     }
     /* Show the CPU information exclude Overflow*/
-    if (TaskNumber == 0xFFU || TaskNumber == TASK_BLTFLOW){
+    //if (TaskNumber == 0xFFU || TaskNumber == TASK_BLTFLOW || TaskNumber == TASK_DIMMING || TaskNumber == TASK_BATFLOW || TaskNumber == TASK_PWGFLOW){
+    if (TaskNumber == 0xFFU){
         /*DO NOTHING*/
     }else{
-        sprintf((char *)u8TxBuffer,"QLINE> %ld TASK> %d\r\n",QueneNumber,TaskNumber);
-        // UartDriver_TxWriteString(u8TxBuffer);
+        if (TC0App_TimerReturn(TIMER_CPUCOUNT)>3U)
+        {
+            sprintf((char *)u8TxBuffer,"LOADING:%d QLINE> %ld TASK> %d\r\n",TC0App_TimerReturn(TIMER_CPUCOUNT),QueneNumber,TaskNumber);
+            UartDriver_TxWriteString(u8TxBuffer);
+        }
     }
 
     (void)QueneNumber;
