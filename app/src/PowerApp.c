@@ -23,17 +23,10 @@ void PowerApp_Sequence(uint8_t u8Action)
         PortDriver_PinSet(DES_PDB_PORT,DES_PDB_PIN);
         TC0App_DelayMS(2U);
         PortDriver_PinSet(BIAS_EN_PORT,BIAS_EN_PIN);
-        PortDriver_PinSet(DISP_RESX_PORT,DISP_RESX_PIN);
-        TC0App_DelayMS(2U);
-        PortDriver_PinSet(LED_EN_PORT,LED_EN_PIN);
         break;
 
     case POWER_OFF: //total ms
         /* code */
-        PortDriver_PinClear(LED_EN_PORT,LED_EN_PIN);
-        TC0App_DelayMS(2U);
-        PortDriver_PinClear(DISP_RESX_PORT,DISP_RESX_PIN);
-        TC0App_DelayMS(2U);
         PortDriver_PinClear(DES_PDB_PORT,DES_PDB_PIN);
         TC0App_DelayMS(2U);
         PortDriver_PinClear(P1V2_EN_PORT,P1V2_EN_PIN);
@@ -41,6 +34,18 @@ void PowerApp_Sequence(uint8_t u8Action)
         TC0App_DelayMS(2U);
         PortDriver_PinClear(VBATT_EN_PORT,VBATT_EN_PIN);
         PortDriver_PinClear(P3V3_EN_PORT,P3V3_EN_PIN);
+        break;
+
+    case LCD_ON:
+        PortDriver_PinSet(DISP_RESX_PORT,DISP_RESX_PIN);
+        TC0App_DelayMS(2U);
+        PortDriver_PinSet(LED_EN_PORT,LED_EN_PIN);
+        break;
+
+    case LCD_OFF:
+        PortDriver_PinClear(LED_EN_PORT,LED_EN_PIN);
+        TC0App_DelayMS(2U);
+        PortDriver_PinClear(DISP_RESX_PORT,DISP_RESX_PIN);
         break;
 
     default:

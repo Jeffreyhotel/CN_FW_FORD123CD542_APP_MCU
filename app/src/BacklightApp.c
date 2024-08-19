@@ -254,13 +254,12 @@ void BacklightApp_DimmingControl(void)
     }
     
     if(BacklightSwitch == BLT_ENABLE){
-        u16GradientValue = 0U;
-        BacklightApp_BrightnessAdgust(BrightnessTarget,0U);
-
         /*Check if battery in protection state*/
         if(u8BATT_PROTECT_EN == FALSE)
         {
             PwmDriver_Start();
+            u16GradientValue = 0U;
+            BacklightApp_BrightnessAdgust(BrightnessTarget,0U);
         }else{
             PwmDriver_Stop();
         }

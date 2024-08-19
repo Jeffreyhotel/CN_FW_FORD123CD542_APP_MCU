@@ -46,6 +46,7 @@ uint8_t FLAG_STARTTOWORK_START = FALSE;
 uint8_t FLAG_INTBSETTCNT_START = FALSE;
 uint8_t FLAG_INTBHOLDCNT_START = FALSE;
 volatile bool DHUTaskFlag[DHUCmdBufferSize] = {0};
+volatile static bool StopperEN = false;
 
 static void TC0APP_TC0_Task_1000msec(void)
 {
@@ -90,10 +91,20 @@ static void TC0APP_TC0_Task_1msec(void)
     }
 }
 
+void TC0App_TimerTaskStopper(bool EnCmd)
+{
+    StopperEN = EnCmd;
+}
+
 static void TC0App_Callback_InterruptHandler(void)
 {
     TC0Driver_IntFlagClean();
-    timercount_ms = timercount_ms+1;
+    if (StopperEN == false)
+    {
+        timercount_ms = timercount_ms+1;
+    }else{
+        /* Do nothing*/
+    }
     cpu_timer_ms = cpu_timer_ms+1;
     if(FLAG_INTBSETTCNT_START == TRUE)
     {

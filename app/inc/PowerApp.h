@@ -5,6 +5,8 @@
 
 #define POWER_OFF   0x00U
 #define POWER_ON    0x01U
+#define LCD_OFF     0x02U
+#define LCD_ON      0x03U
 
 #define RTQ6749_PAVDD_FAULT_MASK 0x08U
 #define RTQ6749_VGL_FAULT_MASK 0x04U

@@ -25,5 +25,6 @@ uint8_t TC0App_TimerReturn(uint8_t Request);
 void TC0App_TimerReset(uint8_t Request);
 uint8_t TC0App_DelayMS(uint16_t delay);
 uint8_t TC0App_DelayUS(uint16_t delay);
+void TC0App_TimerTaskStopper(bool EnCmd);
 
 #endif

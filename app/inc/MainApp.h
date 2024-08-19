@@ -7,7 +7,8 @@
 #define STATE_NORMAL        0x03U
 #define STATE_PRESLEEP      0x04U
 #define STATE_SLEEP         0x05U
-#define STATE_WAKE_HOST     0x06U  
+#define STATE_WAKE_HOST     0x06U
+#define STATE_SHUTDOWN      0x07U
 
 uint8_t MainApp_Task(void);
 
