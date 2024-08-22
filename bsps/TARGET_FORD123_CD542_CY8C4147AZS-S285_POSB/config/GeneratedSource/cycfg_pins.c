@@ -733,8 +733,8 @@ const cyhal_resource_inst_t HVLDO_EN_obj =
 
 const cy_stc_gpio_pin_config_t DES_INTB_config =
 {
-    .outVal = 1,
-    .driveMode = CY_GPIO_DM_PULLUP_IN_OFF,
+    .outVal = 0,
+    .driveMode = CY_GPIO_DM_PULLDOWN_IN_OFF,
     .hsiom = DES_INTB_HSIOM,
     .intEdge = CY_GPIO_INTR_DISABLE,
     .vtrip = CY_GPIO_VTRIP_CMOS,
