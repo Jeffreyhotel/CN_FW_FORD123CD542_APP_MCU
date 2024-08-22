@@ -103,7 +103,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     /* Due to Bus pull up with P3V3 vout, Init after Power on seq; HW would change PCBA (pull up with MCU_3V3)*/
     I2C4MDriver_Initialize();
     TC0App_NormalWorkStartSet(TRUE);
-    sprintf((char *)u8TxBuffer,"BOOT FINISHED, PC:0x%lX\r\n",PC);
+    sprintf((char *)u8TxBuffer,"BOOT FINISHED, PC:0x%lX, POS:%02X\r\n",PC,MCU_POSITION);
     UartDriver_TxWriteString(u8TxBuffer);
     /* Only for flash w/r test*/
     uint8_t Flag[4] = {0x0F, 0x00, 0x00, 0x00};

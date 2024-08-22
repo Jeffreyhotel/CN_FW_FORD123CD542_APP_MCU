@@ -100,8 +100,17 @@ SOURCES=
 # directories (without a leading -I).
 INCLUDES=
 
+ifeq ($(TARGET),FORD123_CD542_CY8C4147AZS-S285)
+MCU_POSITION=0x01U
+endif
+ifeq ($(TARGET),FORD123_CD542_CY8C4147AZS-S285_POSA)
+MCU_POSITION=0x0AU
+endif
+ifeq ($(TARGET),FORD123_CD542_CY8C4147AZS-S285_POSB)
+MCU_POSITION=0x0BU
+endif
 # Add additional defines to the build process (without a leading -D).
-DEFINES=
+DEFINES=MCU_POSITION
 
 # Select softfp or hardfp floating point. Default is softfp.
 VFP_SELECT=
@@ -137,9 +146,9 @@ LINKER_SCRIPT=
 PREBUILD=
 
 # Custom post-build commands to run.
-POSTBUILD="C:/Users/Admin/ModusToolbox/tools_3.2/gcc/bin/arm-none-eabi-objcopy.exe" \
-			D:/SourceCode/ModusWorkspace/CN_FW_FORD123CD542_APP_MCU/build/FORD123_CD542_CY8C4147AZS-S285/Debug/CN_FW_FORD123CD542_APP_MCU.elf \
-			D:/SourceCode/ModusWorkspace/CN_FW_FORD123CD542_APP_MCU/build/FORD123_CD542_CY8C4147AZS-S285/Debug/CN_FW_FORD123CD542_APP_MCU.bin -O binary --gap-fill=0xff --pad-to=0x20000
+POSTBUILD="$(CY_TOOLS_PATHS)/gcc/bin/arm-none-eabi-objcopy.exe" \
+			../$(APPNAME)/build/$(TARGET)/$(CONFIG)/$(APPNAME).elf \
+			../$(APPNAME)/build/$(TARGET)/$(CONFIG)/$(APPNAME).bin -O binary --gap-fill=0xff --pad-to=0x20000
 
 
 ################################################################################

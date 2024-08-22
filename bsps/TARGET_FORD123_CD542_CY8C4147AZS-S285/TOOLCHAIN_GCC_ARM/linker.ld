@@ -47,7 +47,7 @@ GROUP(-lgcc -lc -lnosys)
 ;   <o1> Flash Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
  -----------------------------------------------------------------------------*/
-__FLASH_START = 0x00003000;
+__FLASH_START = 0x00000000;
 __FLASH_SIZE =  0x00020000;
 
 /*--------------------- Embedded RAM Configuration ---------------------------
