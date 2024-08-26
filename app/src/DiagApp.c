@@ -1,6 +1,7 @@
 #include "app/inc/DiagApp.h"
 #include "app/inc/RegisterApp.h"
 #include "app/inc/INTBApp.h"
+#include "app/inc/PowerApp.h"
 #include "driver/inc/PortDriver.h"
 #include "driver/inc/UartDriver.h"
 
@@ -114,6 +115,7 @@ uint8_t DiagApp_ConsecutiveCheckRegister(DiagIO* ds1,bool isgood)
 
 DiagIO FAULT_LED;
 DiagIO FAULT_LCD;
+DiagIO FAULT_BIAS;
 DiagIO STATUS_LOCK;
 DiagIO STATUS_RFPC;
 DiagIO STATUS_LFPC;
@@ -132,6 +134,13 @@ void DiagApp_CheckFlowInitial()
     FAULT_LCD.Threshlod = 5;
     FAULT_LCD.ConsecutiveHighCnt =  0;
     FAULT_LCD.ConsecutiveLowCnt = 0;
+
+    FAULT_BIAS.Status = IO_STATUS_SWIM;
+    FAULT_BIAS.Port = BIAS_FAULT_PORT;
+    FAULT_BIAS.PortNumber = BIAS_FAULT_PIN;
+    FAULT_BIAS.Threshlod = 5;
+    FAULT_BIAS.ConsecutiveHighCnt =  0;
+    FAULT_BIAS.ConsecutiveLowCnt = 0;
 
     STATUS_RFPC.Status = IO_STATUS_SWIM;
     STATUS_RFPC.Port = FPCACHK_RIN_PORT;
@@ -172,6 +181,26 @@ void DiagApp_FaultCheckFlow(void)
     if(IO_STATUS_HIGH == u8Status2){
         DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
     }else if(IO_STATUS_LOW == u8Status2){
+        DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
+    }else{
+        /* When voltage at swim state, Do nothing*/
+    }
+    sprintf((char *)u8TxBuffer,"FAULT CHECK FLOW> LED 0x%02x LCD 0x%02x\r\n",u8Status1,u8Status2);
+    //UartDriver_TxWriteString(u8TxBuffer);
+}
+
+void DiagApp_BiasFaultCheckFlow(void)
+{
+    uint8_t u8Status1 = IO_STATUS_SWIM;
+    uint8_t u8Status2 = IO_STATUS_SWIM;
+    u8Status1 = DiagApp_ConsecutiveCheckIO(&FAULT_BIAS);
+    if(IO_STATUS_HIGH == u8Status1){
+        /* Recovery mechanism merge to LCD FAULT
+        DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
+        */
+    }else if(IO_STATUS_LOW == u8Status1){
+        /* Get error info & latch disp status bit*/
+        PowerApp_RTQ6749_FaultCheck();
         DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
     }else{
         /* When voltage at swim state, Do nothing*/
