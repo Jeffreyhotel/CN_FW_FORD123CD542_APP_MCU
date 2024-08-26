@@ -943,6 +943,27 @@ extern "C" {
 #define DISP_RESX_HAL_DRIVEMODE CYHAL_GPIO_DRIVE_STRONG
 #endif /* defined (CY_USING_HAL) */
 
+#define DISP_STBY_ENABLED 1U
+#define DISP_STBY_PORT GPIO_PRT6
+#define DISP_STBY_PORT_NUM 6U
+#define DISP_STBY_PIN 2U
+#define DISP_STBY_NUM 2U
+#define DISP_STBY_DRIVEMODE CY_GPIO_DM_STRONG_IN_OFF
+#define DISP_STBY_INIT_DRIVESTATE 0
+#ifndef ioss_0_port_6_pin_2_HSIOM
+    #define ioss_0_port_6_pin_2_HSIOM HSIOM_SEL_GPIO
+#endif
+#define DISP_STBY_HSIOM ioss_0_port_6_pin_2_HSIOM
+#define DISP_STBY_IRQ ioss_interrupt_gpio_IRQn
+
+#if defined (CY_USING_HAL)
+#define DISP_STBY_HAL_PORT_PIN P6_2
+#define DISP_STBY P6_2
+#define DISP_STBY_HAL_IRQ CYHAL_GPIO_IRQ_NONE
+#define DISP_STBY_HAL_DIR CYHAL_GPIO_DIR_OUTPUT 
+#define DISP_STBY_HAL_DRIVEMODE CYHAL_GPIO_DRIVE_STRONG
+#endif /* defined (CY_USING_HAL) */
+
 #define MCU_I2C_SCL_ENABLED 1U
 #define MCU_I2C_SCL_PORT GPIO_PRT6
 #define MCU_I2C_SCL_PORT_NUM 6U
@@ -1283,6 +1304,12 @@ extern const cy_stc_gpio_pin_config_t DISP_RESX_config;
 
 #if defined (CY_USING_HAL)
 extern const cyhal_resource_inst_t DISP_RESX_obj;
+#endif /* defined (CY_USING_HAL) */
+
+extern const cy_stc_gpio_pin_config_t DISP_STBY_config;
+
+#if defined (CY_USING_HAL)
+extern const cyhal_resource_inst_t DISP_STBY_obj;
 #endif /* defined (CY_USING_HAL) */
 
 extern const cy_stc_gpio_pin_config_t MCU_I2C_SCL_config;

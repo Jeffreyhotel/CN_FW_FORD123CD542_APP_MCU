@@ -845,6 +845,25 @@ const cyhal_resource_inst_t DISP_RESX_obj =
 };
 #endif /* defined (CY_USING_HAL) */
 
+const cy_stc_gpio_pin_config_t DISP_STBY_config =
+{
+    .outVal = 0,
+    .driveMode = CY_GPIO_DM_STRONG_IN_OFF,
+    .hsiom = DISP_STBY_HSIOM,
+    .intEdge = CY_GPIO_INTR_DISABLE,
+    .vtrip = CY_GPIO_VTRIP_CMOS,
+    .slewRate = CY_GPIO_SLEW_FAST,
+};
+
+#if defined (CY_USING_HAL)
+const cyhal_resource_inst_t DISP_STBY_obj =
+{
+    .type = CYHAL_RSC_GPIO,
+    .block_num = DISP_STBY_PORT_NUM,
+    .channel_num = DISP_STBY_PIN,
+};
+#endif /* defined (CY_USING_HAL) */
+
 const cy_stc_gpio_pin_config_t MCU_I2C_SCL_config =
 {
     .outVal = 1,
@@ -966,6 +985,7 @@ void init_cycfg_pins(void)
     Cy_GPIO_Pin_Init(LED_FAULT_PORT, LED_FAULT_PIN, &LED_FAULT_config);
     Cy_GPIO_Pin_Init(DES_BISTEN_PORT, DES_BISTEN_PIN, &DES_BISTEN_config);
     Cy_GPIO_Pin_Init(DISP_RESX_PORT, DISP_RESX_PIN, &DISP_RESX_config);
+    Cy_GPIO_Pin_Init(DISP_STBY_PORT, DISP_STBY_PIN, &DISP_STBY_config);
     Cy_GPIO_Pin_Init(MCU_I2C_SCL_PORT, MCU_I2C_SCL_PIN, &MCU_I2C_SCL_config);
     Cy_GPIO_Pin_Init(MCU_I2C_SDA_PORT, MCU_I2C_SDA_PIN, &MCU_I2C_SDA_config);
     Cy_GPIO_Pin_Init(DEBUG_UART_RX_PORT, DEBUG_UART_RX_PIN, &DEBUG_UART_RX_config);
@@ -1017,6 +1037,7 @@ void reserve_cycfg_pins(void)
     cyhal_hwmgr_reserve(&LED_FAULT_obj);
     cyhal_hwmgr_reserve(&DES_BISTEN_obj);
     cyhal_hwmgr_reserve(&DISP_RESX_obj);
+    cyhal_hwmgr_reserve(&DISP_STBY_obj);
     cyhal_hwmgr_reserve(&MCU_I2C_SCL_obj);
     cyhal_hwmgr_reserve(&MCU_I2C_SDA_obj);
     cyhal_hwmgr_reserve(&DEBUG_UART_RX_obj);
