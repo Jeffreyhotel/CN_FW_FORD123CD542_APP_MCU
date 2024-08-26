@@ -216,12 +216,15 @@ void StackTaskApp_MissionAction(void)
             */
             DiagApp_BiasFaultCheckFlow();
             DiagApp_FaultCheckFlow();
-            DiagApp_FpcCheckFlow();
-            DiagApp_LockCheckFlow();
         break;
 
         case TASK_LEDFLOW:
             DiagApp_LedFaultCheckFlow();
+        break;
+
+        case TASK_IOCHECK:
+            DiagApp_LockCheckFlow();
+            DiagApp_FpcCheckFlow();
         break;
 
         case TASK_UPDATE_ERASE:

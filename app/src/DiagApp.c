@@ -162,7 +162,7 @@ void DiagApp_CheckFlowInitial()
     STATUS_LOCK.Status = IO_STATUS_SWIM;
     STATUS_LOCK.Port = DES_LOCK_PORT;
     STATUS_LOCK.PortNumber = DES_LOCK_PIN;
-    STATUS_LOCK.Threshlod = 5;
+    STATUS_LOCK.Threshlod = 4;
     STATUS_LOCK.ConsecutiveHighCnt = 0;
     STATUS_LOCK.ConsecutiveLowCnt = 0;
 }

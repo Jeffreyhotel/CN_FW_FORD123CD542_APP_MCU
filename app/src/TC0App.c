@@ -62,6 +62,7 @@ static void TC0APP_TC0_Task_6msec(void)
 static void TC0APP_TC0_Task_10msec(void)
 {
     StackTaskApp_MissionPush(TASK_BATFLOW);
+    StackTaskApp_MissionPush(TASK_IOCHECK);
 }
 
 static void TC0APP_TC0_Task_15msec(void)
