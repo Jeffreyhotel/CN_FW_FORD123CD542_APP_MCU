@@ -2,6 +2,7 @@
 #include "app/inc/RegisterApp.h"
 #include "app/inc/INTBApp.h"
 #include "driver/inc/PortDriver.h"
+#include "driver/inc/UartDriver.h"
 
 static uint8_t u8DiagDispByte0 = 0x00U;
 static uint8_t u8DiagDispByte1 = 0x01U;
@@ -114,7 +115,8 @@ uint8_t DiagApp_ConsecutiveCheckRegister(DiagIO* ds1,bool isgood)
 DiagIO FAULT_LED;
 DiagIO FAULT_LCD;
 DiagIO STATUS_LOCK;
-DiagIO STATUS_FPC;
+DiagIO STATUS_RFPC;
+DiagIO STATUS_LFPC;
 void DiagApp_CheckFlowInitial()
 {
     FAULT_LED.Status = IO_STATUS_SWIM;
@@ -125,18 +127,25 @@ void DiagApp_CheckFlowInitial()
     FAULT_LED.ConsecutiveLowCnt = 0;
 
     FAULT_LCD.Status = IO_STATUS_SWIM;
-    FAULT_LCD.Port = LED_FAULT_PORT;
-    FAULT_LCD.PortNumber = LED_FAULT_PIN;
+    FAULT_LCD.Port = DISP_FAULT_PORT;
+    FAULT_LCD.PortNumber = DISP_FAULT_PIN;
     FAULT_LCD.Threshlod = 5;
     FAULT_LCD.ConsecutiveHighCnt =  0;
     FAULT_LCD.ConsecutiveLowCnt = 0;
 
-    STATUS_FPC.Status = IO_STATUS_SWIM;
-    STATUS_FPC.Port = FPCACHK_ROUT_PORT;
-    STATUS_FPC.PortNumber = FPCACHK_ROUT_PIN;
-    STATUS_FPC.Threshlod = 5;
-    STATUS_FPC.ConsecutiveHighCnt = 0;
-    STATUS_FPC.ConsecutiveLowCnt = 0;
+    STATUS_RFPC.Status = IO_STATUS_SWIM;
+    STATUS_RFPC.Port = FPCACHK_RIN_PORT;
+    STATUS_RFPC.PortNumber = FPCACHK_RIN_PIN;
+    STATUS_RFPC.Threshlod = 5;
+    STATUS_RFPC.ConsecutiveHighCnt = 0;
+    STATUS_RFPC.ConsecutiveLowCnt = 0;
+
+    STATUS_LFPC.Status = IO_STATUS_SWIM;
+    STATUS_LFPC.Port = FPCACHK_LIN_PORT;
+    STATUS_LFPC.PortNumber = FPCACHK_LIN_PIN;
+    STATUS_LFPC.Threshlod = 5;
+    STATUS_LFPC.ConsecutiveHighCnt = 0;
+    STATUS_LFPC.ConsecutiveLowCnt = 0;
 
     STATUS_LOCK.Status = IO_STATUS_SWIM;
     STATUS_LOCK.Port = DES_LOCK_PORT;
@@ -174,16 +183,18 @@ void DiagApp_FaultCheckFlow(void)
 void DiagApp_FpcCheckFlow(void)
 {
     uint8_t u8Status1 = IO_STATUS_SWIM;
-    u8Status1 = DiagApp_ConsecutiveCheckIO(&STATUS_FPC);
-    if(IO_STATUS_HIGH == u8Status1){
-        DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_DCERR_MASK);
-    }else if(IO_STATUS_LOW == u8Status1){
+    u8Status1 = (DiagApp_ConsecutiveCheckIO(&STATUS_RFPC) | DiagApp_ConsecutiveCheckIO(&STATUS_LFPC));
+    if(IO_STATUS_SWIM == u8Status1){
+        /* When voltage at swim state, Do nothing*/
+    }else if(IO_STATUS_HIGH == (u8Status1 & IO_STATUS_HLMASK)){
         DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_DCERR_MASK);
+    }else if(IO_STATUS_LOW == (u8Status1 & IO_STATUS_HLMASK)){
+        DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_DCERR_MASK);
     }else{
         /* When voltage at swim state, Do nothing*/
     }
-    sprintf((char *)u8TxBuffer,"FPC CHECK FLOW> STATUS_FPC 0x%02x\r\n",u8Status1);
-    //UartDriver_TxWriteString(u8TxBuffer);
+    sprintf((char *)u8TxBuffer,"FPC CHECK FLOW> STATUS_R/LFPC 0x%02x,0x%02x,0x%02x\r\n",u8Status1,STATUS_RFPC.ConsecutiveLowCnt,STATUS_LFPC.ConsecutiveLowCnt);
+    UartDriver_TxWriteString(u8TxBuffer);
 }
 
 void DiagApp_LockCheckFlow(void)

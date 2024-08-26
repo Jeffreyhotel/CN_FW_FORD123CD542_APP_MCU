@@ -186,7 +186,7 @@ void StackTaskApp_MissionAction(void)
     {
         case TASK_DEBUGINFO:
             /*Do nothing*/
-            INTBApp_PullReqSetOrClear(INTB_REQ_SET);
+            //INTBApp_PullReqSetOrClear(INTB_REQ_SET);
             UartApp_ReadFlow();
             //PowerApp_RTQ6749_FaultCheck();
             //PowerApp_LP8664_FaultCheck();
@@ -199,7 +199,7 @@ void StackTaskApp_MissionAction(void)
 
         case TASK_BLTFLOW:
             BacklightApp_DeratingFlow();
-            DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_TERR_MASK);
+            //DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_TERR_MASK);
         break;
 
         case TASK_DIMMING:

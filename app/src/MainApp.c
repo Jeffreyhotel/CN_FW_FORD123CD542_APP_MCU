@@ -32,6 +32,7 @@
 #include "app/inc/WdtApp.h"
 #include "app/inc/PowerApp.h"
 #include "app/inc/FlashApp.h"
+#include "app/inc/DiagApp.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/I2C4MDriver.h"
@@ -103,6 +104,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     /* Due to Bus pull up with P3V3 vout, Init after Power on seq; HW would change PCBA (pull up with MCU_3V3)*/
     I2C4MDriver_Initialize();
     TC0App_NormalWorkStartSet(TRUE);
+    DiagApp_CheckFlowInitial();
     sprintf((char *)u8TxBuffer,"BOOT FINISHED, PC:0x%lX, POS:%02X\r\n",PC,MCU_POSITION);
     UartDriver_TxWriteString(u8TxBuffer);
     /* Only for flash w/r test*/
