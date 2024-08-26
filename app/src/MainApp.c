@@ -255,6 +255,7 @@ static uint8_t MainApp_Shutdown_Mode(uint8_t u8Nothing)
     TC0App_NormalWorkStartSet(FALSE);
     /* Do Power Off Sequence*/
     INTBApp_Flow();
+    PwmDriver_Stop();
     PowerApp_Sequence(LCD_OFF);
     PowerApp_Sequence(POWER_OFF);
     TC0App_DelayMS(500U);
