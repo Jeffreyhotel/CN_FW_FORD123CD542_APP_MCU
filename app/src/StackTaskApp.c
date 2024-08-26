@@ -211,16 +211,17 @@ void StackTaskApp_MissionAction(void)
 
         case TASK_PWGFLOW: /* 100ms Task*/
             PowerApp_PowerGoodFlow();
-            if((RegisterApp_DHU_Read(CMD_DISP_EN,CMD_DATA_POS)==0x01)&&(RegisterApp_DHU_Read(CMD_DISP_SHUTD,CMD_DATA_POS)==0x00))
-            {
-                /* RTQ6749 only check i2c when hardware pin BIAS_FAULT pull low (DiagApp_BiasFaultCheckFlow())
-                PowerApp_RTQ6749_FaultCheck();
-                */
-                DiagApp_BiasFaultCheckFlow();
-            }
+            /* RTQ6749 only check i2c when hardware pin BIAS_FAULT pull low (DiagApp_BiasFaultCheckFlow())
+            PowerApp_RTQ6749_FaultCheck();
+            */
+            DiagApp_BiasFaultCheckFlow();
             DiagApp_FaultCheckFlow();
             DiagApp_FpcCheckFlow();
             DiagApp_LockCheckFlow();
+        break;
+
+        case TASK_LEDFLOW:
+            DiagApp_LedFaultCheckFlow();
         break;
 
         case TASK_UPDATE_ERASE:

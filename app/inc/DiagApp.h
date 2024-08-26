@@ -41,6 +41,7 @@ typedef struct{
     uint8_t Threshlod;
     uint8_t ConsecutiveHighCnt;
     uint8_t ConsecutiveLowCnt;
+    bool Report;
 }DiagIO;
 
 void DiagApp_CheckFlowInitial(void);
@@ -49,6 +50,7 @@ void DiagApp_DispStatusSet(uint8_t ByteNumber, uint8_t MaskValue);
 uint8_t DiagApp_ConsecutiveCheckIO(DiagIO* ds);
 uint8_t DiagApp_ConsecutiveCheckRegister(DiagIO* ds,bool isgood);
 void DiagApp_FaultCheckFlow(void);
+void DiagApp_LedFaultCheckFlow(void);
 void DiagApp_BiasFaultCheckFlow(void);
 void DiagApp_FpcCheckFlow(void);
 void DiagApp_LockCheckFlow(void);

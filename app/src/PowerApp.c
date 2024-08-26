@@ -92,7 +92,7 @@ void PowerApp_PowerGoodInitial()
     FAULT_RTQ6749.ConsecutiveLowCnt = 0;
 
     FAULT_LP8664.Status = IO_STATUS_SWIM;
-    FAULT_LP8664.Threshlod = 3;
+    FAULT_LP8664.Threshlod = 1;
     FAULT_LP8664.ConsecutiveHighCnt = 0;
     FAULT_LP8664.ConsecutiveLowCnt = 0;
 }
@@ -202,12 +202,12 @@ void PowerApp_LP8664_FaultCheck()
     }
 
     if(IO_STATUS_HIGH == u8Status){
-        UartDriver_TxWriteString((uint8_t *)"LP8664 is Good!\r\n");
+        //UartDriver_TxWriteString((uint8_t *)"LP8664 is Good!\r\n");
     }else if(IO_STATUS_LOW == u8Status){
-        UartDriver_TxWriteString((uint8_t *)"LP8664 fault happen!\r\n");
+        //UartDriver_TxWriteString((uint8_t *)"LP8664 fault happen!\r\n");
     }else{
         /* When voltage at swim state, Do nothing*/
         sprintf((char *)u8TxBuffer,"LP8664 SWIM >> 0x%02x, %d, %d\r\n",u8Status,FAULT_LP8664.ConsecutiveHighCnt,FAULT_LP8664.ConsecutiveLowCnt);
-        UartDriver_TxWriteString(u8TxBuffer);
+        //UartDriver_TxWriteString(u8TxBuffer);
     }
 }

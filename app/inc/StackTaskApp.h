@@ -16,6 +16,7 @@
 #define TASK_DIMMING    3U
 #define TASK_BATFLOW    4U
 #define TASK_PWGFLOW    5U
+#define TASK_LEDFLOW    6U
 #define TASK_UPDATE_ERASE   0xE6U
 #define TASK_UPDATE_TRANS   0xE7U
 #define TASK_UPDATE_CRCSM   0xE8U
