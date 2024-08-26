@@ -210,7 +210,7 @@ void StackTaskApp_MissionAction(void)
             BatteryApp_Flow();
         break;
 
-        case TASK_PWGFLOW:
+        case TASK_PWGFLOW: /* 100ms Task*/
             PowerApp_PowerGoodFlow();
             DiagApp_FaultCheckFlow();
             DiagApp_FpcCheckFlow();

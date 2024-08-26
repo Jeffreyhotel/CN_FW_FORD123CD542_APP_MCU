@@ -1,6 +1,7 @@
 #include "app/inc/PowerApp.h"
 #include "app/inc/TC0App.h"
 #include "app/inc/DiagApp.h"
+#include "app/inc/RegisterApp.h"
 #include "driver/inc/PortDriver.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/I2C4MDriver.h"
@@ -104,7 +105,8 @@ void PowerApp_PowerGoodFlow()
     if(IO_STATUS_HIGH == u8Status1){
 
     }else if(IO_STATUS_LOW == u8Status1){
-
+        /* GO TO SHUTDOWN*/
+        RegisterApp_DHU_Setup(CMD_DISP_SHUTD,CMD_DATA_POS,0x01);
     }else{
         /* When voltage at swim state, Do nothing*/
         sprintf((char *)u8TxBuffer,"P1V2 SWIM >> 0x%02x, %d, %d\r\n",u8Status1,PG_P1V2.ConsecutiveHighCnt,PG_P1V2.ConsecutiveLowCnt);
@@ -114,7 +116,8 @@ void PowerApp_PowerGoodFlow()
     if(IO_STATUS_HIGH == u8Status2){
 
     }else if(IO_STATUS_LOW == u8Status2){
-
+        /* GO TO SHUTDOWN*/
+        RegisterApp_DHU_Setup(CMD_DISP_SHUTD,CMD_DATA_POS,0x01);
     }else{
         /* When voltage at swim state, Do nothing*/
         sprintf((char *)u8TxBuffer,"P3V3 SWIM >> 0x%02x, %d, %d\r\n",u8Status2,PG_P3V3.ConsecutiveHighCnt,PG_P3V3.ConsecutiveLowCnt);

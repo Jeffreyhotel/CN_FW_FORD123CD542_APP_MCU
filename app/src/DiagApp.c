@@ -194,7 +194,7 @@ void DiagApp_FpcCheckFlow(void)
         /* When voltage at swim state, Do nothing*/
     }
     sprintf((char *)u8TxBuffer,"FPC CHECK FLOW> STATUS_R/LFPC 0x%02x,0x%02x,0x%02x\r\n",u8Status1,STATUS_RFPC.ConsecutiveLowCnt,STATUS_LFPC.ConsecutiveLowCnt);
-    UartDriver_TxWriteString(u8TxBuffer);
+    //UartDriver_TxWriteString(u8TxBuffer);
 }
 
 void DiagApp_LockCheckFlow(void)
