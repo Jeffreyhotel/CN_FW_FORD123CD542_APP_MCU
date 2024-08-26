@@ -28,7 +28,6 @@ void PwmDriver_Stop(void)
 
 void PwmDriver_DutySet(uint16_t duty)
 {
-    uint32_t cnt = 0U;
     /* Need to double check, the potential take time would cause delay*/
     /* Take time > 15ms when duty set > 0x03F8*/
 #if 0
