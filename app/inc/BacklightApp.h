@@ -16,8 +16,11 @@
 /*With 3FF section*/
 #define BLT_SECTION 0x03FFU
 #define BLT_100P    0x03FFU
-#define BLT_60P     0x0258U
-#define BLT_20P     0x00C8U
+#define BLT_75P     0x02FFU
+#define BLT_60P     0x0266U
+#define BLT_40P     0x0199U
+#define BLT_20P     0x00CDU
+#define BLT_3P      0x001FU
 #define BLT_0P      0x0000U
 #define BLT_PERIOD  20459U
 #define BLT_UNITSTEP    ((BLT_PERIOD+1U)/BLT_SECTION)
@@ -32,10 +35,10 @@
 #define BLT_BOIL_MODE       0x02U
 #define BLT_SCORCH_MODE     0x03U
 
-#define BLT_TEMP80  660U
-#define BLT_TEMP90  550U
-#define BLT_TEMP93  440U
-#define BLT_TEMP105 330U
+#define BLT_TEMP80  585U
+#define BLT_TEMP85  519U
+#define BLT_TEMP90  460U
+#define BLT_TEMP95  408U
 
 void BacklightApp_BattProtectSet(uint8_t u8Set);
 void BacklightApp_Initial(void);

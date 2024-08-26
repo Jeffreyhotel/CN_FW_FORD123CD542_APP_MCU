@@ -25,6 +25,7 @@
 #include "app/inc/RegisterApp.h"
 #include "app/inc/StackTaskApp.h"
 #include "app/inc/BacklightApp.h"
+#include "app/inc/DiagApp.h"
 #include "driver/inc/PwmDriver.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/UartDriver.h"
@@ -122,7 +123,7 @@ static uint8_t BacklightApp_Normal_Mode(uint16_t u16MATemp)
 	uint8_t u8Return = BLT_NORMAL_MODE;
     u8BLT_DERATING_EN = FALSE;
     u16BrightnessUpperLimit = BLT_100P;
-    if(u16MATemp < BLT_TEMP90)
+    if(u16MATemp < BLT_TEMP85)
     {
         (void)u8BLT_DERATING_EN;
         u8BLT_DERATING_EN = TRUE;
@@ -140,7 +141,7 @@ static uint8_t BacklightApp_Burn_Mode(uint16_t u16MATemp)
 {
     uint8_t u8Return = BLT_BURN_MODE;
     u8BLT_DERATING_EN = TRUE;
-    u16BrightnessUpperLimit = BLT_60P;
+    u16BrightnessUpperLimit = BLT_75P;
     if(u16MATemp > BLT_TEMP80)
     {
         TC0App_DerateCntStartSet(TRUE);
@@ -157,7 +158,7 @@ static uint8_t BacklightApp_Burn_Mode(uint16_t u16MATemp)
         {
             u8Return = BLT_BURN_MODE;
         }
-    }else if(u16MATemp < BLT_TEMP93){
+    }else if(u16MATemp < BLT_TEMP90){
         u8BLT_DERATING_ALARM_FLAG = TRUE;
         bDimmingUpdateStepFlag = true;
         u8Return = BLT_BOIL_MODE;
@@ -171,7 +172,7 @@ static uint8_t BacklightApp_Boil_Mode(uint16_t u16MATemp)
 {
 	uint8_t u8Return = BLT_BOIL_MODE;
     u8BLT_DERATING_EN = TRUE;
-    u16BrightnessUpperLimit = BLT_20P;
+    u16BrightnessUpperLimit = BLT_40P;
     if(u16MATemp > BLT_TEMP80)
     {
         TC0App_DerateCntStartSet(TRUE);
@@ -188,7 +189,7 @@ static uint8_t BacklightApp_Boil_Mode(uint16_t u16MATemp)
         {
             u8Return = BLT_BOIL_MODE;
         }
-    }else if(u16MATemp < BLT_TEMP105){
+    }else if(u16MATemp < BLT_TEMP95){
         u8BLT_DERATING_ALARM_FLAG = TRUE;
         bDimmingUpdateStepFlag = true;
         u8Return = BLT_SCORCH_MODE;
@@ -203,7 +204,7 @@ static uint8_t BacklightApp_Scorch_Mode(uint16_t u16MATemp)
 {
 	uint8_t u8Return = BLT_SCORCH_MODE;
     u8BLT_DERATING_EN = TRUE;
-    u16BrightnessUpperLimit = BLT_20P;
+    u16BrightnessUpperLimit = BLT_3P;
     if(u16MATemp > BLT_TEMP80)
     {
         TC0App_DerateCntStartSet(TRUE);
@@ -276,7 +277,15 @@ void BacklightApp_DimmingControl(void)
     {
         u8BLT_DERATING_ALARM_FLAG = FALSE;
         //report Derating
-        //StackTaskApp_IRQPush(0x62U);
+        if(u8BLT_DERATING_EN == FALSE)
+        {
+            DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_TERR_MASK);
+        }else if(u8BLT_DERATING_EN == TRUE)
+        {
+            DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_TERR_MASK);
+        }else{
+            /* Need To Check*/
+        }
     }else{/*DO NOTHING*/}
     // sprintf((char *)u8TxBuffer,"SW %d NOW %02X TARGET %02X GRAD %d BATT_PT %d STEP %d\r\n",BacklightSwitch,u16Brightness,BrightnessTarget,u16GradientValue,u8BATT_PROTECT_EN,u16DimmingStep);
     // UartDriver_TxWriteString((uint8_t*)u8TxBuffer);
