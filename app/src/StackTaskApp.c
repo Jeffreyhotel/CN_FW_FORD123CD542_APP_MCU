@@ -198,7 +198,6 @@ void StackTaskApp_MissionAction(void)
 
         case TASK_BLTFLOW:
             BacklightApp_DeratingFlow();
-            //DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_TERR_MASK);
         break;
 
         case TASK_DIMMING:
@@ -215,7 +214,6 @@ void StackTaskApp_MissionAction(void)
             PowerApp_RTQ6749_FaultCheck();
             */
             DiagApp_BiasFaultCheckFlow();
-            DiagApp_FaultCheckFlow();
         break;
 
         case TASK_LEDFLOW:
@@ -225,6 +223,10 @@ void StackTaskApp_MissionAction(void)
         case TASK_IOCHECK:
             DiagApp_LockCheckFlow();
             DiagApp_FpcCheckFlow();
+        break;
+
+        case TASK_LCDFLOW:
+            DiagApp_LcdFaultCheckFlow();
         break;
 
         case TASK_UPDATE_ERASE:

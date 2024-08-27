@@ -2,6 +2,7 @@
 #include "app/inc/RegisterApp.h"
 #include "app/inc/INTBApp.h"
 #include "app/inc/PowerApp.h"
+#include "app/inc/DisplayChip.h"
 #include "driver/inc/PortDriver.h"
 #include "driver/inc/UartDriver.h"
 
@@ -132,7 +133,7 @@ void DiagApp_CheckFlowInitial()
     FAULT_LCD.Status = IO_STATUS_SWIM;
     FAULT_LCD.Port = DISP_FAULT_PORT;
     FAULT_LCD.PortNumber = DISP_FAULT_PIN;
-    FAULT_LCD.Threshlod = 5;
+    FAULT_LCD.Threshlod = 4;
     FAULT_LCD.ConsecutiveHighCnt =  0;
     FAULT_LCD.ConsecutiveLowCnt = 0;
     FAULT_LCD.Report = true;
@@ -167,16 +168,26 @@ void DiagApp_CheckFlowInitial()
     STATUS_LOCK.ConsecutiveLowCnt = 0;
 }
 
-void DiagApp_FaultCheckFlow(void)
+void DiagApp_LcdFaultCheckFlow(void)
 {
     uint8_t u8Status1 = IO_STATUS_SWIM;
     u8Status1 = DiagApp_ConsecutiveCheckIO(&FAULT_LCD);
     if(IO_STATUS_HIGH == u8Status1){
-        DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
+        if(IO_HIGH == PortDrvier_PinRead(DISP_FAULT_PORT,DISP_FAULT_PIN))
+        {
+            DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
+        }else{/* Do Nothing*/}
+        FAULT_LCD.Report = true;
     }else if(IO_STATUS_LOW == u8Status1){
+        if(FAULT_LCD.Report == true)
+        {
+            DisplayChipApp_FaultCheck();
+            FAULT_LCD.Report = false;
+        }
         DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
     }else{
         /* When voltage at swim state, Do nothing*/
+        FAULT_LCD.Report = true;
     }
     sprintf((char *)u8TxBuffer,"FAULT CHECK FLOW> LCD 0x%02x\r\n",u8Status1);
     //UartDriver_TxWriteString(u8TxBuffer);

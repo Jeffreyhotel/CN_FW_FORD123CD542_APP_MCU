@@ -49,7 +49,7 @@ void DiagApp_DispStatusClear(uint8_t ByteNumber, uint8_t MaskValue);
 void DiagApp_DispStatusSet(uint8_t ByteNumber, uint8_t MaskValue);
 uint8_t DiagApp_ConsecutiveCheckIO(DiagIO* ds);
 uint8_t DiagApp_ConsecutiveCheckRegister(DiagIO* ds,bool isgood);
-void DiagApp_FaultCheckFlow(void);
+void DiagApp_LcdFaultCheckFlow(void);
 void DiagApp_LedFaultCheckFlow(void);
 void DiagApp_BiasFaultCheckFlow(void);
 void DiagApp_FpcCheckFlow(void);

@@ -83,6 +83,7 @@ static void TC0APP_TC0_Task_100msec(void)
 static void TC0APP_TC0_Task_250msec(void)
 {
     StackTaskApp_MissionPush(TASK_LEDFLOW);
+    StackTaskApp_MissionPush(TASK_LCDFLOW);
 }
 
 static void TC0APP_TC0_Task_1msec(void)
