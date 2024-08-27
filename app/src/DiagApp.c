@@ -8,7 +8,7 @@
 
 static uint8_t u8DiagDispByte0 = 0x00U;
 static uint8_t u8DiagDispByte1 = 0x01U;
-static uint8_t u8TxBuffer[60] = {0};
+static uint8_t u8TxBuffer[80] = {0};
 
 void DiagApp_DispStatusClear(uint8_t ByteNumber, uint8_t MaskValue)
 {
@@ -243,8 +243,12 @@ void DiagApp_BiasFaultCheckFlow(void)
 
 void DiagApp_FpcCheckFlow(void)
 {
+    uint8_t u8StatusR = IO_STATUS_SWIM;
+    uint8_t u8StatusL = IO_STATUS_SWIM;
     uint8_t u8Status1 = IO_STATUS_SWIM;
-    u8Status1 = (DiagApp_ConsecutiveCheckIO(&STATUS_RFPC) | DiagApp_ConsecutiveCheckIO(&STATUS_LFPC));
+    u8StatusR = DiagApp_ConsecutiveCheckIO(&STATUS_RFPC);
+    u8StatusL = DiagApp_ConsecutiveCheckIO(&STATUS_LFPC);
+    u8Status1 = (u8StatusR | u8StatusL);
     if(IO_STATUS_SWIM == u8Status1){
         /* When voltage at swim state, Do nothing*/
     }else if(IO_STATUS_HIGH == (u8Status1 & IO_STATUS_HLMASK)){
@@ -254,7 +258,7 @@ void DiagApp_FpcCheckFlow(void)
     }else{
         /* When voltage at swim state, Do nothing*/
     }
-    sprintf((char *)u8TxBuffer,"FPC CHECK FLOW> STATUS_R/LFPC 0x%02x,0x%02x,0x%02x\r\n",u8Status1,STATUS_RFPC.ConsecutiveLowCnt,STATUS_LFPC.ConsecutiveLowCnt);
+    sprintf((char *)u8TxBuffer,"FPC CHECK FLOW> STATUS_RFPC 0x%02x,0x%02x STATUS_RFPC 0x%02x,0x%02x\r\n",u8StatusR,STATUS_RFPC.ConsecutiveLowCnt,u8StatusL,STATUS_LFPC.ConsecutiveLowCnt);
     //UartDriver_TxWriteString(u8TxBuffer);
 }
 
