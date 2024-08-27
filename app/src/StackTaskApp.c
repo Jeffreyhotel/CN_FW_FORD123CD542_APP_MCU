@@ -172,7 +172,6 @@ static uint8_t StackTaskApp_MissionPop(void)
 **            Case Task define at StackTaskApp.h
 **        Go: No Return
  */
-uint8_t test_flag = TRUE;
 void StackTaskApp_MissionAction(void)
 {
     TC0App_TimerReset(TIMER_CPUCOUNT);
@@ -186,9 +185,7 @@ void StackTaskApp_MissionAction(void)
     {
         case TASK_DEBUGINFO:
             /*Do nothing*/
-            //INTBApp_PullReqSetOrClear(INTB_REQ_SET);
             UartApp_ReadFlow();
-            //PowerApp_LP8664_FaultCheck();
         break;
 
         case TASK_MONITOR:
