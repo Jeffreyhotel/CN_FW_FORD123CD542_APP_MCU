@@ -126,6 +126,9 @@ static uint8_t MainApp_PreNormal_Mode(uint8_t u8Nothing)
     TC0App_TimerTaskStopper(true);
     PowerApp_Sequence(LCD_ON);
     TC0App_TimerTaskStopper(false);
+    /* SWRA-01-06: Set DISP_STATUS 0x00 CMD Byte1 DISP_ST & BL_ST set as 1.*/
+    DiagApp_DispStatusSet(DISP_STATUS_BYTE1,DISP1_DISPST_MASK);
+    DiagApp_DispStatusSet(DISP_STATUS_BYTE1,DISP1_BLST_MASK);
     sprintf((char *)u8TxBuffer,"PRENORMAL FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
     /* Need to put at the end of prenormal task*/
@@ -201,10 +204,15 @@ static uint8_t MainApp_PreSleep_Mode(uint8_t u8Nothing)
 {
     uint8_t u8Return;
     WdtApp_CleanCounter();
+    /* SWRA-01-05: Set DISP_STATUS 0x00 CMD Byte1 DISP_ST & BL_ST set as 0.*/
+    DiagApp_DispStatusClear(DISP_STATUS_BYTE1,DISP1_DISPST_MASK);
+    DiagApp_DispStatusClear(DISP_STATUS_BYTE1,DISP1_BLST_MASK);
     /* Do LCD Power Off Sequence*/
     TC0App_TimerTaskStopper(true);
     PowerApp_Sequence(LCD_OFF);
     TC0App_TimerTaskStopper(false);
+    /* SWRA-01-05: Timer Lock Hold set as 1000ms, avoid rapid-off/on behavior*/
+    TC0App_TimerReset(TIMER_HOLDCOUNT);
     sprintf((char *)u8TxBuffer,"PRESLEEP FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
     u8Return = STATE_SLEEP;
@@ -233,7 +241,14 @@ static uint8_t MainApp_Sleep_Mode(uint8_t u8Nothing)
     {
         if((RegisterApp_DHU_Read(CMD_DISP_EN,1U) & 0x01U) == 0x01U)
         {
-            u8Return = STATE_PRENORMAL;
+            /* SWRA-01-05: Timer Lock Hold set as 1000ms, avoid rapid-off/on behavior*/
+            /* TIMER_HOLDCOUNT will return 0xFF if hold time > 1000ms*/
+            if(TC0App_TimerReturn(TIMER_HOLDCOUNT) != 0x00U)
+            {
+                u8Return = STATE_PRENORMAL;
+            }else{
+                u8Return = STATE_SLEEP;
+            }
         }else{
             u8Return = STATE_SLEEP;
         }
@@ -254,6 +269,9 @@ static uint8_t MainApp_Shutdown_Mode(uint8_t u8Nothing)
 {
     uint8_t u8Return;
     WdtApp_CleanCounter();
+    /* SWRA-01-07: Set DISP_STATUS 0x00 CMD Byte1 DISP_ST & BL_ST set as 0.*/
+    DiagApp_DispStatusClear(DISP_STATUS_BYTE1,DISP1_DISPST_MASK);
+    DiagApp_DispStatusClear(DISP_STATUS_BYTE1,DISP1_BLST_MASK);
     TC0App_NormalWorkStartSet(FALSE);
     /* Do Power Off Sequence*/
     INTBApp_Flow();

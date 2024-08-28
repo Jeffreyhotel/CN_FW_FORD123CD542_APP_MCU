@@ -10,6 +10,7 @@
 #define TIMER_DERATECOUNT       0x04U
 #define TIMER_BATTERYCOUNT      0x05U
 #define TIMER_WDTCOUNT          0x06U
+#define TIMER_HOLDCOUNT         0x07U
 
 #define DHUCmdBufferSize 256U
 

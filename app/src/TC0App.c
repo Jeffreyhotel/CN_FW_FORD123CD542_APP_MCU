@@ -40,6 +40,7 @@ static long int batteryprotect_timer_sec =0;
 static long int intb_set_timer_ms=0;
 static long int intb_hold_timer_ms=0;
 static long int wdt_timer_ms=0;
+static long int hold_timer_ms=1001;
 uint8_t FLAG_DERATINGCNT_START = FALSE;
 uint8_t FLAG_BATTERYPROT_START = FALSE;
 uint8_t FLAG_STARTTOWORK_START = FALSE;
@@ -50,7 +51,6 @@ volatile static bool StopperEN = false;
 
 static void TC0APP_TC0_Task_1000msec(void)
 {
-    StackTaskApp_MissionPush(TASK_DEBUGINFO);
     StackTaskApp_MissionPush(TASK_MONITOR);
 }
 
@@ -82,6 +82,7 @@ static void TC0APP_TC0_Task_100msec(void)
 
 static void TC0APP_TC0_Task_250msec(void)
 {
+    StackTaskApp_MissionPush(TASK_DEBUGINFO);
     StackTaskApp_MissionPush(TASK_LEDFLOW);
     StackTaskApp_MissionPush(TASK_LCDFLOW);
 }
@@ -112,6 +113,7 @@ static void TC0App_Callback_InterruptHandler(void)
     }else{
         /* Do nothing*/
     }
+    hold_timer_ms = hold_timer_ms+1;
     cpu_timer_ms = cpu_timer_ms+1;
     if(FLAG_INTBSETTCNT_START == TRUE)
     {
@@ -270,6 +272,15 @@ uint8_t TC0App_TimerReturn(uint8_t Request)
         u8Return = wdt_timer_ms;
         break;
 
+    case TIMER_HOLDCOUNT:
+        if(hold_timer_ms > 1000)
+        {
+            u8Return = 0xFFU;
+        }else{
+            u8Return = 0x00U;
+        }
+        break;
+
     default:
         u8Return = 0xFFU;
         break;
@@ -314,6 +325,10 @@ void TC0App_TimerReset(uint8_t Request)
 
     case TIMER_WDTCOUNT:
         wdt_timer_ms = 0U;
+        break;
+
+    case TIMER_HOLDCOUNT:
+        hold_timer_ms = 0U;
         break;
 
     default:
