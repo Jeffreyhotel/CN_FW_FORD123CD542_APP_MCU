@@ -1,4 +1,4 @@
-#include "app/inc/DisplayChip.h"
+#include "app/inc/DisplayChipApp.h"
 #include "driver/inc/I2C4MDriver.h"
 #include "driver/inc/UartDriver.h"
 

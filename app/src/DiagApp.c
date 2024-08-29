@@ -2,7 +2,7 @@
 #include "app/inc/RegisterApp.h"
 #include "app/inc/INTBApp.h"
 #include "app/inc/PowerApp.h"
-#include "app/inc/DisplayChip.h"
+#include "app/inc/DisplayChipApp.h"
 #include "driver/inc/PortDriver.h"
 #include "driver/inc/UartDriver.h"
 
