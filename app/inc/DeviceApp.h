@@ -3,7 +3,8 @@
 
 #include "main.h"
 
-#define SUBREVISION_SW_VER  0x00U
+/* TEST VERSION = MAIN VER + 0x80U*/
+#define SUBREVISION_SW_VER  (0x00U+0x80U)
 
 void DeviceApp_Intial(void);
 
