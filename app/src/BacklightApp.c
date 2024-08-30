@@ -48,6 +48,7 @@ uint8_t u8BLT_DERATING_STATUS = BLT_NORMAL_MODE;
 uint8_t u8BLT_DERATING_EN = FALSE;
 uint8_t u8BLT_DERATING_ALARM_FLAG = FALSE;
 uint8_t u8BATT_PROTECT_EN = FALSE;
+uint8_t u8RSTRQ_TYPEB_SW = TRUE;
 
 uint16_t u16DimmingStep = 8U;
 volatile bool bDimmingUpdateStepFlag = false;
@@ -55,6 +56,11 @@ volatile bool bDimmingUpdateStepFlag = false;
 void BacklightApp_BattProtectSet(uint8_t u8Set)
 {
     u8BATT_PROTECT_EN = u8Set;
+}
+
+void BacklightApp_RstRqSwitchSet(uint8_t u8Set)
+{
+    u8RSTRQ_TYPEB_SW = u8Set;
 }
 
 void BacklightApp_Initial(void)
@@ -241,7 +247,11 @@ void BacklightApp_DimmingControl(void)
     /* SWRA-01-05: Timer Lock Hold set as 1000ms, avoid rapid-off/on behavior
     ** TIMER_HOLDCOUNT will return 0xFF if hold time > 1000ms
     */
-    BacklightSwitch = RegisterApp_DHU_Read(CMD_DISP_EN,CMD_DATA_POS) & (!RegisterApp_DHU_Read(CMD_DISP_SHUTD,CMD_DATA_POS)) & 0x01U & (TC0App_TimerReturn(TIMER_HOLDCOUNT) != 0x00U);
+    BacklightSwitch = RegisterApp_DHU_Read(CMD_DISP_EN,CMD_DATA_POS) 
+                    & (!RegisterApp_DHU_Read(CMD_DISP_SHUTD,CMD_DATA_POS))
+                    & (TC0App_TimerReturn(TIMER_HOLDCOUNT) != 0x00U)
+                    & u8RSTRQ_TYPEB_SW
+                    & 0x01U ;
     
     /*Dimming target*/
     BrightnessTarget =  ((uint16_t)rdData[CMD_DATA_POS+1U])*256U;

@@ -41,6 +41,7 @@
 #define BLT_TEMP95  408U
 
 void BacklightApp_BattProtectSet(uint8_t u8Set);
+void BacklightApp_RstRqSwitchSet(uint8_t u8Set);
 void BacklightApp_Initial(void);
 void BacklightApp_UpdateDimmingStep(void);
 void BacklightApp_DimmingControl(void);

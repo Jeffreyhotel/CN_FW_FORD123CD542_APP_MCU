@@ -3,6 +3,7 @@
 #include "app/inc/INTBApp.h"
 #include "app/inc/PowerApp.h"
 #include "app/inc/DisplayChipApp.h"
+#include "app/inc/BacklightApp.h"
 #include "driver/inc/PortDriver.h"
 #include "driver/inc/UartDriver.h"
 
@@ -129,9 +130,11 @@ bool DiagApp_RtnRstRequestCheck(bool set ,uint8_t u8DiagRstReqMask)
     {
         breturn = true;
         DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_RSTRQ_MASK);
+        BacklightApp_RstRqSwitchSet(BLT_DISABLE);
     }else{
         breturn = false;
         DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_RSTRQ_MASK);
+        BacklightApp_RstRqSwitchSet(BLT_ENABLE);
     }
     RegisterApp_DHU_Setup(CMD_DTC,DTC_RST_RQ,u8DiagRstReqStatus);
     return breturn;
