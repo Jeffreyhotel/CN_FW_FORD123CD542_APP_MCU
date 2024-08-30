@@ -9,6 +9,8 @@
 static uint8_t u8DiagDispByte0 = 0x00U;
 static uint8_t u8DiagDispByte1 = 0x01U;
 static uint8_t u8TxBuffer[80] = {0};
+static uint8_t u8DiagRstReqStatus = 0x00U;
+static uint8_t u8DiagI2cFaultStatus = 0x00U;
 
 void DiagApp_DispStatusClear(uint8_t ByteNumber, uint8_t MaskValue)
 {
@@ -114,6 +116,38 @@ uint8_t DiagApp_ConsecutiveCheckRegister(DiagIO* ds1,bool isgood)
     return ds.Status;
 }
 
+bool DiagApp_RtnRstRequestCheck(bool set ,uint8_t u8DiagRstReqMask)
+{
+    bool breturn = false;
+    if(set)
+    {
+        u8DiagRstReqStatus &= u8DiagRstReqMask;
+    }else{
+        u8DiagRstReqStatus &= !u8DiagRstReqMask;
+    }
+    if(u8DiagRstReqStatus != 0x00U)
+    {
+        breturn = true;
+        DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_RSTRQ_MASK);
+    }else{
+        breturn = false;
+        DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_RSTRQ_MASK);
+    }
+    RegisterApp_DHU_Setup(CMD_DTC,DTC_RST_RQ,u8DiagRstReqStatus);
+    return breturn;
+}
+
+void DiagApp_I2CMasterFaultCheck(bool set ,uint8_t u8DiagI2cFaultMask)
+{
+    if(set)
+    {
+        u8DiagI2cFaultStatus &= u8DiagI2cFaultMask;
+    }else{
+        u8DiagI2cFaultStatus &= !u8DiagI2cFaultMask;
+    }
+    RegisterApp_DHU_Setup(CMD_DTC,DTC_I2CM_FAULT,u8DiagI2cFaultStatus);
+}
+
 DiagIO FAULT_LED;
 DiagIO FAULT_LCD;
 DiagIO FAULT_BIAS;
@@ -177,6 +211,7 @@ void DiagApp_LcdFaultCheckFlow(void)
         {
             DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
         }else{/* Do Nothing*/}
+        DiagApp_RtnRstRequestCheck(false,DIAG_RST_LCD_MASK);
         FAULT_LCD.Report = true;
     }else if(IO_STATUS_LOW == u8Status1){
         if(FAULT_LCD.Report == true)
@@ -185,6 +220,7 @@ void DiagApp_LcdFaultCheckFlow(void)
             FAULT_LCD.Report = false;
         }
         DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
+        DiagApp_RtnRstRequestCheck(true,DIAG_RST_LCD_MASK);
     }else{
         /* When voltage at swim state, Do nothing*/
         FAULT_LCD.Report = true;
@@ -199,6 +235,7 @@ void DiagApp_LedFaultCheckFlow(void)
     u8Status1 = DiagApp_ConsecutiveCheckIO(&FAULT_LED);
     if(IO_STATUS_HIGH == u8Status1){
         DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_BLERR_MASK);
+        DiagApp_RtnRstRequestCheck(false,DIAG_RST_LED_MASK);
         FAULT_LED.Report = true;
     }else if(IO_STATUS_LOW == u8Status1){
         if(FAULT_LED.Report == true)
@@ -207,6 +244,7 @@ void DiagApp_LedFaultCheckFlow(void)
             FAULT_LED.Report = false;
         }
         DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_BLERR_MASK);
+        DiagApp_RtnRstRequestCheck(true,DIAG_RST_LED_MASK);
     }else{
         /* When voltage at swim state, Do nothing*/
         FAULT_LED.Report = true;
@@ -224,6 +262,7 @@ void DiagApp_BiasFaultCheckFlow(void)
         /* Recovery mechanism merge to LCD FAULT
         DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
         */
+       DiagApp_RtnRstRequestCheck(false,DIAG_RST_BIAS_MASK);
        FAULT_BIAS.Report = true;
     }else if(IO_STATUS_LOW == u8Status1){
         /* Get error info & latch disp status bit*/
@@ -233,6 +272,7 @@ void DiagApp_BiasFaultCheckFlow(void)
             FAULT_BIAS.Report = false;
         }
         DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
+        DiagApp_RtnRstRequestCheck(true,DIAG_RST_BIAS_MASK);
     }else{
         FAULT_BIAS.Report = true;
         /* When voltage at swim state, Do nothing*/

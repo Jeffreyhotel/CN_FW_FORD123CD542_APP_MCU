@@ -139,11 +139,13 @@ void PowerApp_RTQ6749_FaultCheck()
     Status |= I2C4MDriver_WriteRead(BIAS_ADDR,CMD_DataAddr,1U,RxBuffer,30U);
     if(Status != ERROR_NONE)
     {
+        DiagApp_I2CMasterFaultCheck(true,DIAG_I2CM_BIAS_MASK);
         sprintf((char *)u8TxBuffer,"I2C M driver transmit fail >> 0x%02x\r\n",Status);
         //UartDriver_TxWriteString(u8TxBuffer);
         u8fault = 0xFFU;
     }else{
         u8fault = RxBuffer[0x1DU];
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_BIAS_FAULT_0x1D,u8fault);
         sprintf((char *)u8TxBuffer,"RTQ6749 Fault Analysis >> 0x%02x\r\n",u8fault);
         //UartDriver_TxWriteString(u8TxBuffer);
     }
@@ -179,16 +181,23 @@ void PowerApp_LP8664_FaultCheck()
     Status = I2C4MDriver_WriteRead(LED_ADDR,CMD_DataAddr,1U,RxBuffer,30U);
     if(Status != ERROR_NONE)
     {
+        DiagApp_I2CMasterFaultCheck(true,DIAG_I2CM_LED_MASK);
         sprintf((char *)u8TxBuffer,"I2C M driver transmit fail >> 0x%02x\r\n",Status);
         UartDriver_TxWriteString(u8TxBuffer);
         u8fault[0] = 0xFFU;
     }else{
         u8fault[1] = RxBuffer[0x0EU];
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_LED_FAULT_0x0E,u8fault[1]);
         u8fault[2] = RxBuffer[0x0FU];
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_LED_FAULT_0x0F,u8fault[2]);
         u8fault[3] = RxBuffer[0x10U];
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_LED_FAULT_0x10,u8fault[3]);
         u8fault[4] = RxBuffer[0x11U];
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_LED_FAULT_0x11,u8fault[4]);
         u8fault[5] = RxBuffer[0x12U];
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_LED_FAULT_0x12,u8fault[5]);
         u8fault[6] = RxBuffer[0x13U];
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_LED_FAULT_0x13,u8fault[6]);
         u8fault[0] = u8fault[1]|u8fault[2]|u8fault[3]|u8fault[4]|u8fault[5]|u8fault[6];
         sprintf((char *)u8TxBuffer,"LP8664 Fault Analysis >> 0x%02x\r\n",u8fault[0]);
         UartDriver_TxWriteString(u8TxBuffer);

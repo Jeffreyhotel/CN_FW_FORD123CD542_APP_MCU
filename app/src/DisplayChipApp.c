@@ -1,4 +1,6 @@
 #include "app/inc/DisplayChipApp.h"
+#include "app/inc/RegisterApp.h"
+#include "app/inc/DiagApp.h"
 #include "driver/inc/I2C4MDriver.h"
 #include "driver/inc/UartDriver.h"
 
@@ -21,9 +23,14 @@ void DisplayChipApp_FaultCheck()
         u8Status |= I2C4MDriver_WriteRead(CHIP_ADDR,u8ReadRegister0x1B,sizeof(u8ReadRegister0x1B),&u8ASIL[2],1U);
         u8Status |= I2C4MDriver_WriteRead(CHIP_ADDR,u8ReadRegister0x1C,sizeof(u8ReadRegister0x1C),&u8ASIL[3],1U);
         if(u8Status != ERROR_NONE){
+            DiagApp_I2CMasterFaultCheck(true,DIAG_I2CM_LCD_MASK);
             sprintf((char *)u8TxBuffer,"FAULT CHECK FLOW> LCD I2C ERROR=0x%02x [0x%02x,0x%02x,0x%02x,0x%02x]\r\n",u8Status,u8ASIL[0],u8ASIL[1],u8ASIL[2],u8ASIL[3]);
             UartDriver_TxWriteString(u8TxBuffer);
         }else{
+            RegisterApp_DHU_Setup(CMD_DTC,DTC_LCD_FAULT_0x19,u8ASIL[0]);
+            RegisterApp_DHU_Setup(CMD_DTC,DTC_LCD_FAULT_0x1A,u8ASIL[1]);
+            RegisterApp_DHU_Setup(CMD_DTC,DTC_LCD_FAULT_0x1B,u8ASIL[2]);
+            RegisterApp_DHU_Setup(CMD_DTC,DTC_LCD_FAULT_0x1C,u8ASIL[3]);
             sprintf((char *)u8TxBuffer,"FAULT CHECK FLOW> LCD [0x%02x,0x%02x,0x%02x,0x%02x]\r\n",u8ASIL[0],u8ASIL[1],u8ASIL[2],u8ASIL[3]);
             UartDriver_TxWriteString(u8TxBuffer);
         }

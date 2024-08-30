@@ -26,6 +26,16 @@
 #define DISP1_TSCST_MASK    0x02U   /* Touch Controller Status (No use)*/
 #define DISP1_DISPST_MASK   0x01U   /* I2C Client Status (Formerly Display Status)*/
 
+#define DIAG_RST_RQ_MASK    0x07U   /* Mask for filtering RST RQ */
+#define DIAG_RST_BIAS_MASK  0x01U
+#define DIAG_RST_LED_MASK   0x02U
+#define DIAG_RST_LCD_MASK   0x04U
+
+#define DIAG_I2CM_FAULT_MASK    0x07U   /* Mask for filtering RST RQ */
+#define DIAG_I2CM_BIAS_MASK     0x01U
+#define DIAG_I2CM_LED_MASK      0x02U
+#define DIAG_I2CM_LCD_MASK      0x04U
+
 #define IO_HIGH     1U
 #define IO_LOW      0U
 
@@ -49,6 +59,8 @@ void DiagApp_DispStatusClear(uint8_t ByteNumber, uint8_t MaskValue);
 void DiagApp_DispStatusSet(uint8_t ByteNumber, uint8_t MaskValue);
 uint8_t DiagApp_ConsecutiveCheckIO(DiagIO* ds);
 uint8_t DiagApp_ConsecutiveCheckRegister(DiagIO* ds,bool isgood);
+void DiagApp_I2CMasterFaultCheck(bool set ,uint8_t u8DiagI2cFaultMask);
+bool DiagApp_RtnRstRequestCheck(bool set ,uint8_t u8DiagRstReqMask);
 void DiagApp_LcdFaultCheckFlow(void);
 void DiagApp_LedFaultCheckFlow(void);
 void DiagApp_BiasFaultCheckFlow(void);

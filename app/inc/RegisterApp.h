@@ -55,9 +55,22 @@
 #define DTC_HW_VERSION              0x03U
 #define DTC_DDI_VERSION             0x04U
 #define DTC_RESET_CAUSE             0x05U
-#define DTC_BATT_VOLT_ADC           0x06U
-#define DTC_BLT_TEMP_ADC            0x08U
-#define DTC_PCB_TEMP_ADC            0x0AU
+#define DTC_RST_RQ                  0x06U
+#define DTC_BIAS_FAULT_0x1D         0x07U
+#define DTC_LED_FAULT_0x0E          0x08U
+#define DTC_LED_FAULT_0x0F          0x09U
+#define DTC_LED_FAULT_0x10          0x0AU
+#define DTC_LED_FAULT_0x11          0x0BU
+#define DTC_LED_FAULT_0x12          0x0CU
+#define DTC_LED_FAULT_0x13          0x0DU
+#define DTC_LCD_FAULT_0x19          0x0EU
+#define DTC_LCD_FAULT_0x1A          0x0FU
+#define DTC_LCD_FAULT_0x1B          0x10U
+#define DTC_LCD_FAULT_0x1C          0x11U
+#define DTC_I2CM_FAULT              0x12U
+#define DTC_BATT_VOLT_ADC           0x17U
+#define DTC_BLT_TEMP_ADC            0x19U
+#define DTC_PCB_TEMP_ADC            0x1BU
 
 typedef struct{
     volatile uint8_t DHU_0X00_DISP_STATUS[RegisterMaxSize];
