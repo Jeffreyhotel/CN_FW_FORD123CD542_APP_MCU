@@ -121,9 +121,9 @@ bool DiagApp_RtnRstRequestCheck(bool set ,uint8_t u8DiagRstReqMask)
     bool breturn = false;
     if(set)
     {
-        u8DiagRstReqStatus &= u8DiagRstReqMask;
+        u8DiagRstReqStatus |= u8DiagRstReqMask;
     }else{
-        u8DiagRstReqStatus &= !u8DiagRstReqMask;
+        u8DiagRstReqStatus &= ~u8DiagRstReqMask;
     }
     if(u8DiagRstReqStatus != 0x00U)
     {
