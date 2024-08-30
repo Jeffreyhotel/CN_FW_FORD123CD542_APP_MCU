@@ -74,9 +74,9 @@ static uint8_t INTBApp_Deinit_Mode(void)
     TC0App_TimerReset(TIMER_INT_HOLD_COUNT);
     if(SWITCH_INIT_STATE == INTB_DEINITIAL)
     {
-        u8return = INTB_STATE_INIT;
-    }else if(SWITCH_INIT_STATE == INTB_INITIAL){
         u8return = INTB_STATE_DEINIT;
+    }else if(SWITCH_INIT_STATE == INTB_INITIAL){
+        u8return = INTB_STATE_INIT;
     }else{
         u8return = INTB_STATE_DEINIT;
     }
