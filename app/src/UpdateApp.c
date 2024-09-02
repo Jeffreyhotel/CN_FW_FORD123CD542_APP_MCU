@@ -4,8 +4,11 @@
 #include "app/inc/I2C2SlaveApp.h"
 #include "driver/inc/NVMDriver.h"
 #include "driver/inc/UartDriver.h"
+#include "app/inc/WdtApp.h"
+#include "app/inc/PowerApp.h"
 
 uint8_t APP_POS = 0x0AU;
+uint8_t APP_UPDATE_PROGRESS = FALSE;
 uint16_t u16ChecksumMCU = 0U;
 static uint8_t u8TxBuffer[100] = {0};
 const uint32_t crc32_tab[256] = {
@@ -72,6 +75,7 @@ bool UpdateApp_EraseFlashMCU(void)
             address = (uint32_t)ADDR_APPA_START + ((uint32_t)(SIZE_ERASE_256B) * u32Index);
         }
         breturn = NVMDriver_RowErase(address);
+        WdtApp_CleanCounter();
     }
     __enable_irq();
     sprintf((char *)u8TxBuffer,"MCU ERASE OK\r\n");
@@ -127,7 +131,7 @@ bool UpdateApp_TransferFlashMCU(void)
     UartDriver_TxWriteString(u8TxBuffer);
     if(breturn == true)
     {
-        RegisterApp_DHU_Setup(CMD_TRANSFER_FB,CMD_UPDATE_DATA_POS,(uint8_t)u32DataSerialNumber >> 8U);
+        RegisterApp_DHU_Setup(CMD_TRANSFER_FB,CMD_UPDATE_DATA_POS,(uint8_t)(u32DataSerialNumber >> 8U));
         RegisterApp_DHU_Setup(CMD_TRANSFER_FB,CMD_UPDATE_DATA_POS+1U,(uint8_t)u32DataSerialNumber);
         I2CSlaveApp_UpdateCmdChecksumSet(CMD_TRANSFER_FB);
     }
@@ -240,7 +244,8 @@ bool UpdateApp_ChecksumFlashMCU(void)
     }else{
         breturn &= false;
     }
-
+    sprintf((char *)u8TxBuffer,"DATA CRC DONE. CRC:%04X RDdata:%04X\r\n",u16ChecksumDHU,u16ChecksumMCU);
+    UartDriver_TxWriteString(u8TxBuffer);
     /* Do MCU data self check*/
     if(UpdateApp_CheckSumMCU() == TRUE)
     {
@@ -252,6 +257,7 @@ bool UpdateApp_ChecksumFlashMCU(void)
     /* Configure the checksum result to CMD_CRC_FB*/
     if(breturn == true)
     {
+        APP_UPDATE_PROGRESS = TRUE;
         RegisterApp_DHU_Setup(CMD_CRC_FB,CMD_UPDATE_DATA_POS,CMD_FB_CHECKSUM_PASS);
         I2CSlaveApp_UpdateCmdChecksumSet(CMD_CRC_FB);
         /* Update Flag would return pass after software reset (Default value)*/
@@ -263,4 +269,25 @@ bool UpdateApp_ChecksumFlashMCU(void)
     }
 
     return breturn;
+}
+
+void UpdateApp_McuReset(void)
+{
+    uint8_t APP_POSITION = 0x00U;
+    if(APP_UPDATE_PROGRESS == TRUE)
+    {
+        if(MCU_POSITION != 0x0BU){
+            APP_POSITION = 0x0BU;
+        }else{
+            APP_POSITION = 0x0AU;
+        }
+        /* Only for flash w/r test*/
+        uint8_t Flag[4] = {APP_POSITION, 0x00, 0x00, 0x00};
+        FlashApp_WriteRowFlash(&Flag[0],0x0001F000,4U);
+        __NOP();
+        PowerApp_Sequence(LCD_OFF);
+        PowerApp_Sequence(POWER_OFF);
+        __NVIC_SystemReset();
+    }
+    
 }

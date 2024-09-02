@@ -140,11 +140,11 @@ static void I2CSlaveApp_TxWriteTransferDone(uint8_t subaddr)
     if(I2CSlaveApp_SubaddressUpdateCmdCheck(subaddr) == true)
     {
         uint32_t u32ChecksumCounter = 0U;
-        for(uint32_t index = 0U;index<(I2CSlaveApp_GetCmdSize(subaddr)-2U);index++)
+        for(uint32_t index = 0U;index<(I2CSlaveApp_GetCmdSize(subaddr)-1U);index++)
         {
             u32ChecksumCounter += i2cWriteBuffer[index];
         }
-        if((uint8_t)(u32ChecksumCounter & 0x000000FFU) == i2cWriteBuffer[I2CSlaveApp_GetCmdSize(subaddr)-1U])
+        if((uint8_t)((u32ChecksumCounter+1U) & 0x000000FFU) == i2cWriteBuffer[I2CSlaveApp_GetCmdSize(subaddr)-1U])
         {
             isUpdateCmdWithCorrectChecksum = true;
         }else{
@@ -258,6 +258,15 @@ static void I2CSlaveApp_TxReadTransferDone(uint8_t subaddr)
         case CMD_DISP_STATUS:
             /* Check the DISP_STATUS has been sent, then Clear INT_ERR*/
             RegisterApp_DHU_Setup(CMD_ISR_STATUS,CMD_DATA_POS,INTB_INT_ERR_CLEAR);
+            break;
+        
+        case CMD_CRC_FB:
+            if(RegisterApp_DHU_Read(CMD_CRC_FB,CMD_DATA_POS+1U) == CMD_FB_CHECKSUM_PASS)
+            {
+                TC0App_DHUTaskPush(TASK_UPDATE_RESET);
+            }else{
+                /* Do nothing*/
+            }
             break;
         
         default:

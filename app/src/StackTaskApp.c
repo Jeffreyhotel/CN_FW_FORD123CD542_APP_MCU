@@ -238,6 +238,10 @@ void StackTaskApp_MissionAction(void)
             UpdateApp_ChecksumFlashMCU();
         break;
 
+        case TASK_UPDATE_RESET:
+            UpdateApp_McuReset();
+        break;
+
         default:
             /*Do nothing*/
         break;

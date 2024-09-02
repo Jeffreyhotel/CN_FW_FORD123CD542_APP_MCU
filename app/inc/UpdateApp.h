@@ -27,5 +27,6 @@
 bool UpdateApp_EraseFlashMCU(void);
 bool UpdateApp_TransferFlashMCU(void);
 bool UpdateApp_ChecksumFlashMCU(void);
+void UpdateApp_McuReset(void);
 
 #endif
