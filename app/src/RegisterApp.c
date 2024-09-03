@@ -29,6 +29,8 @@
 
 Register RegisterContainer;
 
+#define UpdateLenPos    0x01U
+
 #if 0
 void RegisterApp_DHU_CRCSetup(uint8_t Page, uint16_t Length)
 {
@@ -120,6 +122,18 @@ void RegisterApp_Initial(Register* pRegisterContainer)
     for(counter =0x0001U;counter<WritePageSize;counter++){
         pRegisterContainer->DHU_0XE7_TRANSFER_REQ[counter]        =   0x00U;
     }
+    pRegisterContainer->DHU_0XE4_APP_REQ[UpdateLenPos]           = 0x03U;
+    pRegisterContainer->DHU_0XE5_BL_REQ[UpdateLenPos]            = 0x03U;
+    pRegisterContainer->DHU_0XE6_ERASE_REQ[UpdateLenPos]         = 0x03U;
+    pRegisterContainer->DHU_0XE7_TRANSFER_REQ[UpdateLenPos]      = 0x84U;
+    pRegisterContainer->DHU_0XE8_CRC_REQ[UpdateLenPos]           = 0x04U;
+    pRegisterContainer->DHU_0XE9_UPDATESTATUS_REQ[UpdateLenPos]  = 0x02U;
+    pRegisterContainer->DHU_0XF4_APP_FB[UpdateLenPos]            = 0x03U;
+    pRegisterContainer->DHU_0XF5_BL_FB[UpdateLenPos]             = 0x03U;
+    pRegisterContainer->DHU_0XF6_ERASE_FB[UpdateLenPos]          = 0x03U;
+    pRegisterContainer->DHU_0XF7_TRANSFER_FB[UpdateLenPos]       = 0x04U;
+    pRegisterContainer->DHU_0XF8_CRC_FB[UpdateLenPos]            = 0x03U;
+    pRegisterContainer->DHU_0XF9_UPDATESTATUS_FB[UpdateLenPos]   = 0x03U;
     (void)address;
 }
 

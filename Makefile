@@ -100,17 +100,16 @@ SOURCES=
 # directories (without a leading -I).
 INCLUDES=
 
+# Add additional defines to the build process (without a leading -D).
 ifeq ($(TARGET),FORD123_CD542_CY8C4147AZS-S285)
-MCU_POSITION=0x01U
+DEFINES=MCU_POSITION=0x02U
 endif
 ifeq ($(TARGET),FORD123_CD542_CY8C4147AZS-S285_POSA)
-MCU_POSITION=0x0AU
+DEFINES=MCU_POSITION=0x0AU
 endif
 ifeq ($(TARGET),FORD123_CD542_CY8C4147AZS-S285_POSB)
-MCU_POSITION=0x0BU
+DEFINES=MCU_POSITION=0x0BU
 endif
-# Add additional defines to the build process (without a leading -D).
-DEFINES=MCU_POSITION
 
 # Select softfp or hardfp floating point. Default is softfp.
 VFP_SELECT=
@@ -204,5 +203,8 @@ $(error Unable to find any of the available CY_TOOLS_PATHS -- $(CY_TOOLS_PATHS).
 endif
 
 $(info Tools Directory: $(CY_TOOLS_DIR))
+# Debug output
+$(info TARGET is $(TARGET))
+$(info MCU_POSITION is $(MCU_POSITION))
 
 include $(CY_TOOLS_DIR)/make/start.mk

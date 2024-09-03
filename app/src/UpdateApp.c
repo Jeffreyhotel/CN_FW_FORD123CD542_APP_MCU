@@ -7,9 +7,9 @@
 #include "app/inc/WdtApp.h"
 #include "app/inc/PowerApp.h"
 
-uint8_t APP_POS = 0x0AU;
+uint8_t APP_POS = MCU_POSITION;
 uint8_t APP_UPDATE_PROGRESS = FALSE;
-uint16_t u16ChecksumMCU = 0U;
+uint32_t u16ChecksumMCU = 0U;
 static uint8_t u8TxBuffer[100] = {0};
 const uint32_t crc32_tab[256] = {
 	0x00000000U, 0x77073096U, 0xee0e612cU, 0x990951baU, 0x076dc419U, 0x706af48fU,
@@ -72,13 +72,14 @@ bool UpdateApp_EraseFlashMCU(void)
             address = (uint32_t)ADDR_APPA_START + ((uint32_t)(SIZE_ERASE_256B) * u32Index);
         }else
         {/*NEED TO CHECK STATUS*/
-            address = (uint32_t)ADDR_APPA_START + ((uint32_t)(SIZE_ERASE_256B) * u32Index);
+            address = (uint32_t)ADDR_APPB_START + ((uint32_t)(SIZE_ERASE_256B) * u32Index);
         }
         breturn = NVMDriver_RowErase(address);
         WdtApp_CleanCounter();
     }
     __enable_irq();
-    sprintf((char *)u8TxBuffer,"MCU ERASE OK\r\n");
+    sprintf((char *)u8TxBuffer,"[UPDATE]ERASE:MCU ERASE OK\r\n");
+    u16ChecksumMCU = 0U;
     UartDriver_TxWriteString(u8TxBuffer);
     RegisterApp_DHU_Setup(CMD_ERASE_FB,CMD_UPDATE_DATA_POS,CMD_FB_MCU_OK);
     I2CSlaveApp_UpdateCmdChecksumSet(CMD_ERASE_FB);
@@ -94,10 +95,10 @@ static void UpdateApp_FlashMCU(uint8_t u8DataBuffer[],uint32_t u32DataSerialNumb
         address = (uint32_t)ADDR_APPA_START + ((uint32_t)(SIZE_PACKUNIT_128B) * (u32DataSerialNumber-1U));
     }else{/* Do nothing*/}
     
-    if(APP_POS == 0x0A && u32DataSerialNumber >= POS_SN_AB_SEPERATE)
+    if((APP_POS == 0x0AU) && (u32DataSerialNumber > POS_SN_AB_SEPERATE))
     {
         FlashApp_WriteRowFlash(&u8DataBuffer[0],address,SIZE_PACKUNIT_128B);
-    }else if(APP_POS == 0x0B && u32DataSerialNumber < POS_SN_AB_SEPERATE)
+    }else if((APP_POS == 0x0B) && (u32DataSerialNumber < (POS_SN_AB_SEPERATE + 1U)))
     {
         FlashApp_WriteRowFlash(&u8DataBuffer[0],address,SIZE_PACKUNIT_128B);
     }else{
@@ -127,7 +128,7 @@ bool UpdateApp_TransferFlashMCU(void)
     }else{
         breturn = false;
     }
-    sprintf((char *)u8TxBuffer,"TRANSFER FINISHED - SN = %ld, Checksum = %d \r\n",u32DataSerialNumber,u16ChecksumMCU);
+    sprintf((char *)u8TxBuffer,"[UPDATE]TRANS:SN=%ld,DATASUM=0x%04X\r\n",u32DataSerialNumber,(uint16_t)u16ChecksumMCU);
     UartDriver_TxWriteString(u8TxBuffer);
     if(breturn == true)
     {
@@ -221,7 +222,7 @@ static uint8_t UpdateApp_CheckSumMCU(void)
 
     __enable_irq();
 
-    sprintf((char *)u8TxBuffer,"MCU CRC DONE. CRC:%lX u8MCUresult:%d size:%ld APP:%X APP Flag:%d RDdata:%08lX\r\n",UpdateApp_ByteReverse(u32ComputeCrc32),u8result,u32Index,APP_POS,0x0000000A,u32RDdata[0]);
+    sprintf((char *)u8TxBuffer,"[UPDATE]CRCSM:MCU CRC DONE. CRC:%lX u8MCUresult:%d size:%ld APP:%X APP Flag:%d RDdata:%08lX\r\n",UpdateApp_ByteReverse(u32ComputeCrc32),u8result,u32Index,APP_POS,0x0000000A,u32RDdata[0]);
     UartDriver_TxWriteString(u8TxBuffer);
     (void)u32data;
     (void)u8TxBuffer;
@@ -238,13 +239,13 @@ bool UpdateApp_ChecksumFlashMCU(void)
                         + (uint32_t)RegisterApp_DHU_Read(CMD_CRC_REQ,3U);
 
     /* Do Data Communication Checksum*/
-    if(u16ChecksumDHU == u16ChecksumMCU)
+    if(u16ChecksumDHU == (uint16_t)u16ChecksumMCU)
     {
         breturn &= true;
     }else{
         breturn &= false;
     }
-    sprintf((char *)u8TxBuffer,"DATA CRC DONE. CRC:%04X RDdata:%04X\r\n",u16ChecksumDHU,u16ChecksumMCU);
+    sprintf((char *)u8TxBuffer,"[UPDATE]CRCSM:DATA CRC DONE. Return:%d CRC:%04X RDdata:%04X\r\n",breturn,u16ChecksumDHU,(uint16_t)u16ChecksumMCU);
     UartDriver_TxWriteString(u8TxBuffer);
     /* Do MCU data self check*/
     if(UpdateApp_CheckSumMCU() == TRUE)
@@ -284,10 +285,11 @@ void UpdateApp_McuReset(void)
         /* Only for flash w/r test*/
         uint8_t Flag[4] = {APP_POSITION, 0x00, 0x00, 0x00};
         FlashApp_WriteRowFlash(&Flag[0],0x0001F000,4U);
+        sprintf((char *)u8TxBuffer,"[UPDATE]RESET:FLASH DONE. APP_POS Flag set as %02X\r\n",APP_POSITION);
+        UartDriver_TxWriteString(u8TxBuffer);
         __NOP();
         PowerApp_Sequence(LCD_OFF);
         PowerApp_Sequence(POWER_OFF);
         __NVIC_SystemReset();
     }
-    
 }

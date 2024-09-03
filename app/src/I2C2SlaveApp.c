@@ -103,7 +103,7 @@ static bool I2CSlaveApp_SubAddrWritePassCheck(uint8_t subaddr)
 static bool I2CSlaveApp_SubaddressUpdateCmdCheck(uint8_t subaddr)
 {
     bool bresult = false;
-    for (uint32_t cnt = 0U; cnt<DHU_WRITE_APPROVED_CMD_NUM; cnt++)
+    for (uint32_t cnt = 0U; cnt<DHU_CMD_UPDATE_NUM; cnt++)
     {
         if (TxCmdUpdatePool[cnt] == subaddr)
         {
@@ -394,5 +394,6 @@ bool I2C2SlaveApp_Initial(void)
         /* Do nothing*/
     }
     I2CSlaveApp_CmdSizeInitial();
+    I2CSlaveApp_UpdateCmdChecksumSet(CMD_UPDATESTATUS_FB);
     return bresult;
 }
