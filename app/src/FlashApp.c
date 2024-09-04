@@ -1,3 +1,27 @@
+/* ************************************************************************** */
+/** Descriptive File Name
+
+  @Company
+    AUO
+
+  @File Name
+    FlashApp.c
+
+  @Summary
+    Setup Flash relevent function for main function to call.
+
+  @Description
+    -Setup a function for flashing MCU memory.
+    -Setup a function for External Flash Write/Read.
+ */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+/* Section: Included Files                                                    */
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 #include "app/inc/FlashApp.h"
 #include "driver/inc/NVMDriver.h"
 

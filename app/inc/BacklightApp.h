@@ -3,15 +3,16 @@
 
 #include "main.h"
 
-/*With 100 section*/
-// #define BLT_SECTION 100U
-// #define BLT_100P    100U
-// #define BLT_60P     60U
-// #define BLT_20P     20U
-// #define BLT_0P      0U
-// #define BLT_PERIOD  19799U
-// #define BLT_UNITSTEP    ((BLT_PERIOD+1U)/BLT_SECTION)
-// #define BLT_GRADUAL_UNIT    0x04U
+/*With 100 section
+#define BLT_SECTION 100U
+#define BLT_100P    100U
+#define BLT_60P     60U
+#define BLT_20P     20U
+#define BLT_0P      0U
+#define BLT_PERIOD  19799U
+#define BLT_UNITSTEP    ((BLT_PERIOD+1U)/BLT_SECTION)
+#define BLT_GRADUAL_UNIT    0x04U
+*/
 
 /*With 3FF section*/
 #define BLT_SECTION 0x03FFU

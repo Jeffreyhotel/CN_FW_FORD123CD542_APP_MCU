@@ -2,16 +2,17 @@
 /** Descriptive File Name
 
   @Company
-    Company Name
+    AUO
 
   @File Name
-    filename.c
+    BatteryApp.c
 
   @Summary
-    Brief description of the file.
+    Encounter Battery Voltage detection and Battery protection mechanism.
 
   @Description
-    Describe the purpose of this file.
+    -Polling 10ms 20times moving average for battery protection mechanism.
+    -Setup a state machine to behavior the mechanism.
  */
 /* ************************************************************************** */
 

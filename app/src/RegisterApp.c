@@ -3,16 +3,16 @@
 /** Descriptive File Name
 
   @Company
-    Company Name
+    AUO
 
   @File Name
-    filename.c
+    RegisterApp.c
 
   @Summary
-    Brief description of the file.
+    Setup virtual register function.
 
   @Description
-    Describe the purpose of this file.
+    -Initial Register configuration.
  */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@
 /* Section: Included Files                                                    */
 /* ************************************************************************** */
 /* ************************************************************************** */
-
-/* This section lists the other files that are included in this file.
- */
 
 #include "app/inc/RegisterApp.h"
 

@@ -3,16 +3,17 @@
 /** Descriptive File Name
 
   @Company
-    Company Name
+    AUO
 
   @File Name
-    filename.c
+    TC0App.c
 
   @Summary
-    Brief description of the file.
+    Setup timer counter flow for polling task.
 
   @Description
-    Describe the purpose of this file.
+    -Setup timer counter mechanism.
+    -Polling time according to behavior requirement.
  */
 /* ************************************************************************** */
 
@@ -22,8 +23,6 @@
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-/* This section lists the other files that are included in this file.
- */
 #include "app/inc/TC0App.h"
 #include "app/inc/StackTaskApp.h"
 #include "driver/inc/TC0Driver.h"

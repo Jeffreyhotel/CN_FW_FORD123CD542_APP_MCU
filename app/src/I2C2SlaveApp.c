@@ -1,3 +1,27 @@
+/* ************************************************************************** */
+/** Descriptive File Name
+
+  @Company
+    AUO
+
+  @File Name
+    I2CSlaveApp.c
+
+  @Summary
+    Design I2c Slave interrupt behavior to fit FORD CD542 FIDM Interface.
+
+  @Description
+    -Design the behavior to fit IFS-MMI2C-SR-REQ-XXXXX.
+    -Transfer Task to Timer counter App (TC0App).
+ */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+/* Section: Included Files                                                    */
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 #include "I2C2SlaveApp.h"
 #include "I2C2SDriver.h"
 #include "app/inc/RegisterApp.h"

@@ -1,3 +1,27 @@
+/* ************************************************************************** */
+/** Descriptive File Name
+
+  @Company
+    AUO
+
+  @File Name
+    DiagApp.c
+
+  @Summary
+    Report Diag Information for Host cmd DISP_STATUS(0x00) & DTC(0xA3).
+
+  @Description
+    -Setup a function for IO/Register Check flow mechanism.
+    -Setup a function for Host cmd DISP_STATUS content status change.
+ */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+/* Section: Included Files                                                    */
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 #include "app/inc/DiagApp.h"
 #include "app/inc/RegisterApp.h"
 #include "app/inc/INTBApp.h"

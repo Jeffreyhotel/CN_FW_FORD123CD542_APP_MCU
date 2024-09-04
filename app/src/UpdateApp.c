@@ -1,3 +1,27 @@
+/* ************************************************************************** */
+
+/** Descriptive File Name
+
+  @Company
+    AUO
+
+  @File Name
+    UpdateApp.c
+
+  @Summary
+    Implement OTA function from HOST cmd according to update flow.
+
+  @Description
+    -Design OTA function- Erase/Flash/Checksum/Reset.
+ */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+/* Section: Included Files                                                    */
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 #include "app/inc/UpdateApp.h"
 #include "app/inc/FlashApp.h"
 #include "app/inc/RegisterApp.h"

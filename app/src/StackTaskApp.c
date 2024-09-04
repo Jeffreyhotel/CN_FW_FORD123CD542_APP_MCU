@@ -1,14 +1,20 @@
 /* ************************************************************************** */
+
 /** Descriptive File Name
+
   @Company
     AUO
+
   @File Name
-    MainApp.c
+    StackTaskApp.c
+
   @Summary
-    Start state machine with function - Power Management APP.
+    Encounter Task Mission mechanism.
+
   @Description
-    RUN Main APP with State .
- **/
+    -Setup Task mechanism.
+    -Define Task behavior.
+ */
 /* ************************************************************************** */
 
 /* ************************************************************************** */
@@ -16,9 +22,6 @@
 /* Section: Included Files                                                    */
 /* ************************************************************************** */
 /* ************************************************************************** */
-
-/* This section lists the other files that are included in this file.
- */
 
 #include "app/inc/StackTaskApp.h"
 #include "app/inc/BacklightApp.h"

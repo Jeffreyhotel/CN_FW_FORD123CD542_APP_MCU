@@ -1,3 +1,26 @@
+/* ************************************************************************** */
+/** Descriptive File Name
+
+  @Company
+    AUO
+
+  @File Name
+    INTBApp.c
+
+  @Summary
+    Design INTB behavior to fit FORD CD542 FIDM Interface.
+
+  @Description
+    -Design a state machine to fit INTB requirement in SPSS.
+ */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+/* Section: Included Files                                                    */
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 #include "app/inc/INTBApp.h"
 #include "app/inc/TC0App.h"
 #include "driver/inc/PortDriver.h"

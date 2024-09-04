@@ -1,3 +1,27 @@
+/* ************************************************************************** */
+/** Descriptive File Name
+
+  @Company
+    AUO
+
+  @File Name
+    DeviceApp.c
+
+  @Summary
+    Show the SPSS part number information into register for Host requestion.
+
+  @Description
+    -Setup part number information at the start of MCU process (BOOT MODE).
+    -Setup a back-door cmd for perpheral driver usage.
+ */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+/* Section: Included Files                                                    */
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 #include "app/inc/DeviceApp.h"
 #include "app/inc/RegisterApp.h"
 #include "driver/inc/PortDriver.h"

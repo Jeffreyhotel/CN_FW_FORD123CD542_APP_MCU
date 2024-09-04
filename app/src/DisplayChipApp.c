@@ -1,3 +1,26 @@
+/* ************************************************************************** */
+/** Descriptive File Name
+
+  @Company
+    AUO
+
+  @File Name
+    DisplayChipApp.c
+
+  @Summary
+    Setup LCD Driver relevent function for main function to call.
+
+  @Description
+    -Setup a function for LCD Fault check.
+ */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+/* Section: Included Files                                                    */
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 #include "app/inc/DisplayChipApp.h"
 #include "app/inc/RegisterApp.h"
 #include "app/inc/DiagApp.h"

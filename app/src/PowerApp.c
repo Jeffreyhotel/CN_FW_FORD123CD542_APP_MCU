@@ -1,3 +1,28 @@
+/* ************************************************************************** */
+/** Descriptive File Name
+
+  @Company
+    AUO
+
+  @File Name
+    PowerApp.c
+
+  @Summary
+    Design Power relevent function with MCU GPIO/ADC control.
+
+  @Description
+    -Power Sequence design
+    -LED Driver function
+    -TFT Driver function
+ */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/* ************************************************************************** */
+/* Section: Included Files                                                    */
+/* ************************************************************************** */
+/* ************************************************************************** */
+
 #include "app/inc/PowerApp.h"
 #include "app/inc/TC0App.h"
 #include "app/inc/DiagApp.h"
@@ -37,7 +62,6 @@ void PowerApp_Sequence(uint8_t u8Action)
         PortDriver_PinClear(P1V2_EN_PORT,P1V2_EN_PIN);
         TC0App_DelayMS(5U);
         PortDriver_PinClear(VBATT_EN_PORT,VBATT_EN_PIN);
-        
         break;
 
     case LCD_ON:
