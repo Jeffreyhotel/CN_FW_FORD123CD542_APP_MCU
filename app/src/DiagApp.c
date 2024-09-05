@@ -168,9 +168,9 @@ void DiagApp_I2CMasterFaultCheck(bool set ,uint8_t u8DiagI2cFaultMask)
 {
     if(set)
     {
-        u8DiagI2cFaultStatus &= u8DiagI2cFaultMask;
+        u8DiagI2cFaultStatus |= u8DiagI2cFaultMask;
     }else{
-        u8DiagI2cFaultStatus &= !u8DiagI2cFaultMask;
+        u8DiagI2cFaultStatus &= ~u8DiagI2cFaultMask;
     }
     RegisterApp_DHU_Setup(CMD_DTC,DTC_I2CM_FAULT,u8DiagI2cFaultStatus);
 }

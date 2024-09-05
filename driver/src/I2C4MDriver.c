@@ -288,6 +288,7 @@ uint8_t I2C4MDriver_WriteRead(uint16_t address, uint8_t* wrData, uint32_t wrLeng
     else
     {
         /* do not requite any actions*/
+        I2C4MDriver_Initialize();
     }
     if(status == CY_SCB_I2C_MASTER_MANUAL_TIMEOUT){
         Cy_SCB_I2C_Disable(I2C4M_MCU_HW, &I2C4M_MCU_context);

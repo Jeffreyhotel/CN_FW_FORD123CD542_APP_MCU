@@ -182,6 +182,10 @@ void UartApp_ReadFlow()
                     }
                     break;
 
+                case 0xA0U:
+                    I2C4MDriver_Initialize();
+                    break;
+                
                 case 0xFFU:
                     /* Write-Read code */
                     if(rdBuffer[0] > UART_CMD_WR_DATA_POS)
