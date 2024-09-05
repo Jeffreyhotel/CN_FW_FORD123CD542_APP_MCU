@@ -35,6 +35,7 @@ static uint8_t u8DiagDispByte0 = 0x00U;
 static uint8_t u8DiagDispByte1 = 0x01U;
 static uint8_t u8TxBuffer[80] = {0};
 static uint8_t u8DiagRstReqStatus = 0x00U;
+static uint8_t u8DiagIsrStatus = 0x00U;
 static uint8_t u8DiagI2cFaultStatus = 0x00U;
 
 void DiagApp_DispStatusClear(uint8_t ByteNumber, uint8_t MaskValue)
@@ -58,7 +59,8 @@ void DiagApp_DispStatusClear(uint8_t ByteNumber, uint8_t MaskValue)
         ((u8OldByte1 & DISP1_LATCHED_MASK) != (u8DiagDispByte1 & DISP1_LATCHED_MASK)))
     {
         INTBApp_PullReqSetOrClear(INTB_REQ_SET);
-        RegisterApp_DHU_Setup(CMD_ISR_STATUS,CMD_DATA_POS,INTB_INT_ERR_SET);
+        //RegisterApp_DHU_Setup(CMD_ISR_STATUS,CMD_DATA_POS,INTB_INT_ERR_SET);
+        DiagApp_RtnIsrCheck(true,INTB_INT_ERR_MASK);
     }
     (void)u8OldByte0;
     (void)u8OldByte1;
@@ -85,7 +87,8 @@ void DiagApp_DispStatusSet(uint8_t ByteNumber, uint8_t MaskValue)
         ((u8OldByte1 & DISP1_LATCHED_MASK) != (u8DiagDispByte1 & DISP1_LATCHED_MASK)))
     {
         INTBApp_PullReqSetOrClear(INTB_REQ_SET);
-        RegisterApp_DHU_Setup(CMD_ISR_STATUS,CMD_DATA_POS,INTB_INT_ERR_SET);
+        //RegisterApp_DHU_Setup(CMD_ISR_STATUS,CMD_DATA_POS,INTB_INT_ERR_SET);
+        DiagApp_RtnIsrCheck(true,INTB_INT_ERR_MASK);
     }
     (void)u8OldByte0;
     (void)u8OldByte1;
@@ -161,6 +164,19 @@ bool DiagApp_RtnRstRequestCheck(bool set ,uint8_t u8DiagRstReqMask)
         BacklightApp_RstRqSwitchSet(BLT_ENABLE);
     }
     RegisterApp_DHU_Setup(CMD_DTC,DTC_RST_RQ,u8DiagRstReqStatus);
+    return breturn;
+}
+
+bool DiagApp_RtnIsrCheck(bool set,uint8_t u8DiagIsrMask)
+{
+    bool breturn = false;
+    if(set)
+    {
+        u8DiagIsrStatus |= u8DiagIsrMask;
+    }else{
+        u8DiagIsrStatus &= ~u8DiagIsrMask;
+    }
+    RegisterApp_DHU_Setup(CMD_ISR_STATUS,CMD_DATA_POS,u8DiagIsrStatus);
     return breturn;
 }
 

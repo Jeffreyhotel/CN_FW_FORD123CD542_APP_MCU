@@ -29,6 +29,7 @@
 #include "app/inc/TC0App.h"
 #include "app/inc/StackTaskApp.h"
 #include "app/inc/BacklightApp.h"
+#include "app/inc/DiagApp.h"
 
 #define DHU_CMD_TOTAL_NUM    25U
 #define DHU_WRITE_APPROVED_CMD_NUM    10U
@@ -281,7 +282,8 @@ static void I2CSlaveApp_TxReadTransferDone(uint8_t subaddr)
         {
         case CMD_DISP_STATUS:
             /* Check the DISP_STATUS has been sent, then Clear INT_ERR*/
-            RegisterApp_DHU_Setup(CMD_ISR_STATUS,CMD_DATA_POS,INTB_INT_ERR_CLEAR);
+            //RegisterApp_DHU_Setup(CMD_ISR_STATUS,CMD_DATA_POS,INTB_INT_ERR_CLEAR);
+            DiagApp_RtnIsrCheck(false,INTB_INT_ERR_MASK);
             break;
         
         case CMD_CRC_FB:

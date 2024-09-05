@@ -60,6 +60,7 @@ void DiagApp_DispStatusSet(uint8_t ByteNumber, uint8_t MaskValue);
 uint8_t DiagApp_ConsecutiveCheckIO(DiagIO* ds);
 uint8_t DiagApp_ConsecutiveCheckRegister(DiagIO* ds,bool isgood);
 void DiagApp_I2CMasterFaultCheck(bool set ,uint8_t u8DiagI2cFaultMask);
+bool DiagApp_RtnIsrCheck(bool set ,uint8_t u8DiagIsrMask);
 bool DiagApp_RtnRstRequestCheck(bool set ,uint8_t u8DiagRstReqMask);
 void DiagApp_LcdFaultCheckFlow(void);
 void DiagApp_LedFaultCheckFlow(void);
