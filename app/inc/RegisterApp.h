@@ -38,6 +38,8 @@
 #define CMD_CRC_FB                  0xF8U
 #define CMD_UPDATESTATUS_FB         0xF9U
 
+#define CMD_FAB_CTRL                0xF1U
+
 /* Define DHU Update Command reply*/
 #define CMD_FB_MCU_OK               0x43U
 #define CMD_FB_FAIL                 0x74U

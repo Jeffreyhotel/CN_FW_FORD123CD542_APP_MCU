@@ -23,6 +23,7 @@
 #define TASK_UPDATE_TRANS   0xE7U
 #define TASK_UPDATE_CRCSM   0xE8U
 #define TASK_UPDATE_RESET   0xF8U
+#define TASK_FAB_CTRL       0xF1U
 
 typedef struct{
     volatile uint8_t data[StackTaskMaxSize];

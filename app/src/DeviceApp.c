@@ -24,7 +24,9 @@
 
 #include "app/inc/DeviceApp.h"
 #include "app/inc/RegisterApp.h"
+#include "app/inc/FlashApp.h"
 #include "driver/inc/PortDriver.h"
+#include "driver/inc/I2C4MDriver.h"
 
 /*
 **  Ascii to Hex Converter: https://zh-tw.rakko.tools/tools/77/
@@ -105,4 +107,108 @@ void DeviceApp_Intial(void)
     {
         RegisterApp_DHU_Setup(CMD_MC_FPN,CMD_DATA_POS+index,DV_MAINCAL_FPN[index]);
     }
+}
+
+void DeviceApp_0xF1FabCommCtrl(void)
+{
+    uint8_t u8CommObject; /*OBJECT:SERCOM0~5...*/
+    uint8_t u8CommType;   /*TYPE:Read,Write,Init,Deinit*/
+    uint8_t u8CommAddr;   /*Address*/
+    uint8_t u8CommLength; /*Length*/
+    uint8_t TxBuff[256] = {0U};
+    uint8_t RxBuff[256] = {0U};
+
+    u8CommObject = RegisterApp_DHU_Read(CMD_FAB_CTRL, CMD_DATA_POS + 2U);
+    u8CommType = RegisterApp_DHU_Read(CMD_FAB_CTRL, CMD_DATA_POS + 3U);
+    u8CommAddr = RegisterApp_DHU_Read(CMD_FAB_CTRL, CMD_DATA_POS + 4U);
+    u8CommLength = RegisterApp_DHU_Read(CMD_FAB_CTRL, CMD_DATA_POS + 5U);
+
+    switch (u8CommType)
+    {
+    case CommType_WRITE:
+        /* code */
+        for(uint8_t index = 0U; index < u8CommLength; index++)
+        {
+            TxBuff[index] = RegisterApp_DHU_Read(CMD_FAB_CTRL,CMD_DATA_POS+2U+4U+index);
+        }
+        (void)I2C4MDriver_Write(u8CommAddr,TxBuff,u8CommLength);
+        break;
+
+    case CommType_READ:
+        /* code */
+        (void)I2C4MDriver_Read(u8CommAddr,RxBuff,u8CommLength);
+        RegisterApp_DHU_Setup(0xF2U,0x00U,u8CommObject);
+        RegisterApp_DHU_Setup(0xF2U,0x01U,u8CommAddr);
+        RegisterApp_DHU_Setup(0xF2U,0x02U,u8CommLength);
+        for(uint8_t index = 0U; index < u8CommLength; index++)
+        {
+            RegisterApp_DHU_Setup(0xF2U,index+3U,RxBuff[index]);
+        }
+        break;
+
+    case CommType_INIT:
+        /* code */
+        I2C4MDriver_Initialize();
+        break;
+
+    case CommType_STOP:
+        /* code */
+        
+        break;
+
+    case CommType_UARTENABLE:
+        /* code */
+        
+        break;
+
+    case CommType_UARTDISABLE:
+        /* code */
+        
+        break;
+
+    case CommType_PortRead:
+        /* code */
+        RegisterApp_DHU_Setup(0xF2U,0x00U,0xFFU);
+        RegisterApp_DHU_Setup(0xF2U,0x01U,u8CommAddr);
+        RegisterApp_DHU_Setup(0xF2U,0x02U,0xFFU);
+        RegisterApp_DHU_Setup(0xF2U,0x03U,PortDrvier_PinRead(((GPIO_PRT_Type*) &GPIO->PRT[(u8CommAddr>>4)]),(u8CommAddr&0x0F)));
+        break;
+
+    case CommType_PortSet:
+        /* code */
+        RegisterApp_DHU_Setup(0xF2U,0x00U,0xFFU);
+        RegisterApp_DHU_Setup(0xF2U,0x01U,u8CommAddr);
+        RegisterApp_DHU_Setup(0xF2U,0x02U,0xFFU);
+        (void)PortDriver_PinSet(((GPIO_PRT_Type*) &GPIO->PRT[(u8CommAddr>>4)]),(u8CommAddr&0x0F));
+        RegisterApp_DHU_Setup(0xF2U,0x03U,PortDrvier_PinRead(((GPIO_PRT_Type*) &GPIO->PRT[(u8CommAddr>>4)]),(u8CommAddr&0x0F)));
+        break;
+
+    case CommType_PortClean:
+        /* code */
+        RegisterApp_DHU_Setup(0xF2U,0x00U,0xFFU);
+        RegisterApp_DHU_Setup(0xF2U,0x01U,u8CommAddr);
+        RegisterApp_DHU_Setup(0xF2U,0x02U,0xFFU);
+        (void)PortDriver_PinClear(((GPIO_PRT_Type*) &GPIO->PRT[(u8CommAddr>>4)]),(u8CommAddr&0x0F));
+        RegisterApp_DHU_Setup(0xF2U,0x03U,PortDrvier_PinRead(((GPIO_PRT_Type*) &GPIO->PRT[(u8CommAddr>>4)]),(u8CommAddr&0x0F)));
+        break;
+
+    case CommType_FLASHWRITE:
+        
+        break;
+
+    case CommType_FLASHREAD:
+        
+        break;
+
+    default:
+        // default
+        break;
+    }
+
+    (void)u8CommObject;
+    (void)u8CommAddr;
+    (void)u8CommLength;
+    (void)u8CommType;
+    (void)TxBuff;
+    (void)RxBuff;
 }
