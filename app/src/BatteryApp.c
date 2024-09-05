@@ -181,6 +181,8 @@ static uint8_t BatteryApp_OverPower_Mode(uint8_t STAGE)
     default:
         /*TURN OFF(BACKLIGHT PWM)*/
         BacklightApp_BattProtectSet(TRUE);
+        /*POWER OFF(SHUT-DOWN)*/
+        RegisterApp_DHU_Setup(CMD_DISP_SHUTD,CMD_DATA_POS,0x01);
         u8Return = BT_OVERPOWER;
         break;
     }
