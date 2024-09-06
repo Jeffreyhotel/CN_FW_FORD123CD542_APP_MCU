@@ -250,10 +250,7 @@ void DiagApp_LcdFaultCheckFlow(void)
     uint8_t u8Status1 = IO_STATUS_SWIM;
     u8Status1 = DiagApp_ConsecutiveCheckIO(&FAULT_LCD);
     if(IO_STATUS_HIGH == u8Status1){
-        if(IO_HIGH == PortDrvier_PinRead(DISP_FAULT_PORT,DISP_FAULT_PIN))
-        {
-            DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
-        }else{/* Do Nothing*/}
+        DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
         DiagApp_RtnRstRequestCheck(false,DIAG_RST_LCD_MASK);
         FAULT_LCD.Report = true;
     }else if(IO_STATUS_LOW == u8Status1){
@@ -302,11 +299,9 @@ void DiagApp_BiasFaultCheckFlow(void)
     uint8_t u8Status2 = IO_STATUS_SWIM;
     u8Status1 = DiagApp_ConsecutiveCheckIO(&FAULT_BIAS);
     if(IO_STATUS_HIGH == u8Status1){
-        /* Recovery mechanism merge to LCD FAULT
-        DiagApp_DispStatusClear(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
-        */
-       DiagApp_RtnRstRequestCheck(false,DIAG_RST_BIAS_MASK);
-       FAULT_BIAS.Report = true;
+        DiagApp_DispStatusClear(DISP_STATUS_BYTE1,DISP1_DISPERR_MASK);
+        DiagApp_RtnRstRequestCheck(false,DIAG_RST_BIAS_MASK);
+        FAULT_BIAS.Report = true;
     }else if(IO_STATUS_LOW == u8Status1){
         /* Get error info & latch disp status bit*/
         if(FAULT_BIAS.Report == true)
@@ -314,7 +309,7 @@ void DiagApp_BiasFaultCheckFlow(void)
             PowerApp_RTQ6749_FaultCheck();
             FAULT_BIAS.Report = false;
         }
-        DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
+        DiagApp_DispStatusSet(DISP_STATUS_BYTE1,DISP1_DISPERR_MASK);
         DiagApp_RtnRstRequestCheck(true,DIAG_RST_BIAS_MASK);
     }else{
         FAULT_BIAS.Report = true;
