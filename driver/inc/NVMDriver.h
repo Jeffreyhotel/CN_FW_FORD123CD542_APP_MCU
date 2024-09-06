@@ -49,8 +49,9 @@
 bool NVMDriver_Read( uint32_t *data, uint32_t length, const uint32_t address );
 cy_en_flashdrv_status_t NVMDriver_PageWrite( uint8_t *u8data, const uint32_t u32address);
 bool NVMDriver_RowErase(uint32_t address);
+#if 0
 bool NVMDriver_IsBusy(void);
-
+#endif
 #endif /* _EXAMPLE_FILE_NAME_H */
 /* *****************************************************************************
  End of File
