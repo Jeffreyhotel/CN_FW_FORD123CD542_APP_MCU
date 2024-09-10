@@ -67,7 +67,8 @@
 #define DTC_LCD_FAULT_0x1A          0x0FU
 #define DTC_LCD_FAULT_0x1B          0x10U
 #define DTC_LCD_FAULT_0x1C          0x11U
-#define DTC_I2CM_FAULT              0x12U
+#define DTC_LCD_FAULT_0x1F          0x12U
+#define DTC_I2CM_FAULT              0x13U
 #define DTC_BATT_VOLT_ADC           0x17U
 #define DTC_BLT_TEMP_ADC            0x19U
 #define DTC_PCB_TEMP_ADC            0x1BU

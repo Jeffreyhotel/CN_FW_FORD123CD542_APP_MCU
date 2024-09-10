@@ -256,11 +256,11 @@ void DiagApp_LcdFaultCheckFlow(void)
     }else if(IO_STATUS_LOW == u8Status1){
         if(FAULT_LCD.Report == true)
         {
+            /* Do RST_RQ mechanism in FaultCheck function*/
             DisplayChipApp_FaultCheck();
             FAULT_LCD.Report = false;
         }
         DiagApp_DispStatusSet(DISP_STATUS_BYTE0,DISP0_LCDERR_MASK);
-        DiagApp_RtnRstRequestCheck(true,DIAG_RST_LCD_MASK);
     }else{
         /* When voltage at swim state, Do nothing*/
         FAULT_LCD.Report = true;
