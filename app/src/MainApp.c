@@ -30,6 +30,7 @@
 #include "app/inc/PowerApp.h"
 #include "app/inc/FlashApp.h"
 #include "app/inc/DiagApp.h"
+#include "app/inc/UartApp.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/I2C4MDriver.h"
@@ -270,6 +271,7 @@ static uint8_t MainApp_Shutdown_Mode(uint8_t u8Nothing)
     PowerApp_Sequence(LCD_OFF);
     PowerApp_Sequence(POWER_OFF);
     TC0App_DelayMS(500U);
+    UartApp_ReadFlow();
     sprintf((char *)u8TxBuffer,"ShutDown... wait for power down\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
     u8Return = STATE_SHUTDOWN;
