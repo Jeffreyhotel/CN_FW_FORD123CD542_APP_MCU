@@ -33,6 +33,7 @@
 #include "app/inc/UartApp.h"
 #include "app/inc/PowerApp.h"
 #include "app/inc/UpdateApp.h"
+#include "app/inc/DisplayChipApp.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/I2C4MDriver.h"
@@ -227,6 +228,10 @@ void StackTaskApp_MissionAction(void)
 
         case TASK_LCDFLOW:
             DiagApp_LcdFaultCheckFlow();
+        break;
+
+        case TASK_LCDVERS:
+            DisplayChipApp_VerCheck();
         break;
 
         case TASK_UPDATE_ERASE:

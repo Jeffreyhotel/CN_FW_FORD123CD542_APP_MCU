@@ -75,5 +75,34 @@ void DisplayChipApp_FaultCheck()
         UartDriver_TxWriteString(u8TxBuffer);
     }else{
         /* Do nothing*/
+        DiagApp_I2CMasterFaultCheck(false,DIAG_I2CM_LCD_MASK);
+    }
+}
+
+void DisplayChipApp_VerCheck()
+{
+    uint8_t u8Status;
+    uint8_t u8ChipVersion[1] = {0};
+    uint8_t u8PageCmd[2] = {0x1EU,0x7FU};
+    uint8_t u8ReadRegister[1] = {0x01U};
+    u8Status = I2C4MDriver_Write(CHIP_ADDR,u8PageCmd,sizeof(u8PageCmd));
+    if(u8Status == ERROR_NONE){
+        u8Status = I2C4MDriver_WriteRead(CHIP_ADDR,u8ReadRegister,sizeof(u8ReadRegister),&u8ChipVersion[0],1U);
+        if(u8Status != ERROR_NONE){
+            /* Do nothing*/
+        }else{
+            RegisterApp_DHU_Setup(CMD_DTC,DTC_DDI_VERSION,u8ChipVersion[0]);
+            sprintf((char *)u8TxBuffer,"VERSION CHECK > LCD Ver: 0x%02x\r\n",u8ChipVersion[0]);
+            UartDriver_TxWriteString(u8TxBuffer);
+        }
+    }else{
+        /* Do nothing*/
+    }
+    if(u8Status != ERROR_NONE){
+        DiagApp_I2CMasterFaultCheck(true,DIAG_I2CM_LCD_MASK);
+        UartDriver_TxWriteString(u8TxBuffer);
+    }else{
+        /* Do nothing*/
+        DiagApp_I2CMasterFaultCheck(false,DIAG_I2CM_LCD_MASK);
     }
 }

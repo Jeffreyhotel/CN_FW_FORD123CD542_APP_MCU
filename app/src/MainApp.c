@@ -123,6 +123,7 @@ static uint8_t MainApp_PreNormal_Mode(uint8_t u8Nothing)
     DiagApp_DispStatusSet(DISP_STATUS_BYTE1,DISP1_BLST_MASK);
     sprintf((char *)u8TxBuffer,"PRENORMAL FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
+    StackTaskApp_MissionPush(TASK_LCDVERS);
     /* Need to put at the end of prenormal task*/
     (void) u8Nothing;
     return STATE_NORMAL;
