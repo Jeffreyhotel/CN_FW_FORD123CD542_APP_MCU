@@ -98,6 +98,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     TC0App_NormalWorkStartSet(TRUE);
     DiagApp_CheckFlowInitial();
     sprintf((char *)u8TxBuffer,"BOOT FINISHED, PC:0x%lX, POS:%02X\r\n",PC,MCU_POSITION);
+    RegisterApp_DHU_Setup(CMD_DTC,DTC_APP_POS,MCU_POSITION);
     UartDriver_TxWriteString(u8TxBuffer);
     /* Only for flash w/r test*/
     // uint8_t Flag[4] = {0x0F, 0x00, 0x00, 0x00};
@@ -327,7 +328,12 @@ static uint8_t MainApp_Flow(uint8_t u8State)
             u8CurrentState = STATE_BOOT;
         break;
     }
-
+    if(u8State != 0x00U)
+    {
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_MAIN_STATE,u8State);
+    }else{
+        /* Do nothing*/
+    }
     return u8CurrentState;
 }
 

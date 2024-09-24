@@ -23,6 +23,7 @@
 
 #include "app/inc/INTBApp.h"
 #include "app/inc/TC0App.h"
+#include "app/inc/RegisterApp.h"
 #include "driver/inc/PortDriver.h"
 
 static uint8_t u8IntbCurrentState = INTB_STATE_INIT;
@@ -155,4 +156,5 @@ void INTBApp_Flow(void)
             u8IntbCurrentState = INTB_STATE_INIT;
         break;
     }
+    RegisterApp_DHU_Setup(CMD_DTC,DTC_INTB_STATE,u8IntbCurrentState);
 }

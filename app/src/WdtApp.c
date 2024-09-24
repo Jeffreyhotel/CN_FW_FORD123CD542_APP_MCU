@@ -81,6 +81,7 @@ void WdtApp_InterruptCallback(void)
     uint8_t wdt_casue = 0U;
     wdt_casue = StackTaskApp_TaskNumberReturn();
     sprintf((char *)u8TxBuffer,"WDT Timeout by 0x%02X:FAULT!\r\n",wdt_casue);
+    RegisterApp_DHU_Setup(CMD_DTC,DTC_WDT_ALARM,wdt_casue);
     UartDriver_TxWriteString(u8TxBuffer);
 }
 

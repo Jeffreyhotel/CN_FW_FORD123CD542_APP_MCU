@@ -42,28 +42,28 @@ uint16_t gu16BattVoltSample[BATT_SAMPLE_CNT] = {0U};
 /*DTC 240321*/
 #define BT_VOLT0   755U
 /*5V*/
-#define BT_VOLT1   906U    
+#define BT_VOLT1   906U
 /*6V*/
-#define BT_VOLT2   1208U    
+#define BT_VOLT2   1208U
 /*8V-Hysteresis*/
-#define BT_VOLT3   2718U    
+#define BT_VOLT3   2718U
 /*18V*/
-#define BT_VOLT4   3020U    
+#define BT_VOLT4   3020U
 /*20V-Hysteresis*/
-#define BT_VOLT5   3322U    
+#define BT_VOLT5   3322U
 /*22V*/ 
-#define BT_VOLT6   4095U    
+#define BT_VOLT6   4095U
 /*24V*/
 
 #define BT_STAGE0   0x00U
 #define BT_STAGE1   0x01U
-#define BT_STAGE2   0x02U   
+#define BT_STAGE2   0x02U
 /*Hysteresis*/
 
-#define BT_STAGE3   0x03U   
+#define BT_STAGE3   0x03U
 /*Normal*/
 
-#define BT_STAGE4   0x04U   
+#define BT_STAGE4   0x04U
 /*Hysteresis*/
 
 #define BT_STAGE5   0x05U
@@ -276,11 +276,10 @@ void BatteryApp_Flow(void)
 	{
         /*DO NOTHING*/
 	}
+    RegisterApp_DHU_Setup(CMD_DTC,DTC_BATT_STATE,guBatteryStatus);
     guBatteryStatus = CurrentStatus;
-	
 	(void)VoltStage;
 	(void)u16MABatt;
-	
 }
 /* *****************************************************************************
  End of File

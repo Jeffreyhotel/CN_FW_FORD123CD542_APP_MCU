@@ -92,7 +92,7 @@ static uint8_t StackTaskApp_Push(Stack* stack, uint8_t u8TaskNumber)
     {
         /*Over Flow Error Flag*/
         ErrorFlag = 1U;
-        //RegisterApp_DHU_Setup(CMDID_COMP,COMP_OFFSET_OVERFLOW,0xFF);
+        RegisterApp_DHU_Setup(CMD_DTC,DTC_TASK_OVERFLOW,0xEFU);
     }
     else
     {

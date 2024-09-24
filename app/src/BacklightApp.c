@@ -365,6 +365,7 @@ void BacklightApp_DeratingFlow(void)
     }else{
         /*DO NOTHING*/
     }
+    RegisterApp_DHU_Setup(CMD_DTC,DTC_BKLT_STATE,u8BLT_DERATING_STATUS);
     u8BLT_DERATING_STATUS = CurrentStatus;
     //sprintf((char *)u8TxBuffer,"TEMP %d STATE %d\r\n",u16MATemp,CurrentStatus);
     //UartDriver_TxWriteString((uint8_t*)u8TxBuffer);
