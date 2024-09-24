@@ -27,6 +27,8 @@
 #include "app/inc/FlashApp.h"
 #include "driver/inc/PortDriver.h"
 #include "driver/inc/I2C4MDriver.h"
+#include "driver/inc/NVMDriver.h"
+#include "driver/inc/UartDriver.h"
 
 /*
 **  Ascii to Hex Converter: https://zh-tw.rakko.tools/tools/77/
@@ -77,11 +79,17 @@ static uint8_t DV_MAINCAL_FPN[NUM_MAINCAL_FPN] = {
 
 void DeviceApp_Intial(void)
 {
+    uint32_t u32data[1] = {0U};
+    uint8_t u8TxBuffer[60] = {0};
     uint8_t u8HW_Ver = PortDrvier_PinRead(PCBA_A0_PORT,PCBA_A0_PIN)
                      +(PortDrvier_PinRead(PCBA_A1_PORT,PCBA_A1_PIN)<<1)
                      +(PortDrvier_PinRead(PCBA_A2_PORT,PCBA_A2_PIN)<<2)
                      +(PortDrvier_PinRead(PCBA_A3_PORT,PCBA_A3_PIN)<<3);
     RegisterApp_DHU_Setup(CMD_DTC,DTC_SW_VERSION,SUBREVISION_SW_VER);
+    while(!NVMDriver_Read(u32data,16U,0x00002FFCU));
+    RegisterApp_DHU_Setup(CMD_DTC,DTC_BL_VERSION,(uint8_t)(u32data[0]>>24));
+    sprintf((char *)u8TxBuffer,"DTC_BL_VERSION:%02X\r\n",(uint8_t)(u32data[0]>>24));
+    UartDriver_TxWriteString(u8TxBuffer);
     RegisterApp_DHU_Setup(CMD_DTC,DTC_HW_VERSION,u8HW_Ver);
     for(uint16_t index=0;index<NUM_DISP_ID;index++)
     {
