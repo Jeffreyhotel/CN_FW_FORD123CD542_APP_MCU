@@ -131,7 +131,8 @@ void DeviceApp_0xF1FabCommCtrl(void)
     u8CommType = RegisterApp_DHU_Read(CMD_FAB_CTRL, CMD_DATA_POS + 3U);
     u8CommAddr = RegisterApp_DHU_Read(CMD_FAB_CTRL, CMD_DATA_POS + 4U);
     u8CommLength = RegisterApp_DHU_Read(CMD_FAB_CTRL, CMD_DATA_POS + 5U);
-    for(uint32_t u32index = 0U; u32index < 80U; u32index++)
+    u8CommLength = (u8CommLength < 65U) ? u8CommLength : 64U;
+    for(uint32_t u32index = 0U; u32index < RegisterMaxSize; u32index++)
     {
         RegisterApp_DHU_Setup(CMD_FAB_CTRLRD, u32index, 0xFFU);
     }
@@ -141,7 +142,7 @@ void DeviceApp_0xF1FabCommCtrl(void)
         /* code */
         for(uint8_t index = 0U; index < u8CommLength; index++)
         {
-            TxBuff[index] = RegisterApp_DHU_Read(CMD_FAB_CTRL,CMD_DATA_POS+2U+4U+index);
+            TxBuff[index] = RegisterApp_DHU_Read(CMD_FAB_CTRL,CMD_DATA_POS + 6U + index);
         }
         (void)I2C4MDriver_Write(u8CommAddr,TxBuff,u8CommLength);
         break;
@@ -149,12 +150,14 @@ void DeviceApp_0xF1FabCommCtrl(void)
     case CommType_READ:
         /* code */
         (void)I2C4MDriver_Read(u8CommAddr,RxBuff,u8CommLength);
-        RegisterApp_DHU_Setup(CMD_FAB_CTRLRD,0x00U,u8CommObject);
-        RegisterApp_DHU_Setup(CMD_FAB_CTRLRD,0x01U,u8CommAddr);
-        RegisterApp_DHU_Setup(CMD_FAB_CTRLRD,0x02U,u8CommLength);
+        RegisterApp_DHU_Setup(CMD_FAB_CTRLRD,0x00U,CMD_FAB_CTRLRD);
+        RegisterApp_DHU_Setup(CMD_FAB_CTRLRD,0x01U,u8CommObject);
+        RegisterApp_DHU_Setup(CMD_FAB_CTRLRD,0x02U,u8CommAddr);
+        RegisterApp_DHU_Setup(CMD_FAB_CTRLRD,0x03U,u8CommType);
+        RegisterApp_DHU_Setup(CMD_FAB_CTRLRD,0x04U,u8CommLength);
         for(uint8_t index = 0U; index < u8CommLength; index++)
         {
-            RegisterApp_DHU_Setup(CMD_FAB_CTRLRD,index+3U,RxBuff[index]);
+            RegisterApp_DHU_Setup(CMD_FAB_CTRLRD,index+5U,RxBuff[index]);
         }
         break;
 
