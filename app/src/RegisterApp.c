@@ -87,6 +87,9 @@ void RegisterApp_Initial(Register* pRegisterContainer)
             pRegisterContainer->DHU_0XF7_TRANSFER_FB[address]       = CMD_TRANSFER_FB;
             pRegisterContainer->DHU_0XF8_CRC_FB[address]            = CMD_CRC_FB;
             pRegisterContainer->DHU_0XF9_UPDATESTATUS_FB[address]   = CMD_UPDATESTATUS_FB;
+
+            pRegisterContainer->DHU_0XF1_FAB_CTRL[address]          = CMD_FAB_CTRL;
+            pRegisterContainer->DHU_0XF2_FAB_CTRLRD[address]        = CMD_FAB_CTRLRD;
         }else{
             pRegisterContainer->DHU_0X00_DISP_STATUS[address]       = 0x00U;
             pRegisterContainer->DHU_0X01_DISP_ID[address]           = 0x00U;
@@ -114,6 +117,9 @@ void RegisterApp_Initial(Register* pRegisterContainer)
             pRegisterContainer->DHU_0XF7_TRANSFER_FB[address]       = 0x00U;
             pRegisterContainer->DHU_0XF8_CRC_FB[address]            = 0x00U;
             pRegisterContainer->DHU_0XF9_UPDATESTATUS_FB[address]   = 0x00U;
+
+            pRegisterContainer->DHU_0XF1_FAB_CTRL[address]          = 0x00U;
+            pRegisterContainer->DHU_0XF2_FAB_CTRLRD[address]        = 0x00U;
         }
     }
     for(counter =0x0001U;counter<WritePageSize;counter++){
@@ -217,6 +223,14 @@ void RegisterApp_Setup(uint8_t Page,Register* pRegisterContainer,uint16_t Regist
 
         case CMD_UPDATESTATUS_REQ:
             pRegisterContainer->DHU_0XE9_UPDATESTATUS_REQ[RegisterOffset] = RegisterValue;
+        break;
+
+        case CMD_FAB_CTRL:
+            pRegisterContainer->DHU_0XF1_FAB_CTRL[RegisterOffset] = RegisterValue;
+        break;
+
+        case CMD_FAB_CTRLRD:
+            pRegisterContainer->DHU_0XF2_FAB_CTRLRD[RegisterOffset] = RegisterValue;
         break;
 
         case CMD_APP_FB:
@@ -334,6 +348,14 @@ uint8_t RegisterApp_Read(uint8_t Page,Register* pRegisterContainer,uint16_t Regi
 
         case CMD_UPDATESTATUS_REQ:
             u8Return = pRegisterContainer->DHU_0XE9_UPDATESTATUS_REQ[RegisterOffset];
+        break;
+
+        case CMD_FAB_CTRL:
+            u8Return = pRegisterContainer->DHU_0XF1_FAB_CTRL[RegisterOffset];
+        break;
+
+        case CMD_FAB_CTRLRD:
+            u8Return = pRegisterContainer->DHU_0XF2_FAB_CTRLRD[RegisterOffset];
         break;
 
         case CMD_APP_FB:

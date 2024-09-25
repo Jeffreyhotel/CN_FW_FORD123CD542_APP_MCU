@@ -31,8 +31,8 @@
 #include "app/inc/BacklightApp.h"
 #include "app/inc/DiagApp.h"
 
-#define DHU_CMD_TOTAL_NUM    25U
-#define DHU_WRITE_APPROVED_CMD_NUM    10U
+#define DHU_CMD_TOTAL_NUM    27U
+#define DHU_WRITE_APPROVED_CMD_NUM    11U
 #define DHU_CMD_UPDATE_NUM  12U
 #define LENGTH_ZERO 0U
 #define LENGTH_ONE  1U
@@ -45,11 +45,13 @@ uint8_t TxCmdAddrPassPool[DHU_CMD_TOTAL_NUM] = {
                                 CMD_DISP_SHUTD,CMD_ISR_STATUS,CMD_CORE_ASMB,CMD_DELIVER_ASMB,CMD_SW_FPN,
                                 CMD_SN,CMD_MC_FPN,CMD_DTC,CMD_APP_REQ,CMD_BL_REQ,
                                 CMD_ERASE_REQ,CMD_TRANSFER_REQ,CMD_CRC_REQ,CMD_UPDATESTATUS_REQ,CMD_APP_FB,
-                                CMD_BL_FB,CMD_ERASE_FB,CMD_TRANSFER_FB,CMD_CRC_FB,CMD_UPDATESTATUS_FB
+                                CMD_BL_FB,CMD_ERASE_FB,CMD_TRANSFER_FB,CMD_CRC_FB,CMD_UPDATESTATUS_FB,
+                                CMD_FAB_CTRL,CMD_FAB_CTRLRD
                                 };
 uint8_t TxCmdWritePassPool[DHU_WRITE_APPROVED_CMD_NUM] = {
                                 CMD_BL_PWM,CMD_DISP_UD,CMD_DISP_EN,CMD_DISP_SHUTD,CMD_APP_REQ,
-                                CMD_BL_REQ,CMD_ERASE_REQ,CMD_TRANSFER_REQ,CMD_CRC_REQ,CMD_UPDATESTATUS_REQ
+                                CMD_BL_REQ,CMD_ERASE_REQ,CMD_TRANSFER_REQ,CMD_CRC_REQ,CMD_UPDATESTATUS_REQ,
+                                CMD_FAB_CTRL
                                 };
 uint8_t TxCmdUpdatePool[DHU_CMD_UPDATE_NUM] = {
                                 CMD_APP_REQ,CMD_BL_REQ,CMD_ERASE_REQ,CMD_TRANSFER_REQ,CMD_CRC_REQ,
@@ -72,7 +74,7 @@ static void I2CSlaveApp_CmdSizeInitial(void)
     CmdSizePool[CMD_SW_FPN]         = 26U;
     CmdSizePool[CMD_SN]             = 26U;
     CmdSizePool[CMD_MC_FPN]         = 26U;
-    CmdSizePool[CMD_DTC]            = 26U;
+    CmdSizePool[CMD_DTC]            = 41U;
 
     CmdSizePool[CMD_APP_REQ]            = 4U;
     CmdSizePool[CMD_BL_REQ]             = 4U;
@@ -86,6 +88,9 @@ static void I2CSlaveApp_CmdSizeInitial(void)
     CmdSizePool[CMD_TRANSFER_FB]        = 5U;
     CmdSizePool[CMD_CRC_FB]             = 4U;
     CmdSizePool[CMD_UPDATESTATUS_FB]    = 4U;
+
+    CmdSizePool[CMD_FAB_CTRL]           = 65U; /*No Limit*/
+    CmdSizePool[CMD_FAB_CTRLRD]         = 65U;
 }
 
 static uint32_t I2CSlaveApp_GetCmdSize(uint8_t subaddr)
@@ -265,6 +270,10 @@ static void I2CSlaveApp_TxWriteTransferDone(uint8_t subaddr)
             RegisterApp_DHU_Setup(CMD_DISP_SHUTD,CMD_DATA_POS,u8temp & 0x01U);
             /* Do task*/
             break;
+        
+        case CMD_FAB_CTRL:
+            TC0App_DHUTaskPush(TASK_FAB_CTRL);
+            break;
 
         default:
             (void)u8temp;
@@ -356,7 +365,7 @@ static void SlaveCallback(uint32_t event)
                     if (I2CSlaveApp_SubAddrWritePassCheck(u8SubAddr) == true)
                     {
                         /* Check the write length is overflow/underflow or not (IFS-MMI2C-SR-REQ-140570/IFS-MMI2C-SR-REQ-140569)*/
-                        if(length == I2CSlaveApp_GetCmdSize(u8SubAddr))
+                        if((length == I2CSlaveApp_GetCmdSize(u8SubAddr)) || (u8SubAddr == CMD_FAB_CTRL))
                         {
                             /* Update DHU Command if Write available */
                             for(index = 0U;index<I2CSlaveApp_GetCmdSize(u8SubAddr);index++)

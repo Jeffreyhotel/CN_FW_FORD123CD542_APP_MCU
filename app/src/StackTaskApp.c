@@ -34,6 +34,7 @@
 #include "app/inc/PowerApp.h"
 #include "app/inc/UpdateApp.h"
 #include "app/inc/DisplayChipApp.h"
+#include "app/inc/DeviceApp.h"
 #include "driver/inc/AdcDriver.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/I2C4MDriver.h"
@@ -248,6 +249,10 @@ void StackTaskApp_MissionAction(void)
 
         case TASK_UPDATE_RESET:
             UpdateApp_McuReset();
+        break;
+
+        case TASK_FAB_CTRL:
+            DeviceApp_0xF1FabCommCtrl();
         break;
 
         default:

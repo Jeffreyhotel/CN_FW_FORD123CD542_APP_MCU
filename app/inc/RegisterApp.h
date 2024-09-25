@@ -39,6 +39,7 @@
 #define CMD_UPDATESTATUS_FB         0xF9U
 
 #define CMD_FAB_CTRL                0xF1U
+#define CMD_FAB_CTRLRD              0xF2U
 
 /* Define DHU Update Command reply*/
 #define CMD_FB_MCU_OK               0x43U
@@ -118,7 +119,9 @@ typedef struct{
     volatile uint8_t DHU_0XF7_TRANSFER_FB[WritePageSize];
     volatile uint8_t DHU_0XF8_CRC_FB[RegisterMaxSize];
     volatile uint8_t DHU_0XF9_UPDATESTATUS_FB[RegisterMaxSize];
-    
+
+    volatile uint8_t DHU_0XF1_FAB_CTRL[RegisterMaxSize];
+    volatile uint8_t DHU_0XF2_FAB_CTRLRD[RegisterMaxSize];
 }Register;
 
 void RegisterApp_ALL_Initial(void);
