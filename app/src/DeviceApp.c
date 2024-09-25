@@ -66,7 +66,7 @@ static uint8_t DV_SW_FPN[NUM_SW_FPN] = {
 #define NUM_SERIAL_FPN    25U
 static uint8_t DV_SERIAL_FPN[NUM_SERIAL_FPN] = {
     /* EXAMPLE: H1BT-14F180-FA*/
-    0x48,0x31,0x42,0x54,0x2d,0x31,0x34,0x46,0x31,0x38,0x30,0x2d,0x46,0x41
+    0
 };
 #define NUM_MAINCAL_FPN    25U
 static uint8_t DV_MAINCAL_FPN[NUM_MAINCAL_FPN] = {
@@ -107,6 +107,7 @@ void DeviceApp_Intial(void)
     {
         RegisterApp_DHU_Setup(CMD_SW_FPN,CMD_DATA_POS+index,DV_SW_FPN[index]);
     }
+    (void)memcpy((void *)DV_SERIAL_FPN, (void *)(ADDR_MCUFLASH_SNUMBER), sizeof(DV_SERIAL_FPN));
     for(uint16_t index=0;index<NUM_SERIAL_FPN;index++)
     {
         RegisterApp_DHU_Setup(CMD_SN,CMD_DATA_POS+index,DV_SERIAL_FPN[index]);
