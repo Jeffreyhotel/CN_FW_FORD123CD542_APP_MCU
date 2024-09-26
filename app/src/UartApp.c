@@ -153,6 +153,35 @@ void UartApp_ReadFlow()
                     }
                     break;
 
+                case 0xA0U:
+                    I2C4MDriver_Initialize();
+                    break;
+
+                case 0xF2U:
+                    uint32_t u32TxBuffAddr  = 0U;
+                    if(rdBuffer[0] == 0x0DU)
+                    {
+                        if(rdBuffer[0x0C] != 0x00U)
+                        {
+                            u32TxBuffAddr += (rdBuffer[0x08U] << 24);
+                            u32TxBuffAddr += (rdBuffer[0x09U] << 16);
+                            u32TxBuffAddr += (rdBuffer[0x0AU] << 8);
+                            u32TxBuffAddr += rdBuffer[0x0BU];
+                            uint8_t dataStr[256] = {0};
+                            (void)memcpy((void *)dataStr, (void *)u32TxBuffAddr, sizeof(dataStr));
+                            UartDriver_TxWriteString((uint8_t *)"\r\n[DEBUG]:");
+                            /* Return Number# */
+                            u8temp[0] = rdBuffer[0x0C];
+                            UartDriver_TxWriteArray(u8temp,1U);
+                            /* Return Value */
+                            UartDriver_TxWriteArray(dataStr,rdBuffer[0x0C]);
+                            UartDriver_TxWriteString((uint8_t *)"\r\n");
+                        }
+                        else{}
+                    }
+                    else{}
+                    break;
+
                 case 0xFEU:
                     /* Control GPIO*/
                     if(rdBuffer[UART_CTRL_PORT_POS] < 7U && rdBuffer[UART_CTRL_PIN_POS] < 8U)
@@ -182,10 +211,6 @@ void UartApp_ReadFlow()
                     }
                     break;
 
-                case 0xA0U:
-                    I2C4MDriver_Initialize();
-                    break;
-                
                 case 0xFFU:
                     /* Write-Read code */
                     if(rdBuffer[0] > UART_CMD_WR_DATA_POS)
