@@ -4,7 +4,7 @@
 #include "main.h"
 
 /* TEST VERSION = MAIN VER + 0x80U*/
-#define IS_TEST_VERSION     (false)
+#define IS_TEST_VERSION     (true)
 #define SUBREVISION_SW_VER  (0x02U + (IS_TEST_VERSION << 7))
 
 #define CommType_WRITE      0x01U
