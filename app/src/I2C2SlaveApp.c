@@ -152,7 +152,7 @@ void I2CSlaveApp_UpdateCmdChecksumSet(uint8_t subaddr)
     uint32_t u32SizeOfCmd = I2CSlaveApp_GetCmdSize(subaddr);
     if(u32SizeOfCmd > 2U && I2CSlaveApp_SubaddressUpdateCmdCheck(subaddr) == true)
     {
-        for(uint32_t index = 0U;index<(u32SizeOfCmd-2U);index++)
+        for(uint32_t index = 0U;index<(u32SizeOfCmd-1U);index++)
         {
             u32ChecksumCounter += RegisterApp_DHU_Read(subaddr,index);
         }
