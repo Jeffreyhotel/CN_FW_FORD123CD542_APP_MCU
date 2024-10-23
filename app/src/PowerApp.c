@@ -59,6 +59,8 @@ void PowerApp_Sequence(uint8_t u8Action)
         TC0App_DelayMS(10U);
         PortDriver_PinClear(DES_PDB_PORT,DES_PDB_PIN);
         TC0App_DelayMS(5U);
+        PortDriver_PinClear(DES_INTB_PORT,DES_INTB_PIN);
+        TC0App_DelayMS(5U);
         PortDriver_PinClear(P3V3_EN_PORT,P3V3_EN_PIN);
         PortDriver_PinClear(P1V2_EN_PORT,P1V2_EN_PIN);
         TC0App_DelayMS(5U);
