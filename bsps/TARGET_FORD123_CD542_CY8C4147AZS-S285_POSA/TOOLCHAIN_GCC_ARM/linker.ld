@@ -233,6 +233,12 @@ SECTIONS
 
     } > RAM AT> FLASH
 
+     .prj.info.A (__FLASH_START+(0xDFF8)):
+    {
+        . = ALIGN(4);
+        KEEP(*(.prj.info.A))
+    } > FLASH
+
    /* Place variables in the section that should not be initialized during the
     *  device startup.
     */
