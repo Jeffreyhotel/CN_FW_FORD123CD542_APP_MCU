@@ -41,7 +41,6 @@
 
 static uint8_t u8MAIN_STATUS = STATE_BOOT;
 static uint8_t u8TxBuffer[60] = {0};
-const uint8_t PRJ_IMAGE[4U] __attribute__((__used__, section(PRJ_INFO_SECTION))) = {0xFF,0xFF,0x12,0x30};
 
 /*  Function: MainApp_Boot_Mode
 **  Callfrom: Main_Flow state machine

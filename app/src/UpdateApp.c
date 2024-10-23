@@ -34,6 +34,7 @@
 uint8_t APP_POS = MCU_POSITION;
 uint8_t APP_UPDATE_PROGRESS = FALSE;
 uint32_t u16ChecksumMCU = 0U;
+const uint8_t PRJ_IMAGE[4U] __attribute__((__used__, section(PRJ_INFO_SECTION))) = {0xFF,0xFF,0x12,0x30};
 static uint8_t u8TxBuffer[100] = {0};
 const uint32_t crc32_tab[256] = {
 	0x00000000U, 0x77073096U, 0xee0e612cU, 0x990951baU, 0x076dc419U, 0x706af48fU,
@@ -253,6 +254,24 @@ static uint8_t UpdateApp_CheckSumMCU(void)
     return u8result;
 }
 
+static uint8_t UpdateApp_ProjectNameCheck(void)
+{
+    uint8_t u8result = TRUE;
+    uint8_t u8dataofprojname[4] = {0};
+    (void)memcpy((void *)u8dataofprojname,(void *)(PRJ_UPDATE_CHECK_ADDR+ADDR_SHIFT_PRJNAMEMRK), 4U);
+    for(uint8_t u8index=0U;u8index < 4U;u8index++)
+    {
+        if(u8dataofprojname[u8index] == PRJ_IMAGE[u8index])
+        {
+            /* Do nothing*/
+        }else{
+            u8result = FALSE;
+        }
+    }
+    sprintf((char *)u8TxBuffer,"[UPDATE]CRCSM:Proj Name Check:%02X%02X%02X%02X u8result:%d\r\n",u8dataofprojname[0],u8dataofprojname[1],u8dataofprojname[2],u8dataofprojname[3],u8result);
+    UartDriver_TxWriteString(u8TxBuffer);
+    return u8result;
+}
 
 bool UpdateApp_ChecksumFlashMCU(void)
 {
@@ -278,7 +297,13 @@ bool UpdateApp_ChecksumFlashMCU(void)
     }else{
         breturn &= false;
     }
-
+    /* Do OTA Fool-proof Check*/
+    if(UpdateApp_ProjectNameCheck() == TRUE)
+    {
+        breturn &= true;
+    }else{
+        breturn &= false;
+    }
     /* Configure the checksum result to CMD_CRC_FB*/
     if(breturn == true)
     {
