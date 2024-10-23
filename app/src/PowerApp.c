@@ -27,6 +27,7 @@
 #include "app/inc/TC0App.h"
 #include "app/inc/DiagApp.h"
 #include "app/inc/RegisterApp.h"
+#include "app/inc/FlashApp.h"
 #include "driver/inc/PortDriver.h"
 #include "driver/inc/UartDriver.h"
 #include "driver/inc/I2C4MDriver.h"
@@ -191,6 +192,33 @@ void PowerApp_RTQ6749_FaultCheck()
     }else{
         /* When voltage at swim state, Do nothing*/
         sprintf((char *)u8TxBuffer,"RTQ6749 SWIM >> 0x%02x, %d, %d\r\n",u8Status,FAULT_RTQ6749.ConsecutiveHighCnt,FAULT_RTQ6749.ConsecutiveLowCnt);
+        UartDriver_TxWriteString(u8TxBuffer);
+    }
+}
+
+void PowerApp_LP8664_CurrentSet()
+{
+    uint8_t u8CurrentSet[3] = {0x02,0xFF,0x0F};
+    uint8_t u8FlashData[2] = {0};
+    uint8_t Status = ERROR_NONE;
+    (void)memcpy((void *)u8FlashData,(void *)(ADDR_MCUFLASH_DIMMING), 2U);
+    if(((u8FlashData[0U]+u8FlashData[1U]*256) > 0x09FFU) && ((u8FlashData[0U]+u8FlashData[1U]*256) < 0x0FFFU))
+    {
+        u8CurrentSet[1U] = u8FlashData[0U];
+        u8CurrentSet[2U] = u8FlashData[1U] & 0x0FU;
+        Status = I2C4MDriver_Write(LED_ADDR,u8CurrentSet,3U);
+            if(Status != ERROR_NONE)
+        {
+            DiagApp_I2CMasterFaultCheck(true,DIAG_I2CM_LED_MASK);
+            sprintf((char *)u8TxBuffer,"LP8664 Current Set Fail >> 0x%02x\r\n",Status);
+            UartDriver_TxWriteString(u8TxBuffer);
+        }else{
+            sprintf((char *)u8TxBuffer,"LP8664 Current Set >> 0x%02X%02X\r\n",u8FlashData[1],u8FlashData[0]);
+            UartDriver_TxWriteString(u8TxBuffer);
+        }
+    }else{
+        /* Do nothing, IC default set as 0x0FFF*/
+        sprintf((char *)u8TxBuffer,"LP8664 Current default >> 0x%02X%02X\r\n",u8FlashData[1],u8FlashData[0]);
         UartDriver_TxWriteString(u8TxBuffer);
     }
 }

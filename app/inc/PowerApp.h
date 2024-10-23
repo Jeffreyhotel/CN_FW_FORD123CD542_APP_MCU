@@ -18,5 +18,6 @@ void PowerApp_PowerGoodInitial();
 void PowerApp_PowerGoodFlow();
 void PowerApp_RTQ6749_FaultCheck();
 void PowerApp_LP8664_FaultCheck();
+void PowerApp_LP8664_CurrentSet();
 
 #endif
