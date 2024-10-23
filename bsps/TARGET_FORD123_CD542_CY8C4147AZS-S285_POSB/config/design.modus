@@ -978,7 +978,7 @@
                         <Param id="calc" value="man"/>
                         <Param id="desFreq" value="48000000.000000"/>
                         <Param id="fracDivider" value="0"/>
-                        <Param id="intDivider" value="52"/>
+                        <Param id="intDivider" value="48"/>
                         <Param id="startOnReset" value="true"/>
                     </Parameters>
                 </Personality>

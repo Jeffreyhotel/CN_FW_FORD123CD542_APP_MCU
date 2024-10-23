@@ -263,7 +263,7 @@ void BacklightApp_DimmingControl(void)
     if(bDimmingUpdateStepFlag == true)
     {
         /* Delta PWM Mod 0x7F (128 dimming step) and plus 1 (at least 1 step a time)*/
-        u16DimmingStep = ((BrightnessTarget > u16Brightness) ? (BrightnessTarget - u16Brightness)/0x7F : (u16Brightness - BrightnessTarget)/0x7F)
+        u16DimmingStep = ((BrightnessTarget > u16Brightness) ? (BrightnessTarget - u16Brightness)/0x80 : (u16Brightness - BrightnessTarget)/0x80)
                          + 1U;
         bDimmingUpdateStepFlag = false;
     }
