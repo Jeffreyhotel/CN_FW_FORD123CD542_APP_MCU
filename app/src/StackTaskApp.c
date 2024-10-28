@@ -215,7 +215,12 @@ void StackTaskApp_MissionAction(void)
             /* RTQ6749 only check i2c when hardware pin BIAS_FAULT pull low (DiagApp_BiasFaultCheckFlow())
             PowerApp_RTQ6749_FaultCheck();
             */
-            DiagApp_BiasFaultCheckFlow();
+            if((RegisterApp_DHU_Read(CMD_DISP_EN,1U) & 0x01U) == 0x01U)
+            {
+                DiagApp_BiasFaultCheckFlow();
+            }else{
+                /* Do Nothing*/
+            }
         break;
 
         case TASK_LEDFLOW:
