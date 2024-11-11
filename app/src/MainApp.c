@@ -100,6 +100,7 @@ static uint8_t MainApp_Boot_Mode(uint8_t u8Nothing)
     sprintf((char *)u8TxBuffer,"BOOT FINISHED, PC:0x%lX, POS:%02X\r\n",PC,MCU_POSITION);
     RegisterApp_DHU_Setup(CMD_DTC,DTC_APP_POS,MCU_POSITION);
     UartDriver_TxWriteString(u8TxBuffer);
+    DiagApp_DispStatusSet(DISP_STATUS_BYTE1,DISP1_INIT_MASK);
     /* Only for LED Driver test*/
     // PowerApp_LP8664_CurrentSet();
     /* Only for flash w/r test*/
@@ -271,6 +272,7 @@ static uint8_t MainApp_Shutdown_Mode(uint8_t u8Nothing)
     /* SWRA-01-07: Set DISP_STATUS 0x00 CMD Byte1 DISP_ST & BL_ST set as 0.*/
     DiagApp_DispStatusClear(DISP_STATUS_BYTE1,DISP1_DISPST_MASK);
     DiagApp_DispStatusClear(DISP_STATUS_BYTE1,DISP1_BLST_MASK);
+    DiagApp_DispStatusClear(DISP_STATUS_BYTE1,DISP1_INIT_MASK);
     TC0App_NormalWorkStartSet(FALSE);
     /* Do Power Off Sequence*/
     INTBApp_Flow();
