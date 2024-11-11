@@ -121,9 +121,12 @@ static uint8_t MainApp_PreNormal_Mode(uint8_t u8Nothing)
     TC0App_TimerTaskStopper(true);
     PowerApp_Sequence(LCD_ON);
     TC0App_TimerTaskStopper(false);
-    /* SWRA-01-06: Set DISP_STATUS 0x00 CMD Byte1 DISP_ST & BL_ST set as 1.*/
+    /* SWRA-01-06: Set DISP_STATUS 0x00 CMD Byte1 DISP_ST set as 1.*/
     DiagApp_DispStatusSet(DISP_STATUS_BYTE1,DISP1_DISPST_MASK);
+    /* [Fix]Set at BacklightApp_Dimming Control.
     DiagApp_DispStatusSet(DISP_STATUS_BYTE1,DISP1_BLST_MASK);
+    */
+    
     sprintf((char *)u8TxBuffer,"PRENORMAL FINISHED\r\n");
     UartDriver_TxWriteString(u8TxBuffer);
     StackTaskApp_MissionPush(TASK_LCDVERS);

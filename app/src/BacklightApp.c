@@ -269,6 +269,8 @@ void BacklightApp_DimmingControl(void)
     }
     
     if(BacklightSwitch == BLT_ENABLE){
+        /* SWRA-01-06: Set DISP_STATUS 0x00 CMD Byte1 BL_ST set as 1.*/
+        DiagApp_DispStatusSet(DISP_STATUS_BYTE1,DISP1_BLST_MASK);
         /*Check if battery in protection state*/
         if(u8BATT_PROTECT_EN == FALSE)
         {
@@ -280,6 +282,8 @@ void BacklightApp_DimmingControl(void)
             (void)PwmDriver_DutySet((uint16_t)( 0U));
         }
     }else if(BacklightSwitch == BLT_DISABLE){
+        /* SWRA-02-03: Set DISP_STATUS 0x00 CMD Byte1 BL_ST set as 0 if Backlight Switch is off.*/
+        DiagApp_DispStatusClear(DISP_STATUS_BYTE1,DISP1_BLST_MASK);
         /* Directly Close Backlight (PWM set as 0)*/
         u16Brightness = 0U;
         //PwmDriver_Stop();
