@@ -276,12 +276,14 @@ void BacklightApp_DimmingControl(void)
             u16GradientValue = 0U;
             BacklightApp_BrightnessAdgust(BrightnessTarget,0U);
         }else{
-            PwmDriver_Stop();
+            //PwmDriver_Stop();
+            (void)PwmDriver_DutySet((uint16_t)( 0U));
         }
     }else if(BacklightSwitch == BLT_DISABLE){
         /* Directly Close Backlight (PWM set as 0)*/
         u16Brightness = 0U;
-        PwmDriver_Stop();
+        //PwmDriver_Stop();
+        (void)PwmDriver_DutySet((uint16_t)( 0U));
     }else{
         /*ERROR READ FORMAT. NEED CHECK*/
     }
