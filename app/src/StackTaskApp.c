@@ -86,7 +86,7 @@ static int32_t StackTaskApp_MissionReturnQueneNumber(void)
 static uint8_t StackTaskApp_Push(Stack* stack, uint8_t u8TaskNumber)
 {
     uint8_t ErrorFlag = 0U;
-	
+	__disable_irq();
 	// volatile var should not be used in complex expression. Store it to stack first.
 	int top = stack->top;
     if ((top >= (int32_t)(StackTaskMaxSize - 1U)) || (top < -1))
@@ -102,6 +102,7 @@ static uint8_t StackTaskApp_Push(Stack* stack, uint8_t u8TaskNumber)
         (void)(stack->data[stack->top]);
         ErrorFlag = 0U;
     }
+    __enable_irq();
     return ErrorFlag;
 }
 
@@ -122,7 +123,7 @@ static uint8_t StackTaskApp_Pop(Stack* stack)
     uint8_t datatmp = 0U;
     // uint32_t u32Index = 0;
 	int32_t s32StackTaskMaxSize = (int32_t)StackTaskMaxSize;
-	
+	__disable_irq();
 	int top = stack->top;
     if ((top <= -1))
     {
@@ -162,7 +163,7 @@ static uint8_t StackTaskApp_Pop(Stack* stack)
 	(void)ErrorFlag;
 	(void)datatmp;
     (void)(stack->data);
-	
+	__enable_irq();
 	return u8Return;
 }
 
