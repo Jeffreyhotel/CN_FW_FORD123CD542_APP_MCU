@@ -123,7 +123,7 @@ static uint8_t StackTaskApp_Pop(Stack* stack)
     uint8_t datatmp = 0U;
     // uint32_t u32Index = 0;
 	int32_t s32StackTaskMaxSize = (int32_t)StackTaskMaxSize;
-	__disable_irq();
+    
 	int top = stack->top;
     if ((top <= -1))
     {
@@ -139,6 +139,7 @@ static uint8_t StackTaskApp_Pop(Stack* stack)
 	}
     else
     {
+        __disable_irq();
 #if FIFO
         if (stack->top == 0)
         {
@@ -158,12 +159,13 @@ static uint8_t StackTaskApp_Pop(Stack* stack)
         stack->top = stack->top - 1;
 #endif
         u8Return = datatmp;
+        __enable_irq();
     }
 
 	(void)ErrorFlag;
 	(void)datatmp;
     (void)(stack->data);
-	__enable_irq();
+	
 	return u8Return;
 }
 
