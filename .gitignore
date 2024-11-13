@@ -33,6 +33,7 @@ Release/
 .project
 .mtbLaunchConfigs/
 makefile.init
+.mtbqueryapi
 
 # Visual Studio Code
 openocd.tcl
