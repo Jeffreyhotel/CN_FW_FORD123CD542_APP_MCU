@@ -259,7 +259,7 @@ void BacklightApp_DimmingControl(void)
                     /*Check if RST_RQ state*/
                     & u8RSTRQ_TYPEB_SW
                     /*Check if battery in protection state*/
-                    & u8BATT_PROTECT_EN
+                    & (!u8BATT_PROTECT_EN)
                     & 0x01U ;
     
     /*Dimming target*/
