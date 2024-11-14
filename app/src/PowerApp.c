@@ -231,7 +231,7 @@ void PowerApp_LP8664_FaultCheck()
 {
     uint8_t CMD_DataAddr[1] = {0x00};
     uint8_t RxBuffer[31] = {0U};
-    uint8_t u8fault[4] = {0U};
+    uint8_t u8fault[7] = {0U};
     uint8_t Status = ERROR_NONE;
     uint8_t u8Status = IO_STATUS_SWIM;
     Status = I2C4MDriver_WriteRead(LED_ADDR,CMD_DataAddr,1U,RxBuffer,30U);
