@@ -120,6 +120,12 @@ static void BacklightApp_BrightnessAdgust(uint16_t BrightnessTarget,uint16_t Gra
     /*Set dimming value to PWM Driver*/
 	duty = ((duty > BLT_PERIOD) ? BLT_PERIOD : duty);
     (void)PwmDriver_DutySet((uint16_t)(duty & 0xFFFFU));
+    if(duty > 0U)
+    {
+        DiagApp_DispStatusSet(DISP_STATUS_BYTE1,DISP1_BLST_MASK);
+    }else{
+        DiagApp_DispStatusClear(DISP_STATUS_BYTE1,DISP1_BLST_MASK);
+    }
     // sprintf((char *)u8TxBuffer,"DUTY %d\r\n",duty);
     // UartDriver_TxWriteString((uint8_t*)u8TxBuffer);
 }
@@ -250,7 +256,10 @@ void BacklightApp_DimmingControl(void)
     BacklightSwitch = RegisterApp_DHU_Read(CMD_DISP_EN,CMD_DATA_POS) 
                     & (!RegisterApp_DHU_Read(CMD_DISP_SHUTD,CMD_DATA_POS))
                     & (TC0App_TimerReturn(TIMER_HOLDCOUNT) != 0x00U)
+                    /*Check if RST_RQ state*/
                     & u8RSTRQ_TYPEB_SW
+                    /*Check if battery in protection state*/
+                    & u8BATT_PROTECT_EN
                     & 0x01U ;
     
     /*Dimming target*/
@@ -270,17 +279,10 @@ void BacklightApp_DimmingControl(void)
     
     if(BacklightSwitch == BLT_ENABLE){
         /* SWRA-01-06: Set DISP_STATUS 0x00 CMD Byte1 BL_ST set as 1.*/
-        DiagApp_DispStatusSet(DISP_STATUS_BYTE1,DISP1_BLST_MASK);
-        /*Check if battery in protection state*/
-        if(u8BATT_PROTECT_EN == FALSE)
-        {
-            PwmDriver_Start();
-            u16GradientValue = 0U;
-            BacklightApp_BrightnessAdgust(BrightnessTarget,0U);
-        }else{
-            //PwmDriver_Stop();
-            (void)PwmDriver_DutySet((uint16_t)( 0U));
-        }
+        
+        PwmDriver_Start();
+        u16GradientValue = 0U;
+        BacklightApp_BrightnessAdgust(BrightnessTarget,0U);
     }else if(BacklightSwitch == BLT_DISABLE){
         /* SWRA-02-03: Set DISP_STATUS 0x00 CMD Byte1 BL_ST set as 0 if Backlight Switch is off.*/
         DiagApp_DispStatusClear(DISP_STATUS_BYTE1,DISP1_BLST_MASK);
